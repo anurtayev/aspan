@@ -1,0 +1,42 @@
+type MetaData {
+  tags: [String!]
+  attributes: [[String!]!]
+  title: String
+  description: String
+}
+
+interface Entry {
+  id: ID!
+  metaData: MetaData
+  type: String!
+}
+
+type Folder implements Entry {
+  id: ID!
+  metaData: MetaData
+  type: String!
+
+  children: [Entry!]
+}
+
+type File implements Entry {
+  id: ID!
+  metaData: MetaData
+  type: String!
+
+  size: Int!
+  thumbImage: String
+  contentType: String
+}
+
+type Query {
+  getRootFolderEntries: [Entry!]
+  getFolderEntries(id: String!): [Entry!]
+}
+
+type Mutation {
+  addTag(id: String!, tag: String!): MetaData
+  removeTag(id: String!, tag: String!): MetaData
+  addAttribute(id: String!, attribute: [String!]!): MetaData
+  removeAttribute(id: String!, attributeKey: String!): MetaData
+}

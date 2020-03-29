@@ -1,0 +1,42 @@
+{
+  "author": "",
+  "dependencies": {
+    "@graphql-toolkit/core": "^0.9.9",
+    "@graphql-toolkit/graphql-file-loader": "^0.9.9",
+    "apollo-server": "^2.11.0",
+    "dotenv": "^8.2.0",
+    "fs-extra": "^9.0.0",
+    "glob": "^7.1.6",
+    "graphql-import": "^1.0.0",
+    "sharp": "^0.25.1"
+  },
+  "description": "",
+  "devDependencies": {
+    "@graphql-codegen/cli": "^1.13.1",
+    "@graphql-codegen/introspection": "1.13.1",
+    "@graphql-codegen/typescript": "1.13.1",
+    "@graphql-codegen/typescript-resolvers": "1.13.1",
+    "@types/fs-extra": "^8.1.0",
+    "@types/glob": "^7.1.1",
+    "@types/sharp": "^0.24.0",
+    "awesome-typescript-loader": "^5.2.1",
+    "backpack-core": "^0.8.4",
+    "eslint": "^6.8.0",
+    "husky": "^4.2.3",
+    "jest": "^25.1.0",
+    "prettier": "^1.19.1",
+    "pretty-quick": "^2.0.1",
+    "typescript": "^3.8.3"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "main": "index.js",
+  "name": "server",
+  "scripts": {
+    "start": "backpack",
+    "codegen": "graphql-codegen",
+    "codegen:watch": "graphql-codegen --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.0"
+}
