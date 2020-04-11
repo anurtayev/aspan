@@ -1,6 +1,16 @@
 import dotenv from "dotenv";
 import assert from "assert";
-import { RepositoryOptions } from "./types";
+import { DataSources } from "apollo-server-core/dist/graphqlOptions";
+
+export type IContext = {
+  path: string;
+  metaFolder: string;
+  thumbsPrefix: string;
+  thumbsLength: number;
+  thumbsWidth: number;
+  exts: string[];
+  dataSources: DataSources<IContext>;
+};
 
 dotenv.config();
 
@@ -22,11 +32,12 @@ const thumbsWidth =
   parseInt(process.env.THUMBS_WIDTH as string, 10) || DEFAULT_THUMBS_WIDTH;
 const exts = (process.env.EXTS as string).split(",") || DEFAULT_EXTS;
 
-export const options: RepositoryOptions = {
+export const Context: IContext = {
   metaFolder: metaFolderName,
   path,
   thumbsPrefix,
   thumbsLength,
   thumbsWidth,
-  exts
+  exts,
+  dataSources: {}
 };

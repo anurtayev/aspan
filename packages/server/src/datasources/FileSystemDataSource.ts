@@ -11,7 +11,7 @@ import {
   emptyDir,
   readFile
 } from "fs-extra";
-import { File, Folder, Entry, MetaData, Maybe } from "./generated/graphql";
+import { File, Folder, MetaData, FolderElement } from "../schema";
 import glob from "glob";
 import {
   addTag,
@@ -21,37 +21,42 @@ import {
 } from "./metaDataHelpers";
 import sharp from "sharp";
 import { DataSource, DataSourceConfig } from "apollo-datasource";
-import { RepositoryOptions } from "./types";
+import { IContext } from "../util";
+import Maybe from "graphql/tsutils/Maybe";
 
 export default class FileSystemDataSource extends DataSource {
-  options!: RepositoryOptions;
+  options!: IContext;
 
   constructor() {
     super();
   }
 
-  initialize(config: DataSourceConfig<RepositoryOptions>): void {
+  initialize(config: DataSourceConfig<IContext>): void {
     this.options = config.context;
     // this.httpCache = new HTTPCache(config.cache, this.httpFetch);
   }
 
-  public getEntry = async (id: string): Promise<Entry> => {
+  public getEntry = async (id: string): Promise<FolderElement> => {
     const stats = await this.stats(id);
 
     return stats.isFile()
       ? {
+          __typename: "File",
           id,
           type: "File",
           size: stats.size,
           contentType: "jpg"
         }
       : {
+          __typename: "Folder",
           id,
           type: "Folder"
         };
   };
 
-  public getFolderEntries = async (id: string): Promise<Array<Entry>> => {
+  public getFolderEntries = async (
+    id: string
+  ): Promise<Array<FolderElement>> => {
     return (
       await Promise.all(
         (await readdir(this.fsPath(id)))
@@ -61,17 +66,21 @@ export default class FileSystemDataSource extends DataSource {
               !basename(entryId).startsWith(".")
           )
           .map((entryId: string): string => normalize(join(id, entryId)))
-          .map((entryId: string): Promise<Entry> => this.getEntry(entryId))
+          .map(
+            (entryId: string): Promise<FolderElement> => this.getEntry(entryId)
+          )
       )
     ).filter(
-      (entry: Entry) =>
+      (entry: FolderElement) =>
         entry.__typename === "Folder" ||
         (entry.__typename === "File" &&
           this.options.exts.includes(entry.contentType))
     );
   };
 
-  public findEntries = async (pattern: string): Promise<Array<Entry>> => {
+  public findEntries = async (
+    pattern: string
+  ): Promise<Array<FolderElement>> => {
     const options = {
       cwd: this.options.path,
       root: this.options.path
@@ -89,7 +98,7 @@ export default class FileSystemDataSource extends DataSource {
               .map(fileName => fileName.slice(this.options.path.length))
               .map(
                 async (fileName: string) =>
-                  this.getEntry(fileName) as Promise<Entry>
+                  this.getEntry(fileName) as Promise<FolderElement>
               )
           )
         );
@@ -117,7 +126,7 @@ export default class FileSystemDataSource extends DataSource {
     return metaData;
   };
 
-  public addTag = async (id: string, tag: string): Promise<MetaData> =>
+  public addTag = async (id: string, tag: string): Promise<Maybe<MetaData>> =>
     await this.setMetaData(id, addTag(await this.getMetaData(id), tag));
 
   public removeTag = async (id: string, tag: string): Promise<MetaData> =>

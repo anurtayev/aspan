@@ -1,6 +1,7 @@
-import { MetaData } from "./generated/graphql";
+import { MetaData } from "../schema";
+import Maybe from "graphql/tsutils/Maybe";
 
-export const addTag = (metaData: MetaData | null, tag: string): MetaData => {
+export const addTag = (metaData: Maybe<MetaData>, tag: string): MetaData => {
   if (!metaData) {
     return { tags: [tag] };
   }
@@ -20,7 +21,7 @@ export const addTag = (metaData: MetaData | null, tag: string): MetaData => {
   return { ...metaData, tags: [...metaData.tags, tag] };
 };
 
-export const removeTag = (metaData: MetaData | null, tag: string): MetaData => {
+export const removeTag = (metaData: Maybe<MetaData>, tag: string): MetaData => {
   if (!metaData) {
     throw new Error("removeTag: metaData must be an instance of MetaData");
   }
@@ -40,7 +41,7 @@ export const removeTag = (metaData: MetaData | null, tag: string): MetaData => {
 };
 
 export const addAttribute = (
-  metaData: MetaData | null,
+  metaData: Maybe<MetaData>,
   attribute: [string]
 ): MetaData => {
   if (!metaData) {
@@ -72,7 +73,7 @@ export const addAttribute = (
 };
 
 export const removeAttribute = (
-  metaData: MetaData | null,
+  metaData: Maybe<MetaData>,
   attribute: string
 ): MetaData => {
   if (!metaData) {
