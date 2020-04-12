@@ -43,8 +43,8 @@ const schema = gql`
   type Mutation {
     """
     Adds new tag to a folder entry. If element does
-    exist it returns updated metadata object or an empty
-    object otherwise.
+    exist it returns updated metadata object or null
+    otherwise.
     """
     addTag(id: String!, tag: String!): MetaData
     removeTag(id: String!, tag: String!): MetaData

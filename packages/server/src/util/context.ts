@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
 import assert from "assert";
-import { DataSources } from "apollo-server-core/dist/graphqlOptions";
 
 export type IContext = {
   path: string;
@@ -9,7 +8,6 @@ export type IContext = {
   thumbsLength: number;
   thumbsWidth: number;
   exts: string[];
-  dataSources: DataSources<IContext>;
 };
 
 dotenv.config();
@@ -38,6 +36,5 @@ export const Context: IContext = {
   thumbsPrefix,
   thumbsLength,
   thumbsWidth,
-  exts,
-  dataSources: {}
+  exts
 };
