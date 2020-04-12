@@ -10,7 +10,7 @@ const server = new ApolloServer({
   context: () => Context,
   dataSources: () => {
     return {
-      moviesAPI: new FileSystemDataSource()
+      fs: new FileSystemDataSource()
     };
   }
 });

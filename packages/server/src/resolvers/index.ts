@@ -1,62 +1,52 @@
-import { IResolvers, IFieldResolver } from "apollo-server";
-import { IContext } from "../util";
+import FileSystemDataSource from "../datasources/FileSystemDataSource";
 
 const ROOT_FOLDER_ID = "/";
 
-const getRootFolderEntries: IFieldResolver<any, any, any> = (
-  _,
-  __,
-  { dataSources }
-) => {
-  return dataSources.fs.getFolderEntries(ROOT_FOLDER_ID);
-};
-
-const getFolderEntries: IFieldResolver<any, any, any> = (
-  _,
-  { id },
-  { dataSources }
-) => {
-  return dataSources.fs.getFolderEntries(id);
-};
-
-const metaData: IFieldResolver<any, any, any> = (
-  _,
-  { id },
-  { dataSources }
+const metaData = (
+  _: any,
+  { id }: { id: string },
+  { dataSources }: { dataSources: { fs: FileSystemDataSource } }
 ) => {
   return dataSources.fs.getMetaData(id);
 };
 
-const children: IFieldResolver<any, any, any> = (
-  _,
-  { id },
-  { dataSources }
-) => {
-  return dataSources.fs.getFolderEntries(id);
-};
-
-const thumbImage: IFieldResolver<any, any, any> = (
-  _,
-  { id },
-  { dataSources }
-) => {
-  return dataSources.fs.getBase64ThumbString(id);
-};
-
-export const resolvers: IResolvers<any, IContext> = {
+export const resolvers = {
   Query: {
-    getRootFolderEntries,
-    getFolderEntries
+    getRootFolderEntries(
+      _: any,
+      __: any,
+      { dataSources }: { dataSources: { fs: FileSystemDataSource } }
+    ) {
+      return dataSources.fs.getFolderEntries(ROOT_FOLDER_ID);
+    },
+    getFolderEntries(
+      _: any,
+      { id }: { id: string },
+      { dataSources }: { dataSources: { fs: FileSystemDataSource } }
+    ) {
+      return dataSources.fs.getFolderEntries(id);
+    }
   },
 
   Folder: {
     metaData,
-    children
+    children(
+      _: any,
+      { id }: { id: string },
+      { dataSources }: { dataSources: { fs: FileSystemDataSource } }
+    ) {
+      return dataSources.fs.getFolderEntries(id);
+    }
   },
 
   File: {
     metaData,
-
-    thumbImage
+    thumbImage(
+      _: any,
+      { id }: { id: string },
+      { dataSources }: { dataSources: { fs: FileSystemDataSource } }
+    ) {
+      return dataSources.fs.getBase64ThumbString(id);
+    }
   }
 };
