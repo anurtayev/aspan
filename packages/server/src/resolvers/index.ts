@@ -1,13 +1,24 @@
 import FileSystemDataSource from "../datasources/FileSystemDataSource";
+import { FolderElement } from "../schema";
 
 const ROOT_FOLDER_ID = "/";
 
-const metaData = (
+const metaDataResolver = (
   _: any,
   { id }: { id: string },
   { dataSources }: { dataSources: { fs: FileSystemDataSource } }
 ) => {
   return dataSources.fs.getMetaData(id);
+};
+
+const folderElementTypeResolver = (obj: FolderElement, _: any, __: any) => {
+  if (obj.__typename === "File") {
+    return "File";
+  }
+  if (obj.__typename === "Folder") {
+    return "Folder";
+  }
+  return null;
 };
 
 export const resolvers = {
@@ -29,10 +40,10 @@ export const resolvers = {
   },
 
   Folder: {
-    metaData,
+    metaData: metaDataResolver,
     children(
-      _: any,
       { id }: { id: string },
+      _: any,
       { dataSources }: { dataSources: { fs: FileSystemDataSource } }
     ) {
       return dataSources.fs.getFolderEntries(id);
@@ -40,13 +51,21 @@ export const resolvers = {
   },
 
   File: {
-    metaData,
+    metaData: metaDataResolver,
     thumbImage(
-      _: any,
       { id }: { id: string },
+      _: any,
       { dataSources }: { dataSources: { fs: FileSystemDataSource } }
     ) {
       return dataSources.fs.getBase64ThumbString(id);
     }
+  },
+
+  FolderElement: {
+    __resolveType: folderElementTypeResolver
+  },
+
+  Entry: {
+    __resolveType: folderElementTypeResolver
   }
 };

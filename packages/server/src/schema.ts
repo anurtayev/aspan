@@ -12,13 +12,11 @@ const schema = gql`
   interface Entry {
     id: ID!
     metaData: MetaData
-    type: String!
   }
 
   type Folder implements Entry {
     id: ID!
     metaData: MetaData
-    type: String!
 
     children: [Entry!]
   }
@@ -26,7 +24,6 @@ const schema = gql`
   type File implements Entry {
     id: ID!
     metaData: MetaData
-    type: String!
 
     size: Int!
     thumbImage: String
@@ -63,7 +60,6 @@ export type RequireFields<T, K extends keyof T> = {
 export type Entry = {
   id: string;
   metaData?: Maybe<MetaData>;
-  type: string;
 };
 
 export type FolderElement = File | Folder;
@@ -72,7 +68,6 @@ export type File = Entry & {
   __typename: "File";
   id: string;
   metaData?: Maybe<MetaData>;
-  type: "File";
   size: number;
   thumbImage?: Maybe<string>;
   contentType: string;
@@ -82,7 +77,6 @@ export type Folder = Entry & {
   __typename: "Folder";
   id: string;
   metaData?: Maybe<MetaData>;
-  type: "Folder";
   children?: Maybe<Array<FolderElement>>;
 };
 

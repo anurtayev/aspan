@@ -7,7 +7,7 @@ import FileSystemDataSource from "./dataSources/FileSystemDataSource";
 const server = new ApolloServer({
   typeDefs: schema,
   resolvers,
-  context: () => Context,
+  context: Context,
   dataSources: () => {
     return {
       fs: new FileSystemDataSource()

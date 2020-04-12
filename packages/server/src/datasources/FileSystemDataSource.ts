@@ -43,14 +43,12 @@ export default class FileSystemDataSource extends DataSource {
       ? {
           __typename: "File",
           id,
-          type: "File",
           size: stats.size,
           contentType: "jpg"
         }
       : {
           __typename: "Folder",
-          id,
-          type: "Folder"
+          id
         };
   };
 
@@ -156,7 +154,7 @@ export default class FileSystemDataSource extends DataSource {
     await Promise.all(
       (await this.getFolderEntries(folder)).map(async entry => {
         await callBack(entry);
-        if (entry.type === "Folder") {
+        if (entry.__typename === "Folder") {
           return this.walkChildren(entry.id, callBack);
         }
       })
@@ -171,6 +169,8 @@ export default class FileSystemDataSource extends DataSource {
   };
 
   public fsPath = (id: string): string => {
+    console.log("==> 1", id);
+
     const path = normalize(join(this.options.path, id));
     return path.endsWith("/") ? path.slice(0, -1) : path;
   };
