@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
-import App from "./App";
+import Navigator from "./components/Navigator";
 import * as serviceWorker from "./serviceWorker";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
+import "./index.css";
 
 const client = new ApolloClient({
   uri: process.env.REACT_APP_GRAPHQL_SERVER_URL,
@@ -13,7 +13,7 @@ const client = new ApolloClient({
 ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <App />
+      <Navigator />
     </ApolloProvider>
   </React.StrictMode>,
   document.getElementById("root")
