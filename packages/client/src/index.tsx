@@ -2,12 +2,25 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Navigator from "./components/Navigator";
 import * as serviceWorker from "./serviceWorker";
-import ApolloClient from "apollo-boost";
+import { ApolloClient } from "apollo-client";
 import { ApolloProvider } from "@apollo/react-hooks";
+import { InMemoryCache } from "apollo-cache-inmemory";
+import { HttpLink } from "apollo-link-http";
 import "./index.css";
 
+const cache = new InMemoryCache();
 const client = new ApolloClient({
-  uri: process.env.REACT_APP_GRAPHQL_SERVER_URL,
+  cache,
+  link: new HttpLink({
+    uri: process.env.REACT_APP_GRAPHQL_SERVER_URL,
+  }),
+  resolvers: {},
+});
+
+cache.writeData({
+  data: {
+    path: "/",
+  },
 });
 
 ReactDOM.render(

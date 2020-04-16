@@ -1,19 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { useQuery } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 import Card from "../Card";
-
-const GET_ROOT_FOLDER_ENTRIES_QUERY = gql`
-  {
-    getRootFolderEntries {
-      ... on Entry {
-        __typename
-        id
-      }
-    }
-  }
-`;
+import { GET_LOCAL_STATE, getFolderEntries } from "./queries";
 
 const OuterFrame = styled.div`
   display: flex;
@@ -21,15 +10,26 @@ const OuterFrame = styled.div`
 `;
 
 export default () => {
-  const { loading, error, data } = useQuery(GET_ROOT_FOLDER_ENTRIES_QUERY);
+  const { data: localState } = useQuery(GET_LOCAL_STATE);
+
+  console.log("==> 4 path", localState.path);
+
+  const { loading, error, data, client } = useQuery(
+    getFolderEntries(localState.path)
+  );
   console.log("==> 1", data);
 
   if (loading) return <p>Loading ...</p>;
   if (error) return <p>Error ...</p>;
   return (
     <OuterFrame>
-      {data.getRootFolderEntries.map((entry: any) => (
-        <Card key={entry.id} {...entry}></Card>
+      {data.getFolderEntries.map((entry: any) => (
+        <Card
+          key={entry.id}
+          {...entry}
+          client={client}
+          base={localState.path}
+        ></Card>
       ))}
     </OuterFrame>
   );
