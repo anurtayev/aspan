@@ -54,8 +54,10 @@ export const resolvers = {
     metaData,
     thumbImageUrl({ id }: { id: string }) {
       return (
-        "http://localhost:8090/unsafe/300x200/" +
-        encodeURIComponent("http://picrepo" + id)
+        process.env.THUMBOR_URL +
+        `/unsafe/150x150/` +
+        // `/unsafe/${process.env.THUMBS_LENGTH}x${process.env.THUMBS_WIDTH}/` +
+        encodeURIComponent(process.env.IMAGES_REPOSITORY_URL + id)
       );
     },
     imageUrl({ id }: { id: string }) {

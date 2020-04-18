@@ -7,14 +7,26 @@ const MAX_CHARACTERS = 20;
 const Frame = styled.div`
   width: 10em;
   height: 10em;
-  border: 1px solid black;
   border-radius: 0.5em;
   margin: 1em 0 0 1em;
-  text-align: center;
+`;
+
+const ImageFrame = styled(Frame)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const FolderFrame = styled(Frame)`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
   background: lightblue;
+`;
+
+const SlimParagraph = styled.div`
+  margin: 0;
 `;
 
 export default ({
@@ -48,19 +60,19 @@ export default ({
       }}
     >
       <FolderIcon></FolderIcon>
-      <p>
+      <SlimParagraph>
         {name.length > MAX_CHARACTERS
           ? name.slice(0, MAX_CHARACTERS) + "\u2026"
           : name}
-      </p>
+      </SlimParagraph>
     </FolderFrame>
   ) : (
-    <Frame
+    <ImageFrame
       onClick={() => {
         // eslint-disable-next-line
         location.href = imageUrl;
       }}
     >
       <img src={thumbImageUrl} alt="thumb"></img>
-    </Frame>
+    </ImageFrame>
   );

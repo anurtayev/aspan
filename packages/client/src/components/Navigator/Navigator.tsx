@@ -1,10 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 import { useQuery } from "@apollo/react-hooks";
-import Card from "../Card";
+import Card from "./Card";
+import NavBar from "./NavBar";
 import { GET_LOCAL_STATE, getFolderEntries } from "./queries";
 
-const OuterFrame = styled.div`
+const Container = styled.div``;
+
+const Cards = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin: 0 1em 0 0;
@@ -21,15 +24,18 @@ export default () => {
   if (error) return <p>Error ...</p>;
 
   return (
-    <OuterFrame>
-      {data.getFolderEntries.map((entry: any) => (
-        <Card
-          key={entry.id}
-          {...entry}
-          client={client}
-          base={localState.path}
-        ></Card>
-      ))}
-    </OuterFrame>
+    <Container>
+      <NavBar client={client} base={localState.path}></NavBar>
+      <Cards>
+        {data.getFolderEntries.map((entry: any) => (
+          <Card
+            key={entry.id}
+            {...entry}
+            client={client}
+            base={localState.path}
+          ></Card>
+        ))}
+      </Cards>
+    </Container>
   );
 };
