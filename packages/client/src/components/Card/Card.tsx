@@ -1,12 +1,16 @@
 import React from "react";
 import styled from "styled-components";
+import { ReactComponent as FolderIcon } from "./Folder.svg";
+
+const MAX_CHARACTERS = 20;
 
 const Frame = styled.div`
-  width: 20em;
+  width: 10em;
   height: 10em;
   border: 1px solid black;
   border-radius: 0.5em;
   margin: 1em 0 0 1em;
+  text-align: center;
 `;
 
 const FolderFrame = styled(Frame)`
@@ -20,6 +24,7 @@ export default ({
   client,
   thumbImageUrl,
   imageUrl,
+  name,
 }: {
   id: string;
   __typename: string;
@@ -27,6 +32,7 @@ export default ({
   imageUrl: string;
   base: string;
   client: any;
+  name: string;
 }) =>
   __typename === "Folder" ? (
     <FolderFrame
@@ -41,7 +47,12 @@ export default ({
         });
       }}
     >
-      {id}
+      <FolderIcon></FolderIcon>
+      <p>
+        {name.length > MAX_CHARACTERS
+          ? name.slice(0, MAX_CHARACTERS) + "\u2026"
+          : name}
+      </p>
     </FolderFrame>
   ) : (
     <Frame

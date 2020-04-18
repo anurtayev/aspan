@@ -38,17 +38,21 @@ export default class FileSystemDataSource extends DataSource {
 
   public getEntry = async (id: string): Promise<FolderElement> => {
     const stats = await this.stats(id);
+    const contentType = extname(id);
+    const name = basename(id, contentType);
 
     return stats.isFile()
       ? {
           __typename: "File",
           id,
           size: stats.size,
-          contentType: extname(id).slice(1)
+          contentType,
+          name
         }
       : {
           __typename: "Folder",
-          id
+          id,
+          name
         };
   };
 

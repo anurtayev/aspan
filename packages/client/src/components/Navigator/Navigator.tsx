@@ -6,6 +6,7 @@ import { GET_LOCAL_STATE, getFolderEntries } from "./queries";
 
 const OuterFrame = styled.div`
   display: flex;
+  flex-wrap: wrap;
   margin: 0 1em 0 0;
 `;
 

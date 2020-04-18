@@ -3,7 +3,7 @@ import { FolderElement } from "../schema";
 
 const ROOT_FOLDER_ID = "/";
 
-const metaDataResolver = (
+const metaData = (
   { id }: { id: string },
   _: any,
   { dataSources }: { dataSources: { fs: FileSystemDataSource } }
@@ -40,7 +40,7 @@ export const resolvers = {
   },
 
   Folder: {
-    metaData: metaDataResolver,
+    metaData,
     children(
       { id }: { id: string },
       _: any,
@@ -51,7 +51,7 @@ export const resolvers = {
   },
 
   File: {
-    metaData: metaDataResolver,
+    metaData,
     thumbImageUrl({ id }: { id: string }) {
       return (
         "http://localhost:8090/unsafe/300x200/" +
