@@ -4,8 +4,8 @@ import { FolderElement } from "../schema";
 const ROOT_FOLDER_ID = "/";
 
 const metaDataResolver = (
-  _: any,
   { id }: { id: string },
+  _: any,
   { dataSources }: { dataSources: { fs: FileSystemDataSource } }
 ) => {
   return dataSources.fs.getMetaData(id);
@@ -52,12 +52,14 @@ export const resolvers = {
 
   File: {
     metaData: metaDataResolver,
-    thumbImage(
-      { id }: { id: string },
-      _: any,
-      { dataSources }: { dataSources: { fs: FileSystemDataSource } }
-    ) {
-      return dataSources.fs.getBase64ThumbString(id);
+    thumbImageUrl({ id }: { id: string }) {
+      return (
+        "http://localhost:8090/unsafe/300x200/" +
+        encodeURIComponent("http://picrepo" + id)
+      );
+    },
+    imageUrl({ id }: { id: string }) {
+      return `http://localhost:8080${id}`;
     }
   },
 

@@ -44,7 +44,7 @@ export default class FileSystemDataSource extends DataSource {
           __typename: "File",
           id,
           size: stats.size,
-          contentType: "jpg"
+          contentType: extname(id).slice(1)
         }
       : {
           __typename: "Folder",
@@ -68,12 +68,13 @@ export default class FileSystemDataSource extends DataSource {
             (entryId: string): Promise<FolderElement> => this.getEntry(entryId)
           )
       )
-    ).filter(
-      (entry: FolderElement) =>
+    ).filter((entry: FolderElement) => {
+      return (
         entry.__typename === "Folder" ||
         (entry.__typename === "File" &&
           this.options.exts.includes(entry.contentType))
-    );
+      );
+    });
   };
 
   public findEntries = async (
@@ -169,8 +170,6 @@ export default class FileSystemDataSource extends DataSource {
   };
 
   public fsPath = (id: string): string => {
-    console.log("==> 1", id);
-
     const path = normalize(join(this.options.path, id));
     return path.endsWith("/") ? path.slice(0, -1) : path;
   };

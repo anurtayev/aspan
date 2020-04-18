@@ -1,0 +1,30 @@
+{
+  "__schema": {
+    "types": [
+      {
+        "kind": "UNION",
+        "name": "FolderElement",
+        "possibleTypes": [
+          {
+            "name": "File"
+          },
+          {
+            "name": "Folder"
+          }
+        ]
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "Entry",
+        "possibleTypes": [
+          {
+            "name": "File"
+          },
+          {
+            "name": "Folder"
+          }
+        ]
+      }
+    ]
+  }
+}

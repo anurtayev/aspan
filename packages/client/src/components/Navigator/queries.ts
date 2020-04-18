@@ -8,6 +8,10 @@ export function getFolderEntries(id: string) {
         __typename
         id
       }
+      ... on File {
+        thumbImageUrl
+        imageUrl
+      }
     }
   }
 `;

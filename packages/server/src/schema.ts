@@ -26,7 +26,8 @@ const schema = gql`
     metaData: MetaData
 
     size: Int!
-    thumbImage: String
+    thumbImageUrl: String!
+    imageUrl: String!
     contentType: String!
   }
 

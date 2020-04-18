@@ -12,15 +12,13 @@ const OuterFrame = styled.div`
 export default () => {
   const { data: localState } = useQuery(GET_LOCAL_STATE);
 
-  console.log("==> 4 path", localState.path);
-
   const { loading, error, data, client } = useQuery(
     getFolderEntries(localState.path)
   );
-  console.log("==> 1", data);
 
   if (loading) return <p>Loading ...</p>;
   if (error) return <p>Error ...</p>;
+
   return (
     <OuterFrame>
       {data.getFolderEntries.map((entry: any) => (

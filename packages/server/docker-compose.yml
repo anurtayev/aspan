@@ -1,0 +1,12 @@
+version: "3"
+services:
+  picrepo:
+    image: "nginx"
+    ports:
+      - "8080:80"
+    volumes:
+      - ${REPOSITORY_PATH}:/usr/share/nginx/html:ro
+  picthumb:
+    image: "minimalcompact/thumbor"
+    ports:
+      - "8090:80"

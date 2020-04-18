@@ -18,9 +18,13 @@ export default ({
   __typename,
   base,
   client,
+  thumbImageUrl,
+  imageUrl,
 }: {
   id: string;
   __typename: string;
+  thumbImageUrl: string;
+  imageUrl: string;
   base: string;
   client: any;
 }) =>
@@ -29,7 +33,6 @@ export default ({
       onClick={() => {
         const newPath =
           base === "/" ? id : `${base}/${id.split("/").slice(-1)[0]}`;
-        console.log("==> 3 newPath", newPath);
 
         client.writeData({
           data: {
@@ -41,5 +44,12 @@ export default ({
       {id}
     </FolderFrame>
   ) : (
-    <Frame>{id}</Frame>
+    <Frame
+      onClick={() => {
+        // eslint-disable-next-line
+        location.href = imageUrl;
+      }}
+    >
+      <img src={thumbImageUrl} alt="thumb"></img>
+    </Frame>
   );

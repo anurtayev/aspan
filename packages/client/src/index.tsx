@@ -4,11 +4,19 @@ import Navigator from "./components/Navigator";
 import * as serviceWorker from "./serviceWorker";
 import { ApolloClient } from "apollo-client";
 import { ApolloProvider } from "@apollo/react-hooks";
-import { InMemoryCache } from "apollo-cache-inmemory";
+import {
+  InMemoryCache,
+  IntrospectionFragmentMatcher,
+} from "apollo-cache-inmemory";
 import { HttpLink } from "apollo-link-http";
 import "./index.css";
+import introspectionQueryResultData from "./fragmentTypes.json";
 
-const cache = new InMemoryCache();
+const fragmentMatcher = new IntrospectionFragmentMatcher({
+  introspectionQueryResultData,
+});
+
+const cache = new InMemoryCache({ fragmentMatcher });
 const client = new ApolloClient({
   cache,
   link: new HttpLink({

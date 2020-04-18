@@ -28,9 +28,9 @@
   "main": "index.js",
   "name": "server",
   "scripts": {
-    "start": "run-p backpack thumbor",
+    "start": "REPOSITORY_PATH=/Users/adilnurtayev/picrepo run-p backpack picrepo",
     "backpack": "backpack",
-    "thumbor": "docker run -p 8888:80 minimalcompact/thumbor",
+    "picrepo": "docker-compose up",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "version": "1.0.0"
