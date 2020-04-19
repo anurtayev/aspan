@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Navigator from "./components/Navigator";
+import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { ApolloClient } from "apollo-client";
 import { ApolloProvider } from "@apollo/react-hooks";
@@ -25,16 +25,17 @@ const client = new ApolloClient({
   resolvers: {},
 });
 
+const STARTING_FOLDER = "/";
 cache.writeData({
   data: {
-    path: "/",
+    path: STARTING_FOLDER,
   },
 });
 
 ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <Navigator />
+      <App />
     </ApolloProvider>
   </React.StrictMode>,
   document.getElementById("root")

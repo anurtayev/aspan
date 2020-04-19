@@ -17,9 +17,3 @@ export function getFolderEntries(id: string) {
   }
 `;
 }
-
-export const GET_LOCAL_STATE = gql`
-  query GetLocalState {
-    path @client
-  }
-`;

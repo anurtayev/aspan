@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { ReactComponent as FolderIcon } from "./Folder.svg";
+import { APP_STATE } from "../../../globalQueries";
+import { useQuery, useApolloClient } from "@apollo/react-hooks";
 
 const MAX_CHARACTERS = 20;
 
@@ -32,8 +34,6 @@ const SlimParagraph = styled.div`
 export default ({
   id,
   __typename,
-  base,
-  client,
   thumbImageUrl,
   imageUrl,
   name,
@@ -42,15 +42,18 @@ export default ({
   __typename: string;
   thumbImageUrl: string;
   imageUrl: string;
-  base: string;
-  client: any;
   name: string;
-}) =>
-  __typename === "Folder" ? (
+}) => {
+  const { data: localState } = useQuery(APP_STATE);
+  const client = useApolloClient();
+
+  return __typename === "Folder" ? (
     <FolderFrame
       onClick={() => {
         const newPath =
-          base === "/" ? id : `${base}/${id.split("/").slice(-1)[0]}`;
+          localState.path === "/"
+            ? id
+            : `${localState.path}/${id.split("/").slice(-1)[0]}`;
 
         client.writeData({
           data: {
@@ -73,6 +76,7 @@ export default ({
         location.href = imageUrl;
       }}
     >
-      <img src={thumbImageUrl} alt="thumb"></img>
+      <img src={thumbImageUrl} alt={id}></img>
     </ImageFrame>
   );
+};
