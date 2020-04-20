@@ -1,3 +1,2 @@
-import React from "react";
-
-export default () => <div></div>;
+import Image from "./Image";
+export default Image;

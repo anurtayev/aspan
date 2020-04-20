@@ -35,13 +35,11 @@ export default ({
   id,
   __typename,
   thumbImageUrl,
-  imageUrl,
   name,
 }: {
   id: string;
   __typename: string;
   thumbImageUrl: string;
-  imageUrl: string;
   name: string;
 }) => {
   const { data: localState } = useQuery(APP_STATE);
@@ -72,8 +70,11 @@ export default ({
   ) : (
     <ImageFrame
       onClick={() => {
-        // eslint-disable-next-line
-        location.href = imageUrl;
+        client.writeData({
+          data: {
+            path: id,
+          },
+        });
       }}
     >
       <img src={thumbImageUrl} alt={id}></img>

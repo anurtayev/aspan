@@ -37,8 +37,9 @@ const schema = gql`
   union FolderElement = File | Folder
 
   type Query {
-    getRootFolderEntries: [FolderElement!]
     getFolderEntries(id: String!): [FolderElement!]
+    getFolderEntries2(id: String!): FolderElement
+    getEntry(id: String!): FolderElement
   }
 
   type Mutation {
@@ -55,11 +56,6 @@ const schema = gql`
 `;
 
 export default schema;
-
-export type RequireFields<T, K extends keyof T> = {
-  [X in Exclude<keyof T, K>]?: T[X];
-} &
-  { [P in K]-?: NonNullable<T[P]> };
 
 export type Entry = {
   id: string;
@@ -101,32 +97,8 @@ export type Mutation = {
   removeAttribute?: Maybe<MetaData>;
 };
 
-export type MutationAddTagArgs = {
-  id: string;
-  tag: string;
-};
-
-export type MutationRemoveTagArgs = {
-  id: string;
-  tag: string;
-};
-
-export type MutationAddAttributeArgs = {
-  id: string;
-  attribute: Array<string>;
-};
-
-export type MutationRemoveAttributeArgs = {
-  id: string;
-  attributeKey: string;
-};
-
 export type Query = {
   __typename?: "Query";
-  getRootFolderEntries?: Maybe<Array<FolderElement>>;
   getFolderEntries?: Maybe<Array<FolderElement>>;
-};
-
-export type QueryGetFolderEntriesArgs = {
-  id: string;
+  getEntry?: Maybe<FolderElement>;
 };

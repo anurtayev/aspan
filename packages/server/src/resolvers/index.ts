@@ -1,8 +1,6 @@
 import FileSystemDataSource from "../datasources/FileSystemDataSource";
 import { FolderElement } from "../schema";
 
-const ROOT_FOLDER_ID = "/";
-
 const metaData = (
   { id }: { id: string },
   _: any,
@@ -23,19 +21,19 @@ const folderElementTypeResolver = (obj: FolderElement, _: any, __: any) => {
 
 export const resolvers = {
   Query: {
-    getRootFolderEntries(
-      _: any,
-      __: any,
-      { dataSources }: { dataSources: { fs: FileSystemDataSource } }
-    ) {
-      return dataSources.fs.getFolderEntries(ROOT_FOLDER_ID);
-    },
     getFolderEntries(
       _: any,
       { id }: { id: string },
       { dataSources }: { dataSources: { fs: FileSystemDataSource } }
     ) {
       return dataSources.fs.getFolderEntries(id);
+    },
+    getEntry(
+      _: any,
+      { id }: { id: string },
+      { dataSources }: { dataSources: { fs: FileSystemDataSource } }
+    ) {
+      return dataSources.fs.getEntry(id);
     }
   },
 
@@ -55,8 +53,7 @@ export const resolvers = {
     thumbImageUrl({ id }: { id: string }) {
       return (
         process.env.THUMBOR_URL +
-        `/unsafe/150x150/` +
-        // `/unsafe/${process.env.THUMBS_LENGTH}x${process.env.THUMBS_WIDTH}/` +
+        `/unsafe/${process.env.THUMBS_LENGTH}x${process.env.THUMBS_WIDTH}/` +
         encodeURIComponent(process.env.IMAGES_REPOSITORY_URL + id)
       );
     },

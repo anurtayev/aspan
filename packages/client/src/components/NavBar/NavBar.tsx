@@ -19,7 +19,7 @@ const PathLabel = styled.p`
 `;
 
 export default () => {
-  const { data } = useQuery(APP_STATE);
+  const { data: localState } = useQuery(APP_STATE);
   const client = useApolloClient();
 
   return (
@@ -36,7 +36,7 @@ export default () => {
         }}
       ></HomeIcon>
       <BackIcon></BackIcon>
-      <PathLabel>{data.path}</PathLabel>
+      <PathLabel>{localState.path}</PathLabel>
     </Bar>
   );
 };
