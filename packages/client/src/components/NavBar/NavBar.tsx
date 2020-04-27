@@ -2,13 +2,14 @@ import React from "react";
 import styled from "styled-components";
 import { ReactComponent as HomeIcon } from "./Home.svg";
 import { ReactComponent as BackIcon } from "./Back.svg";
+import { ReactComponent as ConfigurationIcon } from "./Configuration.svg";
 import { useQuery, useApolloClient } from "@apollo/react-hooks";
-import { APP_STATE } from "../../globalQueries";
+import { routes, useLocalState } from "globalUtil";
 
 const Bar = styled.div`
   display: flex;
   background: lightblue;
-  margin: 0 1em 0 1em;
+  margin: 1em 1em 0 1em;
   border-radius: 0.5em;
   padding: 0 1em 0 1em;
 `;
@@ -19,7 +20,7 @@ const PathLabel = styled.p`
 `;
 
 export default () => {
-  const { data: localState } = useQuery(APP_STATE);
+  const { data: localState } = useLocalState();
   const client = useApolloClient();
 
   return (
@@ -30,13 +31,27 @@ export default () => {
 
           client.writeData({
             data: {
-              path: newPath,
+              displayComponent: routes.Folder,
+
+              id: newPath,
             },
           });
         }}
       ></HomeIcon>
       <BackIcon></BackIcon>
-      <PathLabel>{localState.path}</PathLabel>
+      <ConfigurationIcon
+        onClick={() => {
+          const newPath = "meta:" + localState.id;
+
+          client.writeData({
+            data: {
+              displayComponent: routes.Meta,
+              id: newPath,
+            },
+          });
+        }}
+      />
+      <PathLabel>{localState.id}</PathLabel>
     </Bar>
   );
 };

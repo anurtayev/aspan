@@ -1,3 +1,3 @@
 import React from "react";
 
-export default () => <p>Error...</p>;
+export default ({ message }: any) => <p>Error... {message}</p>;

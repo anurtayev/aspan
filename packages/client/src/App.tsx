@@ -1,18 +1,21 @@
 import React from "react";
-import { useQuery } from "@apollo/react-hooks";
-import { APP_STATE } from "./globalQueries";
-import NavBar from "./components/NavBar";
-import Cards from "./components/Cards";
-import Image from "./components/Image";
+import styled from "styled-components";
+import { useLocalState } from "globalUtil";
+import NavBar from "components/NavBar";
+import Folder from "components/Folder";
+import Image from "components/Image";
+import Meta from "components/Meta";
+import Router from "./Router";
 
-export default () => {
-  const { data } = useQuery(APP_STATE);
-  const isImage = data.path.includes(".jpg");
+const AppFrame = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+`;
 
-  return (
-    <div>
-      <NavBar></NavBar>
-      {isImage ? <Image></Image> : <Cards></Cards>}
-    </div>
-  );
-};
+export default () => (
+  <AppFrame>
+    <NavBar />
+    <Router />
+  </AppFrame>
+);
