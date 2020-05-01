@@ -13,12 +13,14 @@ const schema = gql`
     id: ID!
     metaData: MetaData
     name: String!
+    parent: String
   }
 
   type Folder implements Entry {
     id: ID!
     metaData: MetaData
     name: String!
+    parent: String
 
     children: [Entry!]
   }
@@ -27,6 +29,7 @@ const schema = gql`
     id: ID!
     metaData: MetaData
     name: String!
+    parent: String
 
     size: Int!
     thumbImageUrl: String!
@@ -61,22 +64,22 @@ export type Entry = {
   id: string;
   metaData?: Maybe<MetaData>;
   name: string;
+  parent: string;
 };
 
 export type FolderElement = File | Folder;
 
 export type File = Entry & {
   __typename: "File";
-  id: string;
   metaData?: Maybe<MetaData>;
   size: number;
-  thumbImage?: Maybe<string>;
+  thumbImageUrl: string;
+  imageUrl: string;
   contentType: string;
 };
 
 export type Folder = Entry & {
   __typename: "Folder";
-  id: string;
   metaData?: Maybe<MetaData>;
   children?: Maybe<Array<FolderElement>>;
 };

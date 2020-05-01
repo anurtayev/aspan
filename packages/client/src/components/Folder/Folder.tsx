@@ -6,7 +6,6 @@ import Error from "components/Error";
 import Loading from "components/Loading";
 import { getFolderEntries } from "./queries";
 import {
-  useLocalState,
   useNavigateToFolder,
   useNavigateToImage,
   FolderElement,
@@ -57,37 +56,38 @@ export default ({ id }: { id: string }) => {
   const navigateToFolder = useNavigateToFolder();
   const navigateToImage = useNavigateToImage();
 
-  const { entries }: { entries: FolderElement[] } = data;
-
   if (loading) return <Loading />;
   if (error) return <Error />;
 
+  const {
+    getFolderEntries: entries,
+  }: { getFolderEntries: FolderElement[] } = data;
+
   return (
     <Container>
-      {data.getFolderEntries.map(
-        ({ __typename, id, name, thumbImageUrl }: any) =>
-          __typename === "Folder" ? (
-            <FolderFrame
-              onClick={() => {
-                navigateToFolder(id);
-              }}
-            >
-              <FolderIcon></FolderIcon>
-              <SlimParagraph>
-                {name.length > MAX_CHARACTERS
-                  ? name.slice(0, MAX_CHARACTERS) + "\u2026"
-                  : name}
-              </SlimParagraph>
-            </FolderFrame>
-          ) : (
-            <ImageFrame
-              onClick={() => {
-                navigateToImage(id, entries);
-              }}
-            >
-              <Image src={thumbImageUrl} alt={id}></Image>
-            </ImageFrame>
-          )
+      {entries.map((entry: FolderElement) =>
+        entry.__typename === "Folder" ? (
+          <FolderFrame
+            onClick={() => {
+              navigateToFolder({ id: entry.id, parent: entry.parent });
+            }}
+          >
+            <FolderIcon></FolderIcon>
+            <SlimParagraph>
+              {entry.name.length > MAX_CHARACTERS
+                ? entry.name.slice(0, MAX_CHARACTERS) + "\u2026"
+                : entry.name}
+            </SlimParagraph>
+          </FolderFrame>
+        ) : (
+          <ImageFrame
+            onClick={() => {
+              navigateToImage({ id: entry.id, parentFolderEntries: entries });
+            }}
+          >
+            <Image src={entry.thumbImageUrl} alt={id}></Image>
+          </ImageFrame>
+        )
       )}
     </Container>
   );

@@ -40,6 +40,9 @@ export default class FileSystemDataSource extends DataSource {
     const stats = await this.stats(id);
     const contentType = extname(id);
     const name = basename(id, contentType);
+    const parent = dirname(id);
+    const dockerImageUrl = process.env.IMAGES_REPOSITORY_URL + id;
+    const imageUrl = "http://localhost:8080" + id;
 
     return stats.isFile()
       ? {
@@ -47,12 +50,19 @@ export default class FileSystemDataSource extends DataSource {
           id,
           size: stats.size,
           contentType,
-          name
+          name,
+          parent,
+          thumbImageUrl:
+            process.env.THUMBOR_URL +
+            `/unsafe/${process.env.THUMBS_LENGTH}x${process.env.THUMBS_WIDTH}/` +
+            encodeURIComponent(dockerImageUrl),
+          imageUrl
         }
       : {
           __typename: "Folder",
           id,
-          name
+          name,
+          parent
         };
   };
 

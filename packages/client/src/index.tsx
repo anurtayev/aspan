@@ -11,7 +11,7 @@ import {
 import { HttpLink } from "apollo-link-http";
 import "./index.css";
 import introspectionQueryResultData from "./fragmentTypes.json";
-import { routes } from "./globalUtil";
+import { ROUTE_REGISTRY, FOLDER_COMMANDS } from "./globalUtil";
 
 const fragmentMatcher = new IntrospectionFragmentMatcher({
   introspectionQueryResultData,
@@ -29,8 +29,9 @@ const client = new ApolloClient({
 const STARTING_FOLDER = "/";
 cache.writeData({
   data: {
-    displayComponent: routes.Folder,
+    displayComponent: ROUTE_REGISTRY.Folder,
     id: STARTING_FOLDER,
+    commands: FOLDER_COMMANDS,
   },
 });
 

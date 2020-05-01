@@ -3,8 +3,8 @@ import { getEntry } from "./queries";
 import Error from "components/Error";
 import Loading from "components/Loading";
 import styled from "styled-components";
-import { useQuery, useApolloClient } from "@apollo/react-hooks";
-import { routes, useLocalState } from "globalUtil";
+import { useQuery } from "@apollo/react-hooks";
+import { useNavigateToFolder } from "globalUtil";
 
 const FlexImage = styled.img`
   margin: 1em 1em 0 1em;
@@ -12,22 +12,18 @@ const FlexImage = styled.img`
 
 export default ({ id }: { id: string }) => {
   const { loading, error, data } = useQuery(getEntry(id));
-  const client = useApolloClient();
+  const navigateToFolder = useNavigateToFolder();
 
   if (loading) return <Loading />;
   if (error) return <Error />;
 
+  const { imageUrl, parent } = data.getEntry;
   return (
     <FlexImage
       onClick={() => {
-        client.writeData({
-          data: {
-            displayComponent: routes.Folder,
-            id: id.split("/").slice(0, -1).join("/"),
-          },
-        });
+        navigateToFolder(parent);
       }}
-      src={data.getEntry.imageUrl}
+      src={imageUrl}
       alt={id}
     />
   );

@@ -7,6 +7,7 @@ export const getEntry = (id: string) => gql`
         __typename
         id
         name
+        parent
       }
       ... on File {
         thumbImageUrl

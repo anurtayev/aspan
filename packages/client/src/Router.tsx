@@ -4,17 +4,20 @@ import Folder from "components/Folder";
 import Image from "components/Image";
 import Meta from "components/Meta";
 import Error from "components/Error";
-import { routes } from "globalUtil";
+import { ROUTE_REGISTRY } from "globalUtil";
+import Loading from "components/Loading";
 
 export default () => {
-  const { id, displayComponent } = useLocalState();
+  const { loading, data } = useLocalState();
+  if (loading) return <Loading />;
+  const { id, displayComponent } = data;
 
   switch (displayComponent) {
-    case routes.Meta:
+    case ROUTE_REGISTRY.Meta:
       return <Meta id={id} />;
-    case routes.Image:
+    case ROUTE_REGISTRY.Image:
       return <Image id={id} />;
-    case routes.Folder:
+    case ROUTE_REGISTRY.Folder:
       return <Folder id={id} />;
     default:
       return <Error message="bad displayComponent" />;

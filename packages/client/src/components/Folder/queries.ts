@@ -8,6 +8,7 @@ export function getFolderEntries(id: string) {
         __typename
         id
         name
+        parent
       }
       ... on File {
         thumbImageUrl

@@ -4,7 +4,7 @@ import Error from "components/Error";
 import Loading from "components/Loading";
 import styled from "styled-components";
 import { useQuery, useApolloClient } from "@apollo/react-hooks";
-import { routes, useLocalState } from "globalUtil";
+import { ROUTE_REGISTRY } from "globalUtil";
 
 const FlexImage = styled.div`
   border: 1px solid black;
@@ -12,7 +12,7 @@ const FlexImage = styled.div`
 `;
 
 export default ({ id }: { id: string }) => {
-  const { loading, error, data } = useQuery(getMetaData(id));
+  const { loading, error } = useQuery(getMetaData(id));
   const client = useApolloClient();
 
   if (loading) return <Loading />;
@@ -23,7 +23,7 @@ export default ({ id }: { id: string }) => {
       onClick={() => {
         client.writeData({
           data: {
-            displayComponent: routes.Folder,
+            displayComponent: ROUTE_REGISTRY.Folder,
             id,
           },
         });

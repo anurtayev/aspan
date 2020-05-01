@@ -49,17 +49,7 @@ export const resolvers = {
   },
 
   File: {
-    metaData,
-    thumbImageUrl({ id }: { id: string }) {
-      return (
-        process.env.THUMBOR_URL +
-        `/unsafe/${process.env.THUMBS_LENGTH}x${process.env.THUMBS_WIDTH}/` +
-        encodeURIComponent(process.env.IMAGES_REPOSITORY_URL + id)
-      );
-    },
-    imageUrl({ id }: { id: string }) {
-      return `http://localhost:8080${id}`;
-    }
+    metaData
   },
 
   FolderElement: {

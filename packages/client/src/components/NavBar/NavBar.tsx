@@ -1,10 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { ReactComponent as HomeIcon } from "./Home.svg";
-import { ReactComponent as BackIcon } from "./Back.svg";
-import { ReactComponent as ConfigurationIcon } from "./Configuration.svg";
-import { useQuery, useApolloClient } from "@apollo/react-hooks";
-import { routes, useLocalState } from "globalUtil";
+import { useLocalState } from "globalUtil";
+// import Loading from "components/Loading";
 
 const Bar = styled.div`
   display: flex;
@@ -20,38 +17,23 @@ const PathLabel = styled.p`
 `;
 
 export default () => {
-  const { data: localState } = useLocalState();
-  const client = useApolloClient();
+  const { loading, data } = useLocalState();
+
+  if (loading)
+    return (
+      <Bar>
+        <PathLabel>{"Loading..."}</PathLabel>
+      </Bar>
+    );
+
+  const { id, commands } = data;
 
   return (
     <Bar>
-      <HomeIcon
-        onClick={() => {
-          const newPath = "/";
-
-          client.writeData({
-            data: {
-              displayComponent: routes.Folder,
-
-              id: newPath,
-            },
-          });
-        }}
-      ></HomeIcon>
-      <BackIcon></BackIcon>
-      <ConfigurationIcon
-        onClick={() => {
-          const newPath = "meta:" + localState.id;
-
-          client.writeData({
-            data: {
-              displayComponent: routes.Meta,
-              id: newPath,
-            },
-          });
-        }}
-      />
-      <PathLabel>{localState.id}</PathLabel>
+      <PathLabel>
+        {id}
+        {commands}
+      </PathLabel>
     </Bar>
   );
 };
