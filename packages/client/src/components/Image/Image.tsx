@@ -8,6 +8,7 @@ import { useNavigateToFolder } from "aspanUtils";
 
 const FlexImage = styled.img`
   margin: 1em 1em 0 1em;
+  object-fit: contain;
 `;
 
 export default ({ id }: { id: string }) => {
