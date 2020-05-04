@@ -9,7 +9,7 @@ import {
   useNavigateToFolder,
   useNavigateToImage,
   FolderElement,
-} from "globalUtil";
+} from "aspanUtils";
 
 const Container = styled.div`
   display: flex;
@@ -63,11 +63,14 @@ export default ({ id }: { id: string }) => {
     getFolderEntries: entries,
   }: { getFolderEntries: FolderElement[] } = data;
 
+  console.log("==> entries", entries);
+
   return (
     <Container>
       {entries.map((entry: FolderElement) =>
         entry.__typename === "Folder" ? (
           <FolderFrame
+            key={entry.id}
             onClick={() => {
               navigateToFolder({ id: entry.id, parent: entry.parent });
             }}
@@ -81,6 +84,7 @@ export default ({ id }: { id: string }) => {
           </FolderFrame>
         ) : (
           <ImageFrame
+            key={entry.id}
             onClick={() => {
               navigateToImage({ id: entry.id, parentFolderEntries: entries });
             }}

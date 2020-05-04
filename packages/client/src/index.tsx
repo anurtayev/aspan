@@ -11,7 +11,7 @@ import {
 import { HttpLink } from "apollo-link-http";
 import "./index.css";
 import introspectionQueryResultData from "./fragmentTypes.json";
-import { ROUTE_REGISTRY, FOLDER_COMMANDS } from "./globalUtil";
+import { ROUTE_REGISTRY, FOLDER_COMMANDS } from "aspanUtils";
 
 const fragmentMatcher = new IntrospectionFragmentMatcher({
   introspectionQueryResultData,

@@ -4,7 +4,7 @@ import Error from "components/Error";
 import Loading from "components/Loading";
 import styled from "styled-components";
 import { useQuery, useApolloClient } from "@apollo/react-hooks";
-import { ROUTE_REGISTRY } from "globalUtil";
+import { ROUTE_REGISTRY } from "aspanUtils";
 
 const FlexImage = styled.div`
   border: 1px solid black;

@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocalState, COMMAND_REGISTRY } from "globalUtil";
+import { useLocalState, COMMAND_REGISTRY } from "aspanUtils";
 import HomeCommand from "components/HomeCommand";
 import Error from "components/Error";
 import Loading from "components/Loading";

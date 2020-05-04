@@ -1,10 +1,9 @@
 import React from "react";
-import { useLocalState } from "globalUtil";
+import { useLocalState, ROUTE_REGISTRY } from "aspanUtils";
 import Folder from "components/Folder";
 import Image from "components/Image";
 import Meta from "components/Meta";
 import Error from "components/Error";
-import { ROUTE_REGISTRY } from "globalUtil";
 import Loading from "components/Loading";
 
 export default () => {

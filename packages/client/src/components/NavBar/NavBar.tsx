@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { useLocalState } from "globalUtil";
+import { useLocalState } from "aspanUtils";
 // import Loading from "components/Loading";
 
 const Bar = styled.div`

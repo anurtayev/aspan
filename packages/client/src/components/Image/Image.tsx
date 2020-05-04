@@ -4,7 +4,7 @@ import Error from "components/Error";
 import Loading from "components/Loading";
 import styled from "styled-components";
 import { useQuery } from "@apollo/react-hooks";
-import { useNavigateToFolder } from "globalUtil";
+import { useNavigateToFolder } from "aspanUtils";
 
 const FlexImage = styled.img`
   margin: 1em 1em 0 1em;

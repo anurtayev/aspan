@@ -1,6 +1,6 @@
 import React from "react";
 import { ReactComponent as Icon } from "./Icon.svg";
-import { useNavigateToFolder } from "globalUtil";
+import { useNavigateToFolder } from "aspanUtils";
 
 const ROOT_FOLDER = "/";
 
