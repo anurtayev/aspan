@@ -22,7 +22,7 @@ export default ({ id }: { id: string }) => {
   return (
     <FlexImage
       onClick={() => {
-        navigateToFolder(parent);
+        navigateToFolder({ id: parent });
       }}
       src={imageUrl}
       alt={id}

@@ -5,10 +5,12 @@ import { useLocalState } from "aspanUtils";
 
 const Bar = styled.div`
   display: flex;
+  height: 3em;
   background: lightblue;
   margin: 1em 1em 0 1em;
   border-radius: 0.5em;
   padding: 0 1em 0 1em;
+  align-items: center;
 `;
 
 const PathLabel = styled.p`

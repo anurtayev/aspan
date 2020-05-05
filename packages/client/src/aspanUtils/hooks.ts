@@ -1,6 +1,15 @@
 import { useQuery, useApolloClient } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { FolderElement } from "./types";
+import { File } from "./types";
+
+export type LocalStateParams = {
+  id: string;
+  parentFolderFiles?: File[];
+};
+
+export type LocalState = LocalStateParams & {
+  displayComponent: ROUTE_REGISTRY;
+};
 
 export enum ROUTE_REGISTRY {
   Folder,
@@ -33,13 +42,12 @@ export const FOLDER_COMMANDS = [
 export const useNavigateToFolder = () => {
   const client = useApolloClient();
 
-  return ({ id, parent }: { id: string; parent?: string }) =>
+  return ({ id }: LocalStateParams) =>
     client.writeData({
       data: {
         displayComponent: ROUTE_REGISTRY.Folder,
         id,
         commands: FOLDER_COMMANDS,
-        parent,
       },
     });
 };
@@ -47,18 +55,12 @@ export const useNavigateToFolder = () => {
 export const useNavigateToImage = () => {
   const client = useApolloClient();
 
-  return ({
-    id,
-    parentFolderImages,
-  }: {
-    id: string;
-    parentFolderImages: FolderElement[];
-  }) =>
+  return ({ id, parentFolderFiles }: LocalStateParams) =>
     client.writeData({
       data: {
         displayComponent: ROUTE_REGISTRY.Image,
         id,
-        parentFolderImages,
+        parentFolderFiles,
       },
     });
 };

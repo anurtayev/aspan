@@ -1,3 +1,2 @@
-import React from "react";
-
-export default () => <p>Loading...</p>;
+import Loading from "./Loading";
+export default Loading;
