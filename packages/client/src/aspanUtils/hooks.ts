@@ -49,16 +49,16 @@ export const useNavigateToImage = () => {
 
   return ({
     id,
-    parentFolderEntries,
+    parentFolderImages,
   }: {
     id: string;
-    parentFolderEntries: FolderElement[];
+    parentFolderImages: FolderElement[];
   }) =>
     client.writeData({
       data: {
         displayComponent: ROUTE_REGISTRY.Image,
         id,
-        parentFolderEntries,
+        parentFolderImages,
       },
     });
 };

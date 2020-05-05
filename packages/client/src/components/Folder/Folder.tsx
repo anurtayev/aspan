@@ -63,8 +63,6 @@ export default ({ id }: { id: string }) => {
     getFolderEntries: entries,
   }: { getFolderEntries: FolderElement[] } = data;
 
-  console.log("==> entries", entries);
-
   return (
     <Container>
       {entries.map((entry: FolderElement) =>
@@ -86,7 +84,12 @@ export default ({ id }: { id: string }) => {
           <ImageFrame
             key={entry.id}
             onClick={() => {
-              navigateToImage({ id: entry.id, parentFolderEntries: entries });
+              navigateToImage({
+                id: entry.id,
+                parentFolderImages: entries.filter(
+                  (entry) => entry.__typename === "File"
+                ),
+              });
             }}
           >
             <Image src={entry.thumbImageUrl} alt={id}></Image>
