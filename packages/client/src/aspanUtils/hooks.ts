@@ -1,10 +1,8 @@
 import { useQuery, useApolloClient } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { File } from "./types";
 
 export type LocalStateParams = {
   id: string;
-  parentFolderFiles?: File[];
 };
 
 export type LocalState = LocalStateParams & {
@@ -55,12 +53,11 @@ export const useNavigateToFolder = () => {
 export const useNavigateToImage = () => {
   const client = useApolloClient();
 
-  return ({ id, parentFolderFiles }: LocalStateParams) =>
+  return ({ id }: LocalStateParams) =>
     client.writeData({
       data: {
         displayComponent: ROUTE_REGISTRY.Image,
         id,
-        parentFolderFiles,
       },
     });
 };

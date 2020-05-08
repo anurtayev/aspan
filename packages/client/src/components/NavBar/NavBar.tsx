@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { useLocalState } from "aspanUtils";
-// import Loading from "components/Loading";
+import { useLocalState, COMMAND_REGISTRY } from "aspanUtils";
+import commandsResolver from "./commandsResolver";
 
 const Bar = styled.div`
   display: flex;
@@ -13,29 +13,27 @@ const Bar = styled.div`
   align-items: center;
 `;
 
-const PathLabel = styled.p`
+const PathLabel = styled.span`
   font-weight: bold;
   margin-left: 2em;
 `;
 
 export default () => {
   const { loading, data } = useLocalState();
-
-  if (loading)
-    return (
-      <Bar>
-        <PathLabel>{"Loading..."}</PathLabel>
-      </Bar>
-    );
-
   const { id, commands } = data;
 
   return (
     <Bar>
-      <PathLabel>
-        {id}
-        {commands}
-      </PathLabel>
+      {loading ? (
+        <PathLabel>{"Loading..."}</PathLabel>
+      ) : (
+        <>
+          {commands.map((command: COMMAND_REGISTRY) =>
+            commandsResolver(command)
+          )}
+          <PathLabel>{id}</PathLabel>
+        </>
+      )}
     </Bar>
   );
 };

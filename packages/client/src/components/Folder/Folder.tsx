@@ -9,7 +9,6 @@ import {
   useNavigateToFolder,
   useNavigateToImage,
   FolderElement,
-  File,
 } from "aspanUtils";
 
 const Container = styled.div`
@@ -64,10 +63,6 @@ export default ({ id }: { id: string }) => {
     getFolderEntries: entries,
   }: { getFolderEntries: FolderElement[] } = data;
 
-  const parentFolderFiles: File[] = entries.filter(
-    (entry) => entry.__typename === "File"
-  ) as File[];
-
   return (
     <Container>
       {entries.map((entry: FolderElement) =>
@@ -93,7 +88,6 @@ export default ({ id }: { id: string }) => {
             onClick={() => {
               navigateToImage({
                 id: entry.id,
-                parentFolderFiles,
               });
             }}
           >

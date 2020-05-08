@@ -1,21 +1,15 @@
 import React from "react";
-import { useLocalState, COMMAND_REGISTRY } from "aspanUtils";
+import { COMMAND_REGISTRY } from "aspanUtils";
 import HomeCommand from "components/HomeCommand";
-import Error from "components/Error";
-import Loading from "components/Loading";
+import BackCommand from "components/BackCommand";
 
-export default () => {
-  const { loading, data } = useLocalState();
-  if (loading) return <Loading />;
-  const { commands } = data;
-  return commands.map((command: COMMAND_REGISTRY) => {
-    switch (command) {
-      case COMMAND_REGISTRY.HomeCommand:
-        return <HomeCommand />;
-      case COMMAND_REGISTRY.BackCommand:
-        return <HomeCommand />;
-      default:
-        return <Error message="bad displayComponent" />;
-    }
-  });
+export default (command: COMMAND_REGISTRY) => {
+  switch (command) {
+    case COMMAND_REGISTRY.HomeCommand:
+      return <HomeCommand key={command} />;
+    case COMMAND_REGISTRY.BackCommand:
+      return <BackCommand key={command} />;
+    default:
+      return null;
+  }
 };
