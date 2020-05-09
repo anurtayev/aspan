@@ -1,6 +1,11 @@
 {
   "name": "root",
   "private": true,
+  "scripts": {
+    "start": "run-p start:server start:client",
+    "start:client": "./client.sh",
+    "start:server": "./server.sh"
+  },
   "devDependencies": {
     "lerna": "^3.20.2"
   },
