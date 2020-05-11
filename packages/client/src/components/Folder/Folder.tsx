@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { ReactComponent as FolderIcon } from "./Folder.svg";
 import { useQuery } from "@apollo/react-hooks";
-import Error from "components/Error/Error";
+import Error from "components/Error";
 import Loading from "components/Loading";
 import { getFolderEntries } from "./queries";
 import {

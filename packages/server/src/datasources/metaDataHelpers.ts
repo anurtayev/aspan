@@ -99,3 +99,25 @@ export const removeAttribute = (
     ]
   };
 };
+
+export const setTitle = (
+  metaData: Maybe<MetaData>,
+  title: string
+): MetaData => {
+  if (!metaData || typeof metaData !== "object") {
+    return { title };
+  }
+
+  return { ...metaData, title };
+};
+
+export const setDescription = (
+  metaData: Maybe<MetaData>,
+  description: string
+): MetaData => {
+  if (!metaData || typeof metaData !== "object") {
+    return { description };
+  }
+
+  return { ...metaData, description };
+};

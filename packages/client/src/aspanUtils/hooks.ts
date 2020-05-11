@@ -53,11 +53,8 @@ export const useNavigateToFolder = () => {
 };
 
 export const useNavigateToImage = () => {
-  console.log("==> 1");
-
   const client = useApolloClient();
 
-  console.log("==> 2");
   return ({ id }: LocalStateParams) =>
     client.writeData({
       data: {

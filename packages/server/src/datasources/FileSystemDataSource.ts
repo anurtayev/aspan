@@ -17,7 +17,9 @@ import {
   addTag,
   removeTag,
   addAttribute,
-  removeAttribute
+  removeAttribute,
+  setTitle,
+  setDescription
 } from "./metaDataHelpers";
 import sharp from "sharp";
 import { DataSource, DataSourceConfig } from "apollo-datasource";
@@ -161,6 +163,21 @@ export default class FileSystemDataSource extends DataSource {
     await this.setMetaData(
       id,
       removeAttribute(await this.getMetaData(id), attribute)
+    );
+
+  public setTitle = async (
+    id: string,
+    title: string
+  ): Promise<Maybe<MetaData>> =>
+    await this.setMetaData(id, setTitle(await this.getMetaData(id), title));
+
+  public setDescription = async (
+    id: string,
+    description: string
+  ): Promise<Maybe<MetaData>> =>
+    await this.setMetaData(
+      id,
+      setDescription(await this.getMetaData(id), description)
     );
 
   private stats = async (id: string): Promise<Stats> => lstat(this.fsPath(id));
