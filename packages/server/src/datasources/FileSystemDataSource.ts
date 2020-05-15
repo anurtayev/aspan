@@ -133,24 +133,31 @@ export default class FileSystemDataSource extends DataSource {
   public setMetaData = async (
     id: string,
     metaData: MetaData
-  ): Promise<MetaData> => {
-    if (metaData && (metaData.attributes || metaData.tags)) {
-      await ensureDir(this.fsPath(this.metaFolder(id)));
-      await writeJson(this.fsPath(this.metaFile(id)), metaData);
+  ): Promise<Maybe<MetaData>> => {
+    if (await pathExists(this.fsPath(id))) {
+      if (metaData && (metaData.attributes || metaData.tags)) {
+        await ensureDir(this.fsPath(this.metaFolder(id)));
+        await writeJson(this.fsPath(this.metaFile(id)), metaData);
+      }
+      return metaData;
+    } else {
+      return null;
     }
-    return metaData;
   };
 
   public addTag = async (id: string, tag: string): Promise<Maybe<MetaData>> =>
     await this.setMetaData(id, addTag(await this.getMetaData(id), tag));
 
-  public removeTag = async (id: string, tag: string): Promise<MetaData> =>
+  public removeTag = async (
+    id: string,
+    tag: string
+  ): Promise<Maybe<MetaData>> =>
     await this.setMetaData(id, removeTag(await this.getMetaData(id), tag));
 
   public addAttribute = async (
     id: string,
     attribute: [string]
-  ): Promise<MetaData> =>
+  ): Promise<Maybe<MetaData>> =>
     await this.setMetaData(
       id,
       addAttribute(await this.getMetaData(id), attribute)
@@ -159,7 +166,7 @@ export default class FileSystemDataSource extends DataSource {
   public removeAttribute = async (
     id: string,
     attribute: string
-  ): Promise<MetaData> =>
+  ): Promise<Maybe<MetaData>> =>
     await this.setMetaData(
       id,
       removeAttribute(await this.getMetaData(id), attribute)

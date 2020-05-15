@@ -2,6 +2,13 @@ import { gql } from "apollo-server";
 import Maybe from "graphql/tsutils/Maybe";
 
 const schema = gql`
+  input MetaDataInput {
+    tags: [String!]
+    attributes: [[String!]!]
+    title: String
+    description: String
+  }
+
   type MetaData {
     tags: [String!]
     attributes: [[String!]!]
@@ -57,6 +64,7 @@ const schema = gql`
     removeAttribute(id: String!, attributeKey: String!): MetaData
     setTitle(id: String!, title: String!): MetaData
     setDescription(id: String!, description: String!): MetaData
+    setMetaData(id: String!, metaData: MetaDataInput!): MetaData
   }
 `;
 
@@ -100,6 +108,7 @@ export type Mutation = {
   removeTag?: Maybe<MetaData>;
   addAttribute?: Maybe<MetaData>;
   removeAttribute?: Maybe<MetaData>;
+  setMetaData?: Maybe<MetaData>;
 };
 
 export type Query = {

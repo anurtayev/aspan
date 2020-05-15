@@ -1,5 +1,5 @@
 import FileSystemDataSource from "../datasources/FileSystemDataSource";
-import { FolderElement } from "../schema";
+import { FolderElement, MetaData } from "../schema";
 
 const metaData = (
   { id }: { id: string },
@@ -79,6 +79,13 @@ export const resolvers = {
       { dataSources }: { dataSources: { fs: FileSystemDataSource } }
     ) {
       return dataSources.fs.setDescription(id, description);
+    },
+    setMetaData(
+      _: any,
+      { id, metaData }: { id: string; metaData: MetaData },
+      { dataSources }: { dataSources: { fs: FileSystemDataSource } }
+    ) {
+      return dataSources.fs.setMetaData(id, metaData);
     }
   },
 

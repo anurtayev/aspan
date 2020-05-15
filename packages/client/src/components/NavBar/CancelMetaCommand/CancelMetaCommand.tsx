@@ -1,7 +1,6 @@
 import React from "react";
-import { ReactComponent as Icon } from "./Save.svg";
+import { ReactComponent as Icon } from "./Cancel.svg";
 import { useNavigateToImage, useLocalState } from "aspanUtils";
-import useSaveMeta from "./useSaveMeta";
 
 export default () => {
   const navigateToImage = useNavigateToImage();
@@ -13,7 +12,6 @@ export default () => {
   return (
     <Icon
       onClick={() => {
-        useSaveMeta({ id });
         navigateToImage({ id });
       }}
     />
