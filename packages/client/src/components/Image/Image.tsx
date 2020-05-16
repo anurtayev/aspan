@@ -1,5 +1,5 @@
 import React from "react";
-import { getEntry } from "./queries";
+import { ENTRY_DATA } from "./queries";
 import Error from "components/Error";
 import Loading from "components/Loading";
 import styled from "styled-components";
@@ -12,7 +12,7 @@ const FlexImage = styled.img`
 `;
 
 export default ({ id }: { id: string }) => {
-  const { loading, error, data } = useQuery(getEntry(id));
+  const { loading, error, data } = useQuery(ENTRY_DATA, { variables: { id } });
   const navigateToFolder = useNavigateToFolder();
 
   if (loading) return <Loading />;

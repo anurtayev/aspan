@@ -4,7 +4,7 @@ import { ReactComponent as FolderIcon } from "./Folder.svg";
 import { useQuery } from "@apollo/react-hooks";
 import Error from "components/Error";
 import Loading from "components/Loading";
-import { getFolderEntries } from "./queries";
+import { FOLDER_ENTRIES } from "./queries";
 import {
   useNavigateToFolder,
   useNavigateToImage,
@@ -52,7 +52,9 @@ const SlimParagraph = styled.div`
 `;
 
 export default ({ id }: { id: string }) => {
-  const { loading, error, data } = useQuery(getFolderEntries(id));
+  const { loading, error, data } = useQuery(FOLDER_ENTRIES, {
+    variables: { id },
+  });
   const navigateToFolder = useNavigateToFolder();
   const navigateToImage = useNavigateToImage();
 

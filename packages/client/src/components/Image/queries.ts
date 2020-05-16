@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
-export const getEntry = (id: string) => gql`
-  {
-    getEntry(id: "${id}") {
+export const ENTRY_DATA = gql`
+  query GetEntryData($id: String!) {
+    getEntry(id: $id) {
       ... on Entry {
         __typename
         id

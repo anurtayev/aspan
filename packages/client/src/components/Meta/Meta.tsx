@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery, useMutation } from "@apollo/react-hooks";
-import { getMetaData, mutateMetaData } from "./queries";
+import { META_DATA, UPDATE_META_DATA } from "./queries";
 import Error from "components/Error";
 import Loading from "components/Loading";
 import { Formik, Form, Field, FieldArray } from "formik";
@@ -24,8 +24,8 @@ const FormBody = styled(Form)`
 `;
 
 export default ({ id }: { id: string }) => {
-  const { loading, error, data } = useQuery(getMetaData, { variables: { id } });
-  const [saveMeta] = useMutation(mutateMetaData);
+  const { loading, error, data } = useQuery(META_DATA, { variables: { id } });
+  const [saveMeta] = useMutation(UPDATE_META_DATA);
 
   if (loading) return <Loading />;
   if (error) return <Error />;
@@ -35,8 +35,6 @@ export default ({ id }: { id: string }) => {
       <Formik
         initialValues={data.getEntry.metaData}
         onSubmit={(values) => {
-          console.log("==> onSubmit", id, values);
-
           saveMeta({
             variables: {
               id,

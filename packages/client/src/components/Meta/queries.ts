@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-export const getMetaData = gql`
+export const META_DATA = gql`
   query getMetaData($id: String!) {
     getEntry(id: $id) {
       ... on Entry {
@@ -18,7 +18,7 @@ export const getMetaData = gql`
   }
 `;
 
-export const mutateMetaData = gql`
+export const UPDATE_META_DATA = gql`
   mutation setMetaData($id: String!, $metaData: MetaDataInput!) {
     setMetaData(id: $id, metaData: $metaData) {
       title
