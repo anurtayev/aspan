@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
-export const getMetaData = (id: string) => gql`
-  query getMetaData {
-    getEntry(id: "${id}") {
+export const getMetaData = gql`
+  query getMetaData($id: String!) {
+    getEntry(id: $id) {
       ... on Entry {
         __typename
         id
@@ -14,6 +14,17 @@ export const getMetaData = (id: string) => gql`
           description
         }
       }
+    }
+  }
+`;
+
+export const mutateMetaData = gql`
+  mutation setMetaData($id: String!, $metaData: MetaDataInput!) {
+    setMetaData(id: $id, metaData: $metaData) {
+      title
+      description
+      tags
+      attributes
     }
   }
 `;

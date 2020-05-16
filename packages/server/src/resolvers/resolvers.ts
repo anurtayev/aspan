@@ -85,6 +85,8 @@ export const resolvers = {
       { id, metaData }: { id: string; metaData: MetaData },
       { dataSources }: { dataSources: { fs: FileSystemDataSource } }
     ) {
+      console.log("==> 4", id, metaData);
+
       return dataSources.fs.setMetaData(id, metaData);
     }
   },

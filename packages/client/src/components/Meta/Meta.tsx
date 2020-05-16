@@ -1,11 +1,10 @@
 import React from "react";
-import { useQuery } from "@apollo/react-hooks";
-import { getMetaData } from "./queries";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import { getMetaData, mutateMetaData } from "./queries";
 import Error from "components/Error";
 import Loading from "components/Loading";
 import { Formik, Form, Field, FieldArray } from "formik";
 import styled from "styled-components";
-import useSaveMeta from "./useSaveMeta";
 
 const FormFrame = styled.div`
   margin: 1em;
@@ -25,7 +24,8 @@ const FormBody = styled(Form)`
 `;
 
 export default ({ id }: { id: string }) => {
-  const { loading, error, data } = useQuery(getMetaData(id));
+  const { loading, error, data } = useQuery(getMetaData, { variables: { id } });
+  const [saveMeta] = useMutation(mutateMetaData);
 
   if (loading) return <Loading />;
   if (error) return <Error />;
@@ -34,8 +34,20 @@ export default ({ id }: { id: string }) => {
     <FormFrame>
       <Formik
         initialValues={data.getEntry.metaData}
-        onSubmit={({ values }) => {
-          useSaveMeta({ id, metaData: values });
+        onSubmit={(values) => {
+          console.log("==> onSubmit", id, values);
+
+          saveMeta({
+            variables: {
+              id,
+              metaData: {
+                title: values.title,
+                description: values.description,
+                tags: values.tags,
+                attributes: values.attributes,
+              },
+            },
+          });
         }}
       >
         {({ isSubmitting, values }) => {
@@ -114,6 +126,9 @@ export default ({ id }: { id: string }) => {
                     </div>
                   )}
                 </FieldArray>
+                <button type="submit" disabled={isSubmitting}>
+                  Save
+                </button>
               </FormBody>
             </>
           );

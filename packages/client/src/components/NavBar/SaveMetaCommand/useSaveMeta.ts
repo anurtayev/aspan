@@ -1,4 +1,4 @@
-import { useQuery, useApolloClient } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { MetaData } from "aspanUtils";
 

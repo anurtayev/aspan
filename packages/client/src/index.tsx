@@ -12,6 +12,17 @@ import { HttpLink } from "apollo-link-http";
 import "./index.css";
 import introspectionQueryResultData from "./fragmentTypes.json";
 import { ROUTE_REGISTRY, COMMAND_REGISTRY } from "aspanUtils";
+import { onError } from "apollo-link-error";
+import { ApolloLink } from "apollo-link";
+
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    console.log("graphQLErrors", graphQLErrors);
+  }
+  if (networkError) {
+    console.log("networkError", networkError);
+  }
+});
 
 const fragmentMatcher = new IntrospectionFragmentMatcher({
   introspectionQueryResultData,
@@ -20,13 +31,16 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
 const cache = new InMemoryCache({ fragmentMatcher });
 const client = new ApolloClient({
   cache,
-  link: new HttpLink({
-    uri: process.env.REACT_APP_GRAPHQL_SERVER_URL,
-  }),
+  link: ApolloLink.from([
+    errorLink,
+    new HttpLink({
+      uri: process.env.REACT_APP_GRAPHQL_SERVER_URL,
+    }),
+  ]),
   resolvers: {},
 });
 
-const STARTING_FOLDER = "/";
+const STARTING_FOLDER = "/"; // eslint-disable-line
 cache.writeData({
   data: {
     displayComponent: ROUTE_REGISTRY.Meta,
