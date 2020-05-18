@@ -11,7 +11,7 @@ import {
 import { HttpLink } from "apollo-link-http";
 import "./index.css";
 import introspectionQueryResultData from "./fragmentTypes.json";
-import { ROUTE_REGISTRY, COMMAND_REGISTRY } from "aspanUtils";
+import { ROUTE_REGISTRY, FOLDER_COMMANDS } from "aspanUtils";
 import { onError } from "apollo-link-error";
 import { ApolloLink } from "apollo-link";
 
@@ -40,15 +40,12 @@ const client = new ApolloClient({
   resolvers: {},
 });
 
-const STARTING_FOLDER = "/"; // eslint-disable-line
+const STARTING_FOLDER = "/";
 cache.writeData({
   data: {
-    displayComponent: ROUTE_REGISTRY.Meta,
-    id: "/general_relativity_topic_1024.jpg",
-    commands: [
-      COMMAND_REGISTRY.SaveMetaCommand,
-      COMMAND_REGISTRY.CancelMetaCommand,
-    ],
+    displayComponent: ROUTE_REGISTRY.Folder,
+    id: STARTING_FOLDER,
+    commands: FOLDER_COMMANDS,
   },
 });
 

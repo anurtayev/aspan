@@ -19,7 +19,6 @@ export enum COMMAND_REGISTRY {
   HomeCommand,
   BackCommand,
   MetaCommand,
-  SaveMetaCommand,
   CancelMetaCommand,
 }
 
@@ -73,10 +72,7 @@ export const useNavigateToMeta = () => {
       data: {
         displayComponent: ROUTE_REGISTRY.Meta,
         id,
-        commands: [
-          COMMAND_REGISTRY.SaveMetaCommand,
-          COMMAND_REGISTRY.CancelMetaCommand,
-        ],
+        commands: [COMMAND_REGISTRY.CancelMetaCommand],
       },
     });
 };

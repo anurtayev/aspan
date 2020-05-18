@@ -29,3 +29,10 @@ export type MetaData = {
   title?: string;
   description?: string;
 };
+
+export type MetaDataInput = Omit<MetaData, "__typename">;
+
+export type MetaDataForm = MetaDataInput & {
+  favorite?: boolean;
+  print?: boolean;
+};

@@ -3,7 +3,7 @@ import { useQuery, useMutation } from "@apollo/react-hooks";
 import { META_DATA, UPDATE_META_DATA } from "./queries";
 import Error from "components/Error";
 import Loading from "components/Loading";
-import { MetaData } from "aspanUtils";
+import { MetaData, MetaDataInput, MetaDataForm } from "aspanUtils";
 import { Formik, Form, Field, FieldArray } from "formik";
 import styled from "styled-components";
 
@@ -24,14 +24,9 @@ const FormBody = styled(Form)`
   grid-template-columns: 20% 80%;
 `;
 
-type PreparedMetaData = Omit<MetaData, "__typename"> & {
-  favorite?: boolean;
-  print?: boolean;
-};
-
-const unboxMetaData = (meta: MetaData): PreparedMetaData => {
-  const { __typename, tags, ...noTypeName } = meta;
-  const newMeta: PreparedMetaData = noTypeName;
+const unboxMetaData = (meta: MetaData): MetaDataForm => {
+  const { __typename, tags, ...noTypeName } = meta || {};
+  const newMeta: MetaDataForm = noTypeName;
   newMeta.favorite = tags && tags.includes("favorite");
   newMeta.print = tags && tags.includes("print");
   newMeta.tags =
@@ -39,19 +34,16 @@ const unboxMetaData = (meta: MetaData): PreparedMetaData => {
   return newMeta;
 };
 
-const boxMetaData = (meta: PreparedMetaData) => {
-  const newMeta: Omit<MetaData, "__typename"> = {
+const boxMetaData = (meta: MetaDataForm) => {
+  const newMeta: MetaDataInput = {
     title: meta.title,
     description: meta.description,
     attributes: meta.attributes,
   };
   let tags = meta.tags || [];
-  if (meta.tags && meta.favorite) tags = [...tags, "favorite"];
-  if (meta.tags && meta.print) tags = [...tags, "print"];
+  if (meta.favorite) tags = [...tags, "favorite"];
+  if (meta.print) tags = [...tags, "print"];
   if (tags.length > 0) newMeta.tags = tags;
-
-  console.log("==> boxMetaData", newMeta);
-
   return newMeta;
 };
 
@@ -66,15 +58,14 @@ export default ({ id }: { id: string }) => {
     <FormFrame>
       <Formik
         initialValues={unboxMetaData(data.getEntry.metaData)}
-        onSubmit={(values) => {
-          console.log("==> submit", values);
-
+        onSubmit={(values, { setSubmitting }) => {
           saveMeta({
             variables: {
               id,
               metaData: boxMetaData(values),
             },
           });
+          setSubmitting(false);
         }}
       >
         {({ isSubmitting, values }) => {
