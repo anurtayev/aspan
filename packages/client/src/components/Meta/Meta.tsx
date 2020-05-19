@@ -3,7 +3,12 @@ import { useQuery, useMutation } from "@apollo/react-hooks";
 import { META_DATA, UPDATE_META_DATA } from "./queries";
 import Error from "components/Error";
 import Loading from "components/Loading";
-import { MetaData, MetaDataInput, MetaDataForm } from "aspanUtils";
+import {
+  MetaData,
+  MetaDataInput,
+  MetaDataForm,
+  useNavigateToImage,
+} from "aspanUtils";
 import { Formik, Form, Field, FieldArray } from "formik";
 import styled from "styled-components";
 
@@ -48,8 +53,12 @@ const boxMetaData = (meta: MetaDataForm) => {
 };
 
 export default ({ id }: { id: string }) => {
-  const { loading, error, data } = useQuery(META_DATA, { variables: { id } });
+  const { loading, error, data } = useQuery(META_DATA, {
+    fetchPolicy: "no-cache",
+    variables: { id },
+  });
   const [saveMeta] = useMutation(UPDATE_META_DATA);
+  const navigateToImage = useNavigateToImage();
 
   if (loading) return <Loading />;
   if (error) return <Error />;
@@ -65,7 +74,7 @@ export default ({ id }: { id: string }) => {
               metaData: boxMetaData(values),
             },
           });
-          setSubmitting(false);
+          navigateToImage({ id });
         }}
       >
         {({ isSubmitting, values }) => {

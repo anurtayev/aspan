@@ -1,6 +1,6 @@
 import React from "react";
 import { ReactComponent as Icon } from "./Back.svg";
-import { useNavigateToFolder, useLocalState } from "aspanUtils";
+import { useNavigateToFolder, useLocalState, parent } from "aspanUtils";
 
 export default () => {
   const navigateToFolder = useNavigateToFolder();
@@ -12,14 +12,10 @@ export default () => {
 
   if (id === "/") return null;
 
-  const elements = id.split("/");
-  const parentFolder =
-    elements.length === 2 ? "/" : id.split("/").slice(0, -1).join("/");
-
   return (
     <Icon
       onClick={() => {
-        navigateToFolder({ id: parentFolder });
+        navigateToFolder({ id: parent(id) });
       }}
     />
   );

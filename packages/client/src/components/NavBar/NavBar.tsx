@@ -20,20 +20,17 @@ const PathLabel = styled.span`
 
 export default () => {
   const { loading, data } = useLocalState();
+
+  if (loading) return null;
+
   const { id, commands } = data;
 
   return (
     <Bar>
-      {loading ? (
-        <PathLabel>{"Loading..."}</PathLabel>
-      ) : (
-        <>
-          {commands.map((command: COMMAND_REGISTRY) =>
-            commandsResolver(command)
-          )}
-          <PathLabel>{id}</PathLabel>
-        </>
-      )}
+      <>
+        {commands.map((command: COMMAND_REGISTRY) => commandsResolver(command))}
+        <PathLabel>{id}</PathLabel>
+      </>
     </Bar>
   );
 };
