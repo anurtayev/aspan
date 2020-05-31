@@ -65,7 +65,7 @@ export default ({ id }: { id: string }) => {
     getFolderEntries: entries,
   }: { getFolderEntries: FolderElement[] } = data;
 
-  return (
+  return entries ? (
     <Container>
       {entries.map((entry: FolderElement) =>
         entry.__typename === "Folder" ? (
@@ -98,5 +98,5 @@ export default ({ id }: { id: string }) => {
         )
       )}
     </Container>
-  );
+  ) : null;
 };

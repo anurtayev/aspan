@@ -70,7 +70,7 @@ export class FileSystemDataSource extends DataSource {
   public getFolderEntries = (id: string): Array<FolderElement> | undefined => {
     const retVal: Array<FolderElement> = [];
     for (const [key, rawEntry] of this.cache) {
-      if (basename(key) === id) {
+      if (dirname(key) === id) {
         retVal.push(this.expandEntry({ id: key, rawEntry }));
       }
     }
