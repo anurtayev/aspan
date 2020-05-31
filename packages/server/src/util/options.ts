@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import assert from "assert";
 
-export type IContext = {
+export type IOptions = {
   path: string;
   metaFolder: string;
   thumbsPrefix: string;
@@ -30,7 +30,7 @@ const thumbsWidth =
   parseInt(process.env.THUMBS_WIDTH as string, 10) || DEFAULT_THUMBS_WIDTH;
 const exts = (process.env.EXTS as string).split(",") || DEFAULT_EXTS;
 
-export const Context: IContext = {
+export const options: IOptions = {
   metaFolder: metaFolderName,
   path,
   thumbsPrefix,

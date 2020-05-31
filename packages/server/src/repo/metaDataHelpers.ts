@@ -1,7 +1,12 @@
-import { MetaData } from "../schema";
-import Maybe from "graphql/tsutils/Maybe";
+import { MetaData } from "../util";
 
-export const addTag = (metaData: Maybe<MetaData>, tag: string): MetaData => {
+export const addTag = ({
+  metaData,
+  tag
+}: {
+  metaData?: MetaData;
+  tag: string;
+}): MetaData => {
   if (!metaData) {
     return { tags: [tag] };
   }
@@ -21,7 +26,13 @@ export const addTag = (metaData: Maybe<MetaData>, tag: string): MetaData => {
   return { ...metaData, tags: [...metaData.tags, tag] };
 };
 
-export const removeTag = (metaData: Maybe<MetaData>, tag: string): MetaData => {
+export const removeTag = ({
+  metaData,
+  tag
+}: {
+  metaData?: MetaData;
+  tag: string;
+}): MetaData => {
   if (!metaData) {
     throw new Error("removeTag: metaData must be an instance of MetaData");
   }
@@ -40,10 +51,13 @@ export const removeTag = (metaData: Maybe<MetaData>, tag: string): MetaData => {
   };
 };
 
-export const addAttribute = (
-  metaData: Maybe<MetaData>,
-  attribute: [string]
-): MetaData => {
+export const addAttribute = ({
+  metaData,
+  attribute
+}: {
+  metaData?: MetaData;
+  attribute: [string];
+}): MetaData => {
   if (!metaData) {
     return { attributes: [attribute] };
   }
@@ -72,10 +86,13 @@ export const addAttribute = (
   return { ...metaData, attributes: [...metaData.attributes, attribute] };
 };
 
-export const removeAttribute = (
-  metaData: Maybe<MetaData>,
-  attribute: string
-): MetaData => {
+export const removeAttribute = ({
+  metaData,
+  attribute
+}: {
+  metaData?: MetaData;
+  attribute: string;
+}): MetaData => {
   if (!metaData) {
     throw new Error(
       "removeAttribute: metaData must be an instance of MetaData"
@@ -100,10 +117,13 @@ export const removeAttribute = (
   };
 };
 
-export const setTitle = (
-  metaData: Maybe<MetaData>,
-  title: string
-): MetaData => {
+export const setTitle = ({
+  metaData,
+  title
+}: {
+  metaData?: MetaData;
+  title: string;
+}): MetaData => {
   if (!metaData || typeof metaData !== "object") {
     return { title };
   }
@@ -111,10 +131,13 @@ export const setTitle = (
   return { ...metaData, title };
 };
 
-export const setDescription = (
-  metaData: Maybe<MetaData>,
-  description: string
-): MetaData => {
+export const setDescription = ({
+  metaData,
+  description
+}: {
+  metaData?: MetaData;
+  description: string;
+}): MetaData => {
   if (!metaData || typeof metaData !== "object") {
     return { description };
   }

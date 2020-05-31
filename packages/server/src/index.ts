@@ -1,16 +1,18 @@
 import { ApolloServer } from "apollo-server";
 import schema from "./schema";
-import { Context } from "./util";
+import { options } from "./util";
 import { resolvers } from "./resolvers";
-import FileSystemDataSource from "./dataSources/FileSystemDataSource";
+import { repoCache, FileSystemDataSource } from "./repo";
+
+const cache = repoCache(options);
 
 const server = new ApolloServer({
   typeDefs: schema,
   resolvers,
-  context: Context,
+  context: { options },
   dataSources: () => {
     return {
-      fs: new FileSystemDataSource()
+      fs: new FileSystemDataSource(cache)
     };
   }
 });
