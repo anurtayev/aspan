@@ -4,7 +4,7 @@ import Error from "components/Error";
 import Loading from "components/Loading";
 import styled from "styled-components";
 import { useQuery } from "@apollo/react-hooks";
-import { useNavigateToFolder } from "aspanUtils";
+import { useNavigateToFolder, parent } from "aspanUtils";
 
 const FlexImage = styled.img`
   margin: 1em 1em 0 1em;
@@ -18,11 +18,11 @@ export default ({ id }: { id: string }) => {
   if (loading) return <Loading />;
   if (error) return <Error />;
 
-  const { imageUrl, parent } = data.getEntry;
+  const { imageUrl } = data.getEntry;
   return (
     <FlexImage
       onClick={() => {
-        navigateToFolder({ id: parent });
+        navigateToFolder({ id: parent(id) });
       }}
       src={imageUrl}
       alt={id}

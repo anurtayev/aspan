@@ -7,7 +7,6 @@ export const ENTRY_DATA = gql`
         __typename
         id
         name
-        parent
       }
       ... on File {
         thumbImageUrl

@@ -7,7 +7,6 @@ export const FOLDER_ENTRIES = gql`
         __typename
         id
         name
-        parent
       }
       ... on File {
         thumbImageUrl

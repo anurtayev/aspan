@@ -16,5 +16,3 @@ export const entryName = (id: string): string => basename(id, extname(id));
 
 export const entryContentType = (id: string): string =>
   extname(id).slice(1) as string;
-
-export const parentId = (id: string): string => dirname(id);

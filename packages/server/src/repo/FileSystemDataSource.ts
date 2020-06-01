@@ -41,7 +41,6 @@ export class FileSystemDataSource extends DataSource {
     const stats = rawEntry.stats;
     const contentType = extname(id);
     const name = basename(id, contentType);
-    const parent = dirname(id);
     const dockerImageUrl = process.env.DOCKER_NETWORK_PICREPO_URL + id;
     const imageUrl = "http://localhost:8080" + id;
 
@@ -52,7 +51,6 @@ export class FileSystemDataSource extends DataSource {
           size: stats.size,
           contentType,
           name,
-          parent,
           thumbImageUrl:
             process.env.THUMBOR_URL +
             `/unsafe/${process.env.THUMBS_LENGTH}x${process.env.THUMBS_WIDTH}/` +
@@ -62,8 +60,7 @@ export class FileSystemDataSource extends DataSource {
       : {
           __typename: "Folder",
           id,
-          name,
-          parent
+          name
         };
   };
 

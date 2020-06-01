@@ -34,10 +34,6 @@ export function useLocalState() {
   return useQuery(APP_STATE);
 }
 
-export const FOLDER_COMMANDS = [
-  COMMAND_REGISTRY.HomeCommand,
-  COMMAND_REGISTRY.BackCommand,
-];
 export const useNavigateToFolder = () => {
   const client = useApolloClient();
 
@@ -46,7 +42,7 @@ export const useNavigateToFolder = () => {
       data: {
         displayComponent: ROUTE_REGISTRY.Folder,
         id,
-        commands: FOLDER_COMMANDS,
+        commands: [COMMAND_REGISTRY.HomeCommand, COMMAND_REGISTRY.BackCommand],
       },
     });
 };

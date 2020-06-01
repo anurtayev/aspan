@@ -11,7 +11,7 @@ import {
 import { HttpLink } from "apollo-link-http";
 import "./index.css";
 import introspectionQueryResultData from "./fragmentTypes.json";
-import { ROUTE_REGISTRY, FOLDER_COMMANDS } from "aspanUtils";
+import { ROUTE_REGISTRY, COMMAND_REGISTRY } from "aspanUtils";
 import { onError } from "apollo-link-error";
 import { ApolloLink } from "apollo-link";
 
@@ -45,7 +45,7 @@ cache.writeData({
   data: {
     displayComponent: ROUTE_REGISTRY.Folder,
     id: STARTING_FOLDER,
-    commands: FOLDER_COMMANDS,
+    commands: [COMMAND_REGISTRY.HomeCommand, COMMAND_REGISTRY.BackCommand],
   },
 });
 

@@ -19,14 +19,12 @@ const schema = gql`
     id: ID!
     metaData: MetaData
     name: String!
-    parent: String
   }
 
   type Folder implements Entry {
     id: ID!
     metaData: MetaData
     name: String!
-    parent: String
 
     children: [Entry!]
   }
@@ -35,7 +33,6 @@ const schema = gql`
     id: ID!
     metaData: MetaData
     name: String!
-    parent: String
 
     size: Int!
     thumbImageUrl: String!

@@ -2,7 +2,6 @@ export type Entry = {
   id: string;
   metaData?: MetaData;
   name: string;
-  parent: string;
 };
 
 export type FolderElement = File | Folder;
