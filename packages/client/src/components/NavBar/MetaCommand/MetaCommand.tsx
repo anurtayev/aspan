@@ -12,7 +12,7 @@ export default () => {
   return (
     <Icon
       onClick={() => {
-        navigateToMeta({ id });
+        navigateToMeta(id);
       }}
     />
   );

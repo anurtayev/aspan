@@ -74,7 +74,7 @@ export default ({ id }: { id: string }) => {
               metaData: boxMetaData(values),
             },
           });
-          navigateToImage({ id });
+          navigateToImage(id);
         }}
       >
         {({ isSubmitting, values }) => {

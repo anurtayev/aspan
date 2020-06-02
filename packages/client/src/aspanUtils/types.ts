@@ -35,3 +35,28 @@ export type MetaDataForm = MetaDataInput & {
   favorite?: boolean;
   print?: boolean;
 };
+
+export type ID = string;
+
+export type HistoryEntry = {
+  displayComponent: ROUTE_REGISTRY;
+  id: ID;
+  commands: Array<COMMAND_REGISTRY>;
+};
+
+export type LocalStateParams = {
+  id: string;
+};
+
+export enum ROUTE_REGISTRY {
+  Folder,
+  Image,
+  Meta,
+}
+
+export enum COMMAND_REGISTRY {
+  HomeCommand,
+  BackCommand,
+  MetaCommand,
+  CancelMetaCommand,
+}

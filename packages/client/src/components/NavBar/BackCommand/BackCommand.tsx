@@ -15,7 +15,7 @@ export default () => {
   return (
     <Icon
       onClick={() => {
-        navigateToFolder({ id: parent(id) });
+        navigateToFolder(parent(id));
       }}
     />
   );

@@ -72,9 +72,7 @@ export default ({ id }: { id: string }) => {
           <FolderFrame
             key={entry.id}
             onClick={() => {
-              navigateToFolder({
-                id: entry.id,
-              });
+              navigateToFolder(entry.id);
             }}
           >
             <FolderIcon></FolderIcon>
@@ -88,9 +86,7 @@ export default ({ id }: { id: string }) => {
           <ImageFrame
             key={entry.id}
             onClick={() => {
-              navigateToImage({
-                id: entry.id,
-              });
+              navigateToImage(entry.id);
             }}
           >
             <Image src={entry.thumbImageUrl} alt={id}></Image>

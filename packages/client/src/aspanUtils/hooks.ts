@@ -1,26 +1,6 @@
 import { useQuery, useApolloClient } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-
-export type LocalStateParams = {
-  id: string;
-};
-
-export type LocalState = LocalStateParams & {
-  displayComponent: ROUTE_REGISTRY;
-};
-
-export enum ROUTE_REGISTRY {
-  Folder,
-  Image,
-  Meta,
-}
-
-export enum COMMAND_REGISTRY {
-  HomeCommand,
-  BackCommand,
-  MetaCommand,
-  CancelMetaCommand,
-}
+import { ROUTE_REGISTRY, COMMAND_REGISTRY, ID } from "./types";
 
 export function useLocalState() {
   const APP_STATE = gql`
@@ -37,7 +17,7 @@ export function useLocalState() {
 export const useNavigateToFolder = () => {
   const client = useApolloClient();
 
-  return ({ id }: LocalStateParams) =>
+  return (id: ID) =>
     client.writeData({
       data: {
         displayComponent: ROUTE_REGISTRY.Folder,
@@ -50,7 +30,7 @@ export const useNavigateToFolder = () => {
 export const useNavigateToImage = () => {
   const client = useApolloClient();
 
-  return ({ id }: LocalStateParams) =>
+  return (id: ID) =>
     client.writeData({
       data: {
         displayComponent: ROUTE_REGISTRY.Image,
@@ -63,7 +43,7 @@ export const useNavigateToImage = () => {
 export const useNavigateToMeta = () => {
   const client = useApolloClient();
 
-  return ({ id }: LocalStateParams) =>
+  return (id: ID) =>
     client.writeData({
       data: {
         displayComponent: ROUTE_REGISTRY.Meta,
