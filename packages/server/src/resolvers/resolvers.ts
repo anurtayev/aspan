@@ -26,7 +26,9 @@ export const resolvers = {
       { id }: { id: string },
       { dataSources }: IContext
     ) {
-      return dataSources.fs.getFolderEntries(id);
+      return id === ":favorite"
+        ? dataSources.fs.findEntries(["favorite"])
+        : dataSources.fs.getFolderEntries(id);
     },
 
     getEntry(_: any, { id }: { id: string }, { dataSources }: IContext) {

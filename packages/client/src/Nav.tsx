@@ -1,10 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import { useLocalState, COMMAND_REGISTRY, ROUTE_REGISTRY } from "aspanUtils";
+import { useLocalState, ROUTE_REGISTRY, COMMAND_REGISTRY } from "aspanUtils";
 import HomeCommand from "commands/HomeCommand";
 import BackCommand from "commands/BackCommand";
 import MetaCommand from "commands/MetaCommand";
 import CancelMetaCommand from "commands/CancelMetaCommand";
+import FavoriteCommand from "commands/FavoriteCommand";
 
 const Bar = styled.div`
   display: flex;
@@ -24,8 +25,13 @@ const PathLabel = styled.span`
 const FOLDER_COMMANDS = [
   COMMAND_REGISTRY.HomeCommand,
   COMMAND_REGISTRY.BackCommand,
+  COMMAND_REGISTRY.FavoriteCommand,
 ];
-const IMAGE_COMMANDS = [COMMAND_REGISTRY.MetaCommand];
+const IMAGE_COMMANDS = [
+  COMMAND_REGISTRY.MetaCommand,
+  COMMAND_REGISTRY.FavoriteCommand,
+  COMMAND_REGISTRY.HomeCommand,
+];
 const META_COMMANDS = [COMMAND_REGISTRY.CancelMetaCommand];
 
 const commandsResolver = (command: COMMAND_REGISTRY) => {
@@ -38,6 +44,8 @@ const commandsResolver = (command: COMMAND_REGISTRY) => {
       return <MetaCommand key={command} />;
     case COMMAND_REGISTRY.CancelMetaCommand:
       return <CancelMetaCommand key={command} />;
+    case COMMAND_REGISTRY.FavoriteCommand:
+      return <FavoriteCommand key={command} />;
     default:
       throw new Error("invalid command");
   }

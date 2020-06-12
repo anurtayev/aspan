@@ -17,7 +17,7 @@ export default () => {
     case ROUTE_REGISTRY.Image:
       return <Image id={id} />;
     case ROUTE_REGISTRY.Folder:
-      return <Folder id={id} />;
+      return <Folder />;
     default:
       return <Error message="bad displayComponent" />;
   }

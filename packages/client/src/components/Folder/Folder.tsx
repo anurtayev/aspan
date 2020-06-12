@@ -8,6 +8,7 @@ import { FOLDER_ENTRIES } from "./queries";
 import {
   useNavigateToFolder,
   useNavigateToImage,
+  useLocalState,
   FolderElement,
 } from "aspanUtils";
 
@@ -51,8 +52,14 @@ const SlimParagraph = styled.div`
   margin: 0;
 `;
 
-export default ({ id }: { id: string }) => {
+export default () => {
+  const { loading: stateLoading, data: stateData } = useLocalState();
+  if (stateLoading) return <Loading />;
+
+  const { id } = stateData;
+
   const { loading, error, data } = useQuery(FOLDER_ENTRIES, {
+    fetchPolicy: "no-cache",
     variables: { id },
   });
   const navigateToFolder = useNavigateToFolder();

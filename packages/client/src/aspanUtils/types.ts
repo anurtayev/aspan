@@ -59,4 +59,5 @@ export enum COMMAND_REGISTRY {
   BackCommand,
   MetaCommand,
   CancelMetaCommand,
+  FavoriteCommand,
 }

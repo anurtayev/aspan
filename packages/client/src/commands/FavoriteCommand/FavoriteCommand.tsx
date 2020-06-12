@@ -2,7 +2,7 @@ import React from "react";
 import { ReactComponent as Icon } from "./Favorite.svg";
 import { useNavigateToFolder, useLocalState } from "aspanUtils";
 
-const ROOT_FOLDER = "/";
+const FAVORITE_FOLDER = ":favorite";
 
 export default () => {
   const navigateToFolder = useNavigateToFolder();
@@ -16,7 +16,7 @@ export default () => {
   return (
     <Icon
       onClick={() => {
-        navigateToFolder(ROOT_FOLDER);
+        navigateToFolder(FAVORITE_FOLDER);
       }}
     />
   );
