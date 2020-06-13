@@ -18,8 +18,6 @@ const Container = styled.div`
   margin: 0 1em 0 0;
 `;
 
-const MAX_CHARACTERS = 20;
-
 const Frame = styled.div`
   width: 10em;
   height: 10em;
@@ -83,11 +81,7 @@ export default () => {
             }}
           >
             <FolderIcon></FolderIcon>
-            <SlimParagraph>
-              {entry.name.length > MAX_CHARACTERS
-                ? entry.name.slice(0, MAX_CHARACTERS) + "\u2026"
-                : entry.name}
-            </SlimParagraph>
+            <SlimParagraph>{entry.name}</SlimParagraph>
           </FolderFrame>
         ) : (
           <ImageFrame

@@ -40,7 +40,7 @@ export class FileSystemDataSource extends DataSource {
   }): FolderElement => {
     const stats = rawEntry.stats;
     const contentType = extname(id);
-    const name = basename(id, contentType);
+    const name = basename(id);
     const dockerImageUrl = process.env.DOCKER_NETWORK_PICREPO_URL + id;
     const imageUrl = process.env.IMG_CDN_URL + id;
 
