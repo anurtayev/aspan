@@ -28,23 +28,39 @@ const getMetaData = ({
 };
 
 export const repoCache = (options: IOptions): MemoryRepo => {
+  const startTime = new Date();
   const paths = klawSync(options.path);
+  let totalEntries = 0;
+  let includedEntries = 0;
 
-  return paths.reduce((accumulator: MemoryRepo, currentValue: Item) => {
-    const id = "/" + relative(options.path, currentValue.path);
+  const returnValue = paths.reduce(
+    (accumulator: MemoryRepo, currentValue: Item) => {
+      totalEntries++;
+      const id = "/" + relative(options.path, currentValue.path);
 
-    if (
-      !basename(id).startsWith(".") &&
-      basename(id) !== options.metaFolder &&
-      (currentValue.stats.isDirectory() ||
-        options.exts.includes(extname(basename(id))))
-    ) {
-      accumulator.set(id, {
-        stats: currentValue.stats,
-        metaData: getMetaData({ id, options })
-      });
-    }
+      if (
+        !basename(id).startsWith(".") &&
+        basename(id) !== options.metaFolder &&
+        (currentValue.stats.isDirectory() ||
+          options.exts.includes(extname(basename(id)).toLowerCase()))
+      ) {
+        accumulator.set(id, {
+          stats: currentValue.stats,
+          metaData: getMetaData({ id, options })
+        });
+        includedEntries++;
+      }
 
-    return accumulator;
-  }, new Map());
+      return accumulator;
+    },
+    new Map()
+  );
+
+  console.log(
+    `walked repository in ${new Date().getTime() - startTime.getTime()}ms`
+  );
+  console.log(`processed ${totalEntries} entries`);
+  console.log(`showing ${includedEntries} entries`);
+
+  return returnValue;
 };
