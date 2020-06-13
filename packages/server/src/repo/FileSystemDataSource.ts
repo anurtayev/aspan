@@ -42,7 +42,7 @@ export class FileSystemDataSource extends DataSource {
     const contentType = extname(id);
     const name = basename(id, contentType);
     const dockerImageUrl = process.env.DOCKER_NETWORK_PICREPO_URL + id;
-    const imageUrl = "http://192.168.0.27:8080" + id;
+    const imageUrl = process.env.IMG_CDN_URL + id;
 
     return stats.isFile()
       ? {
