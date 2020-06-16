@@ -40,10 +40,15 @@ const unboxMetaData = (meta: MetaData): MetaDataForm => {
 };
 
 const boxMetaData = (meta: MetaDataForm) => {
+  console.log("==> 1", meta);
+
   const newMeta: MetaDataInput = {
-    title: meta.title,
-    description: meta.description,
-    attributes: meta.attributes,
+    title: !!meta.title ? meta.title : undefined,
+    description: !!meta.description ? meta.description : undefined,
+    attributes:
+      !!meta.attributes && meta.attributes.length > 0
+        ? meta.attributes
+        : undefined,
   };
   let tags = meta.tags || [];
   if (meta.favorite) tags = [...tags, "favorite"];
