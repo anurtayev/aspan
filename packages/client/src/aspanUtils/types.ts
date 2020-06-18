@@ -23,17 +23,17 @@ export type Folder = Entry & {
 
 export type MetaData = {
   __typename: "MetaData";
-  tags?: Array<string>;
-  attributes?: Array<Array<string>>;
-  title?: string;
-  description?: string;
+  tags: Array<string> | null;
+  attributes: Array<Array<string>> | null;
+  title: string | null;
+  description: string | null;
 };
 
 export type MetaDataInput = Omit<MetaData, "__typename">;
 
 export type MetaDataForm = MetaDataInput & {
-  favorite?: boolean;
-  print?: boolean;
+  favorite: boolean;
+  print: boolean;
 };
 
 export type ID = string;

@@ -29,38 +29,47 @@ const FormBody = styled(Form)`
   grid-template-columns: 20% 80%;
 `;
 
-const unboxMetaData = (meta: MetaData | null): MetaDataForm => {
-  const { __typename, tags, ...noTypeName } = meta || {};
+export const unboxMetaData = (meta: MetaData | null): MetaDataForm => {
+  const { __typename, tags, ...noTypeName } = meta || {
+    __typename: "MetaData",
+    tags: null,
+    attributes: null,
+    title: null,
+    description: null,
+  };
 
-  console.log("==> noTypeName", noTypeName);
+  const newMeta: MetaDataForm = {
+    ...noTypeName,
+    tags: null,
+    favorite: !!tags && tags.includes("favorite"),
+    print: !!tags && tags.includes("print"),
+  };
 
-  const newMeta: MetaDataForm = noTypeName;
-  newMeta.favorite = tags && tags.includes("favorite");
-  newMeta.print = tags && tags.includes("print");
-  newMeta.tags =
-    tags && tags.filter((element) => !["favorite", "print"].includes(element));
+  if (tags) {
+    const newTags = tags.filter(
+      (element) => !["favorite", "print"].includes(element)
+    );
+    if (newTags.length > 0) newMeta.tags = newTags;
+  }
   return newMeta;
 };
 
-const boxMetaData = (meta: MetaDataForm): MetaDataInput | undefined => {
-  console.log("==> 1", meta);
-
+export const boxMetaData = (meta: MetaDataForm): MetaDataInput | null => {
   if (meta && typeof meta === "object" && Reflect.ownKeys(meta).length > 0) {
     const { title, description, attributes, tags, favorite, print } = meta;
     const newMeta: MetaDataInput = {
       title,
       description,
       attributes:
-        Array.isArray(attributes) && attributes.length > 0
-          ? attributes
-          : undefined,
+        Array.isArray(attributes) && attributes.length > 0 ? attributes : null,
+      tags: null,
     };
     let newTags = tags || [];
     if (favorite) newTags = [...newTags, "favorite"];
     if (print) newTags = [...newTags, "print"];
-    if (tags && tags.length > 0) newMeta.tags = tags;
+    if (tags && tags.length > 0) newMeta.tags = newTags;
     return newMeta;
-  } else return undefined;
+  } else return null;
 };
 
 export default ({ id }: { id: string }) => {
@@ -74,13 +83,15 @@ export default ({ id }: { id: string }) => {
   if (loading) return <Loading />;
   if (error) return <Error />;
 
-  console.log("==> read meta", data.getEntry.metaData);
+  console.log("==> 1 read meta", data.getEntry.metaData);
 
   return (
     <FormFrame>
       <Formik
         initialValues={unboxMetaData(data.getEntry.metaData)}
         onSubmit={(values, { setSubmitting }) => {
+          console.log("==> 2 to be boxed", values);
+
           saveMeta({
             variables: {
               id,
