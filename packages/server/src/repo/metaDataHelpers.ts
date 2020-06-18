@@ -8,7 +8,7 @@ export const addTag = ({
   tag: string;
 }): MetaData => {
   if (!metaData) {
-    return { tags: [tag] };
+    return { __typename: "MetaData", tags: [tag] };
   }
 
   if (!metaData.tags) {
@@ -59,7 +59,7 @@ export const addAttribute = ({
   attribute: [string];
 }): MetaData => {
   if (!metaData) {
-    return { attributes: [attribute] };
+    return { __typename: "MetaData", attributes: [attribute] };
   }
 
   if (!metaData.attributes) {
@@ -125,7 +125,7 @@ export const setTitle = ({
   title: string;
 }): MetaData => {
   if (!metaData || typeof metaData !== "object") {
-    return { title };
+    return { __typename: "MetaData", title };
   }
 
   return { ...metaData, title };
@@ -139,7 +139,7 @@ export const setDescription = ({
   description: string;
 }): MetaData => {
   if (!metaData || typeof metaData !== "object") {
-    return { description };
+    return { __typename: "MetaData", description };
   }
 
   return { ...metaData, description };

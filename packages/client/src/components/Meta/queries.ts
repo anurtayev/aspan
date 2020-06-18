@@ -19,7 +19,7 @@ export const META_DATA = gql`
 `;
 
 export const UPDATE_META_DATA = gql`
-  mutation setMetaData($id: String!, $metaData: MetaDataInput!) {
+  mutation setMetaData($id: String!, $metaData: MetaDataInput) {
     setMetaData(id: $id, metaData: $metaData) {
       title
       description

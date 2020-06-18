@@ -102,10 +102,10 @@ export class FileSystemDataSource extends DataSource {
 
   public setMetaData = async (
     id: string,
-    metaData: MetaData
+    metaData: MetaData | null
   ): Promise<MetaData | undefined> => {
     if (await pathExists(fsPath(id, this.options))) {
-      if (metaData && (metaData.attributes || metaData.tags)) {
+      if (metaData && Reflect.ownKeys(metaData).length > 0) {
         await ensureDir(fsPath(metaFolder(id, this.options), this.options));
         await writeJson(
           fsPath(metaFile(id, this.options), this.options),
@@ -115,8 +115,8 @@ export class FileSystemDataSource extends DataSource {
         const cacheEntry = this.cache.get(id);
         if (!cacheEntry) throw new Error("missing cache entry for " + id);
         this.cache.set(id, { stats: cacheEntry.stats, metaData });
-      }
-      return metaData;
+        return metaData;
+      } else return undefined;
     } else {
       return undefined;
     }

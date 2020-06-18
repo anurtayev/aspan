@@ -25,7 +25,7 @@ export type Folder = Entry & {
 };
 
 export type MetaData = {
-  __typename?: "MetaData";
+  __typename: "MetaData";
   tags?: Array<string>;
   attributes?: Array<Array<string>>;
   title?: string;
@@ -33,7 +33,7 @@ export type MetaData = {
 };
 
 export type Mutation = {
-  __typename?: "Mutation";
+  __typename: "Mutation";
   addTag?: MetaData;
   removeTag?: MetaData;
   addAttribute?: MetaData;
@@ -42,7 +42,7 @@ export type Mutation = {
 };
 
 export type Query = {
-  __typename?: "Query";
+  __typename: "Query";
   getFolderEntries?: Array<FolderElement>;
   getEntry?: FolderElement;
 };

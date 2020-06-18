@@ -60,7 +60,7 @@ const schema = gql`
     removeAttribute(id: String!, attributeKey: String!): MetaData
     setTitle(id: String!, title: String!): MetaData
     setDescription(id: String!, description: String!): MetaData
-    setMetaData(id: String!, metaData: MetaDataInput!): MetaData
+    setMetaData(id: String!, metaData: MetaDataInput): MetaData
   }
 `;
 

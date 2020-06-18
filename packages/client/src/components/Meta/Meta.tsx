@@ -29,8 +29,11 @@ const FormBody = styled(Form)`
   grid-template-columns: 20% 80%;
 `;
 
-const unboxMetaData = (meta: MetaData): MetaDataForm => {
+const unboxMetaData = (meta: MetaData | null): MetaDataForm => {
   const { __typename, tags, ...noTypeName } = meta || {};
+
+  console.log("==> noTypeName", noTypeName);
+
   const newMeta: MetaDataForm = noTypeName;
   newMeta.favorite = tags && tags.includes("favorite");
   newMeta.print = tags && tags.includes("print");
@@ -39,22 +42,25 @@ const unboxMetaData = (meta: MetaData): MetaDataForm => {
   return newMeta;
 };
 
-const boxMetaData = (meta: MetaDataForm) => {
+const boxMetaData = (meta: MetaDataForm): MetaDataInput | undefined => {
   console.log("==> 1", meta);
 
-  const newMeta: MetaDataInput = {
-    title: !!meta.title ? meta.title : undefined,
-    description: !!meta.description ? meta.description : undefined,
-    attributes:
-      !!meta.attributes && meta.attributes.length > 0
-        ? meta.attributes
-        : undefined,
-  };
-  let tags = meta.tags || [];
-  if (meta.favorite) tags = [...tags, "favorite"];
-  if (meta.print) tags = [...tags, "print"];
-  if (tags.length > 0) newMeta.tags = tags;
-  return newMeta;
+  if (meta && typeof meta === "object" && Reflect.ownKeys(meta).length > 0) {
+    const { title, description, attributes, tags, favorite, print } = meta;
+    const newMeta: MetaDataInput = {
+      title,
+      description,
+      attributes:
+        Array.isArray(attributes) && attributes.length > 0
+          ? attributes
+          : undefined,
+    };
+    let newTags = tags || [];
+    if (favorite) newTags = [...newTags, "favorite"];
+    if (print) newTags = [...newTags, "print"];
+    if (tags && tags.length > 0) newMeta.tags = tags;
+    return newMeta;
+  } else return undefined;
 };
 
 export default ({ id }: { id: string }) => {
@@ -67,6 +73,8 @@ export default ({ id }: { id: string }) => {
 
   if (loading) return <Loading />;
   if (error) return <Error />;
+
+  console.log("==> read meta", data.getEntry.metaData);
 
   return (
     <FormFrame>
