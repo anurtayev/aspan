@@ -29,11 +29,16 @@ export type MetaData = {
   description: string | null;
 };
 
-export type MetaDataInput = Omit<MetaData, "__typename">;
-
-export type MetaDataForm = MetaDataInput & {
+export type MetaDataForm = Omit<MetaData, "__typename"> & {
   favorite: boolean;
   print: boolean;
+};
+
+export type MetaDataInput = {
+  tags?: Array<string>;
+  attributes?: Array<Array<string>>;
+  title?: string;
+  description?: string;
 };
 
 export type ID = string;

@@ -94,8 +94,6 @@ export const resolvers = {
       { id, metaData }: { id: string; metaData: MetaData },
       { dataSources }: IContext
     ) {
-      console.log("==> ", metaData);
-
       return dataSources.fs.setMetaData(id, metaData);
     }
   },

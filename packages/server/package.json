@@ -28,7 +28,7 @@
   "main": "index.js",
   "name": "server",
   "scripts": {
-    "start": "REPOSITORY_PATH=/media/adil/aspan_fotki2/fotki run-p backpack picrepo",
+    "start": "REPOSITORY_PATH=/media/adil/aspan_fotki3/fotki run-p backpack picrepo",
     "backpack": "backpack dev",
     "picrepo": "docker-compose up",
     "test": "echo \"Error: no test specified\" && exit 1"

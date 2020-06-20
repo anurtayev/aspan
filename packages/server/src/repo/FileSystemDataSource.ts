@@ -12,7 +12,7 @@ import {
   setDescription
 } from "./metaDataHelpers";
 import { metaFile, metaFolder, fsPath } from "./path";
-import { ensureDir, writeJson, pathExists } from "fs-extra";
+import { ensureDir, writeJson, pathExists, remove } from "fs-extra";
 
 export class FileSystemDataSource extends DataSource {
   options!: IOptions;
@@ -105,7 +105,11 @@ export class FileSystemDataSource extends DataSource {
     metaData: MetaData | null
   ): Promise<MetaData | undefined> => {
     if (await pathExists(fsPath(id, this.options))) {
-      if (metaData && Reflect.ownKeys(metaData).length > 0) {
+      if (
+        metaData &&
+        typeof metaData === "object" &&
+        Reflect.ownKeys(metaData).length > 0
+      ) {
         await ensureDir(fsPath(metaFolder(id, this.options), this.options));
         await writeJson(
           fsPath(metaFile(id, this.options), this.options),
@@ -116,7 +120,14 @@ export class FileSystemDataSource extends DataSource {
         if (!cacheEntry) throw new Error("missing cache entry for " + id);
         this.cache.set(id, { stats: cacheEntry.stats, metaData });
         return metaData;
-      } else return undefined;
+      } else {
+        remove(fsPath(metaFile(id, this.options), this.options));
+
+        const cacheEntry = this.cache.get(id);
+        if (!cacheEntry) throw new Error("missing cache entry for " + id);
+        this.cache.set(id, { stats: cacheEntry.stats, metaData: undefined });
+        return undefined;
+      }
     } else {
       return undefined;
     }
