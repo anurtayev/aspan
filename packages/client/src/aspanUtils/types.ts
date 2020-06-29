@@ -43,14 +43,12 @@ export type MetaDataInput = {
 
 export type ID = string;
 
-export type HistoryEntry = {
+export type LocalStateParams = {
   displayComponent: ROUTE_REGISTRY;
   id: ID;
-  commands: Array<COMMAND_REGISTRY>;
-};
-
-export type LocalStateParams = {
-  id: string;
+  prevDisplayComponent: ROUTE_REGISTRY;
+  prevId: ID;
+  scrollY: number;
 };
 
 export enum ROUTE_REGISTRY {
@@ -63,6 +61,5 @@ export enum COMMAND_REGISTRY {
   HomeCommand,
   BackCommand,
   MetaCommand,
-  CancelMetaCommand,
   FavoriteCommand,
 }

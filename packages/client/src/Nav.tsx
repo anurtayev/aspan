@@ -4,7 +4,6 @@ import { useLocalState, ROUTE_REGISTRY, COMMAND_REGISTRY } from "aspanUtils";
 import HomeCommand from "commands/HomeCommand";
 import BackCommand from "commands/BackCommand";
 import MetaCommand from "commands/MetaCommand";
-import CancelMetaCommand from "commands/CancelMetaCommand";
 import FavoriteCommand from "commands/FavoriteCommand";
 
 const Bar = styled.div`
@@ -32,7 +31,7 @@ const IMAGE_COMMANDS = [
   COMMAND_REGISTRY.FavoriteCommand,
   COMMAND_REGISTRY.HomeCommand,
 ];
-const META_COMMANDS = [COMMAND_REGISTRY.CancelMetaCommand];
+const META_COMMANDS = [COMMAND_REGISTRY.BackCommand];
 
 const commandsResolver = (command: COMMAND_REGISTRY) => {
   switch (command) {
@@ -42,8 +41,6 @@ const commandsResolver = (command: COMMAND_REGISTRY) => {
       return <BackCommand key={command} />;
     case COMMAND_REGISTRY.MetaCommand:
       return <MetaCommand key={command} />;
-    case COMMAND_REGISTRY.CancelMetaCommand:
-      return <CancelMetaCommand key={command} />;
     case COMMAND_REGISTRY.FavoriteCommand:
       return <FavoriteCommand key={command} />;
     default:

@@ -6,10 +6,10 @@ import Error from "components/Error";
 import Loading from "components/Loading";
 import { FOLDER_ENTRIES } from "./queries";
 import {
-  useNavigateToFolder,
-  useNavigateToImage,
+  useUpdateLocalState,
   useLocalState,
   FolderElement,
+  ROUTE_REGISTRY,
 } from "aspanUtils";
 
 const Container = styled.div`
@@ -51,6 +51,8 @@ const SlimParagraph = styled.div`
 `;
 
 export default () => {
+  console.log("==> 5");
+
   const { loading: stateLoading, data: stateData } = useLocalState();
   if (stateLoading) return <Loading />;
 
@@ -60,8 +62,7 @@ export default () => {
     fetchPolicy: "no-cache",
     variables: { id },
   });
-  const navigateToFolder = useNavigateToFolder();
-  const navigateToImage = useNavigateToImage();
+  const updateLocalState = useUpdateLocalState();
 
   if (loading) return <Loading />;
   if (error) return <Error />;
@@ -77,7 +78,13 @@ export default () => {
           <FolderFrame
             key={entry.id}
             onClick={() => {
-              navigateToFolder(entry.id);
+              updateLocalState({
+                displayComponent: ROUTE_REGISTRY.Folder,
+                prevDisplayComponent: ROUTE_REGISTRY.Folder,
+                id: entry.id,
+                prevId: id,
+                scrollY: window.scrollY,
+              });
             }}
           >
             <FolderIcon></FolderIcon>
@@ -87,7 +94,13 @@ export default () => {
           <ImageFrame
             key={entry.id}
             onClick={() => {
-              navigateToImage(entry.id);
+              updateLocalState({
+                displayComponent: ROUTE_REGISTRY.Folder,
+                prevDisplayComponent: ROUTE_REGISTRY.Folder,
+                id: entry.id,
+                prevId: id,
+                scrollY: window.scrollY,
+              });
             }}
           >
             <Image src={entry.thumbImageUrl} alt={id}></Image>

@@ -1,18 +1,24 @@
 import React from "react";
 import { ReactComponent as Icon } from "./Configuration.svg";
-import { useNavigateToMeta, useLocalState } from "aspanUtils";
+import { useUpdateLocalState, useLocalState, ROUTE_REGISTRY } from "aspanUtils";
 
 export default () => {
-  const navigateToMeta = useNavigateToMeta();
+  const updateLocalState = useUpdateLocalState();
   const { loading, data } = useLocalState();
 
   if (loading) return null;
 
-  const { id } = data;
+  const { id, displayComponent } = data;
   return (
     <Icon
       onClick={() => {
-        navigateToMeta(id);
+        updateLocalState({
+          displayComponent: ROUTE_REGISTRY.Meta,
+          id,
+          prevDisplayComponent: displayComponent,
+          prevId: id,
+          scrollY: window.scrollY,
+        });
       }}
     />
   );

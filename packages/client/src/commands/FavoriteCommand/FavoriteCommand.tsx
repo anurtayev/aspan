@@ -1,22 +1,27 @@
 import React from "react";
 import { ReactComponent as Icon } from "./Favorite.svg";
-import { useNavigateToFolder, useLocalState } from "aspanUtils";
+import { useUpdateLocalState, useLocalState, ROUTE_REGISTRY } from "aspanUtils";
 
 const FAVORITE_FOLDER = ":favorite";
 
 export default () => {
-  const navigateToFolder = useNavigateToFolder();
+  const updateLocalState = useUpdateLocalState();
   const { loading, data } = useLocalState();
 
   if (loading) return null;
 
-  const { id } = data;
-  if (id === "/") return null;
+  const { id, displayComponent } = data;
 
   return (
     <Icon
       onClick={() => {
-        navigateToFolder(FAVORITE_FOLDER);
+        updateLocalState({
+          displayComponent: ROUTE_REGISTRY.Folder,
+          id: FAVORITE_FOLDER,
+          prevDisplayComponent: displayComponent,
+          prevId: id,
+          scrollY: window.scrollY,
+        });
       }}
     />
   );

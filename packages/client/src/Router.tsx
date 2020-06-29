@@ -7,15 +7,19 @@ import Error from "components/Error";
 import Loading from "components/Loading";
 
 export default () => {
+  console.log("==> 2");
+
   const { loading, data } = useLocalState();
   if (loading) return <Loading />;
-  const { id, displayComponent } = data;
+  const { displayComponent } = data;
+
+  console.log("==> 4", displayComponent);
 
   switch (displayComponent) {
     case ROUTE_REGISTRY.Meta:
-      return <Meta id={id} />;
+      return <Meta />;
     case ROUTE_REGISTRY.Image:
-      return <Image id={id} />;
+      return <Image />;
     case ROUTE_REGISTRY.Folder:
       return <Folder />;
     default:

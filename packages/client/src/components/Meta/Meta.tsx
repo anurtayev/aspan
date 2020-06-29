@@ -7,7 +7,9 @@ import {
   MetaData,
   MetaDataInput,
   MetaDataForm,
-  useNavigateToImage,
+  useUpdateLocalState,
+  useLocalState,
+  ROUTE_REGISTRY,
 } from "aspanUtils";
 import { Formik, Form, Field, FieldArray } from "formik";
 import styled from "styled-components";
@@ -77,18 +79,21 @@ export const boxMetaData = (meta: MetaDataForm): MetaDataInput | null => {
   } else return null;
 };
 
-export default ({ id }: { id: string }) => {
+export default () => {
+  const { loading: stateLoading, data: stateData } = useLocalState();
+  if (stateLoading) return <Loading />;
+
+  const { id, prevDisplayComponent, prevId } = stateData;
+
   const { loading, error, data } = useQuery(META_DATA, {
     fetchPolicy: "no-cache",
     variables: { id },
   });
   const [saveMeta] = useMutation(UPDATE_META_DATA);
-  const navigateToImage = useNavigateToImage();
+  const updateLocalState = useUpdateLocalState();
 
   if (loading) return <Loading />;
   if (error) return <Error />;
-
-  console.log("==> 1 read meta", data.getEntry.metaData);
 
   return (
     <FormFrame>
@@ -101,7 +106,13 @@ export default ({ id }: { id: string }) => {
               metaData: boxMetaData(values),
             },
           });
-          navigateToImage(id);
+          updateLocalState({
+            displayComponent: prevDisplayComponent,
+            prevDisplayComponent: ROUTE_REGISTRY.Meta,
+            id: prevId,
+            prevId: id,
+            scrollY: window.scrollY,
+          });
         }}
       >
         {({ isSubmitting, values }) => {

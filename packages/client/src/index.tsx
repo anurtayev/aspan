@@ -45,6 +45,9 @@ cache.writeData({
   data: {
     displayComponent: ROUTE_REGISTRY.Folder,
     id: STARTING_FOLDER,
+    prevDisplayComponent: null,
+    prevId: null,
+    scrollY: null,
   },
 });
 
