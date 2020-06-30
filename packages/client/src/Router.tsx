@@ -7,13 +7,10 @@ import Error from "components/Error";
 import Loading from "components/Loading";
 
 export default () => {
-  console.log("==> 2");
-
   const { loading, data } = useLocalState();
   if (loading) return <Loading />;
-  const { displayComponent } = data;
 
-  console.log("==> 4", displayComponent);
+  const { displayComponent } = data;
 
   switch (displayComponent) {
     case ROUTE_REGISTRY.Meta:

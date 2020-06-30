@@ -51,8 +51,6 @@ const SlimParagraph = styled.div`
 `;
 
 export default () => {
-  console.log("==> 5");
-
   const { loading: stateLoading, data: stateData } = useLocalState();
   if (stateLoading) return <Loading />;
 
@@ -95,7 +93,7 @@ export default () => {
             key={entry.id}
             onClick={() => {
               updateLocalState({
-                displayComponent: ROUTE_REGISTRY.Folder,
+                displayComponent: ROUTE_REGISTRY.Image,
                 prevDisplayComponent: ROUTE_REGISTRY.Folder,
                 id: entry.id,
                 prevId: id,

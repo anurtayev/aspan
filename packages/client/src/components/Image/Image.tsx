@@ -12,8 +12,6 @@ const FlexImage = styled.img`
 `;
 
 export default () => {
-  console.log("==> 1");
-
   const { loading: stateLoading, data: stateData } = useLocalState();
   if (stateLoading) return <Loading />;
 
