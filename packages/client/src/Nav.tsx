@@ -10,10 +10,9 @@ const Bar = styled.div`
   display: flex;
   height: 3em;
   background: lightblue;
-  margin: 1em 1em 0 1em;
-  border-radius: 0.5em;
-  padding: 0 1em 0 1em;
   align-items: center;
+  position: fixed;
+  width: 100%;
 `;
 
 const PathLabel = styled.span`
@@ -61,7 +60,7 @@ const resolveCommands = (displayComponent: ROUTE_REGISTRY) => {
   }
 };
 
-export default () => {
+export const Nav = () => {
   const { loading, data } = useLocalState();
 
   if (loading) return null;
@@ -69,7 +68,7 @@ export default () => {
   const { id, displayComponent } = data;
 
   return (
-    <Bar>
+    <Bar id="Nav">
       <>
         {resolveCommands(displayComponent).map((command: COMMAND_REGISTRY) =>
           commandsResolver(command)

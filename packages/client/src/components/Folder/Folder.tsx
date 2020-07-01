@@ -50,18 +50,16 @@ const SlimParagraph = styled.div`
   margin: 0;
 `;
 
-export default () => {
+export const Folder = () => {
   const { loading: stateLoading, data: stateData } = useLocalState();
-  if (stateLoading) return <Loading />;
-
   const { id } = stateData;
-
   const { loading, error, data } = useQuery(FOLDER_ENTRIES, {
     fetchPolicy: "no-cache",
     variables: { id },
   });
   const updateLocalState = useUpdateLocalState();
 
+  if (stateLoading) return <Loading />;
   if (loading) return <Loading />;
   if (error) return <Error />;
 

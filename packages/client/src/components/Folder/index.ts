@@ -1,2 +1,1 @@
-import Folder from "./Folder";
-export default Folder;
+export * from "./Folder";
