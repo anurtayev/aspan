@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { App } from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { ApolloClient } from "apollo-client";
 import { ApolloProvider } from "@apollo/react-hooks";
@@ -9,11 +8,14 @@ import {
   IntrospectionFragmentMatcher,
 } from "apollo-cache-inmemory";
 import { HttpLink } from "apollo-link-http";
-import "./index.css";
-import introspectionQueryResultData from "./fragmentTypes.json";
-import { ROUTE_REGISTRY } from "aspanUtils";
 import { onError } from "apollo-link-error";
 import { ApolloLink } from "apollo-link";
+
+import { App } from "./App";
+import { ROUTE_REGISTRY, LocalStateParams } from "aspanUtils";
+import introspectionQueryResultData from "./fragmentTypes.json";
+
+import "./index.css";
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
@@ -41,14 +43,16 @@ const client = new ApolloClient({
 });
 
 const STARTING_FOLDER = "/";
+const initialState: LocalStateParams = {
+  displayComponent: ROUTE_REGISTRY.Folder,
+  id: STARTING_FOLDER,
+  scrollY: 0,
+  prevDisplayComponent: null,
+  prevId: null,
+  prevScrollY: null,
+};
 cache.writeData({
-  data: {
-    displayComponent: ROUTE_REGISTRY.Folder,
-    id: STARTING_FOLDER,
-    prevDisplayComponent: null,
-    prevId: null,
-    scrollY: null,
-  },
+  data: initialState,
 });
 
 ReactDOM.render(

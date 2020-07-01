@@ -21,7 +21,8 @@ export default () => {
           prevDisplayComponent: displayComponent,
           id: ROOT_FOLDER,
           prevId: id,
-          scrollY: window.scrollY,
+          scrollY: 0,
+          prevScrollY: window.scrollY,
         });
       }}
     />

@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
-import { ReactComponent as FolderIcon } from "./Folder.svg";
 import { useQuery } from "@apollo/react-hooks";
-import Error from "components/Error";
-import Loading from "components/Loading";
+
+import { ReactComponent as FolderIcon } from "./Folder.svg";
+import { Error } from "components/Error";
+import { Loading } from "components/Loading";
 import { FOLDER_ENTRIES } from "./queries";
 import {
   useUpdateLocalState,
@@ -52,12 +53,16 @@ const SlimParagraph = styled.div`
 
 export const Folder = () => {
   const { loading: stateLoading, data: stateData } = useLocalState();
-  const { id } = stateData;
+  const { id: currentFolderId, scrollY } = stateData;
   const { loading, error, data } = useQuery(FOLDER_ENTRIES, {
     fetchPolicy: "no-cache",
-    variables: { id },
+    variables: { id: currentFolderId },
   });
   const updateLocalState = useUpdateLocalState();
+
+  useEffect(() => {
+    window.scroll(0, scrollY);
+  });
 
   if (stateLoading) return <Loading />;
   if (loading) return <Loading />;
@@ -69,17 +74,18 @@ export const Folder = () => {
 
   return entries ? (
     <Container>
-      {entries.map((entry: FolderElement) =>
-        entry.__typename === "Folder" ? (
+      {entries.map((entry: FolderElement) => {
+        return entry.__typename === "Folder" ? (
           <FolderFrame
             key={entry.id}
             onClick={() => {
               updateLocalState({
                 displayComponent: ROUTE_REGISTRY.Folder,
-                prevDisplayComponent: ROUTE_REGISTRY.Folder,
                 id: entry.id,
-                prevId: id,
-                scrollY: window.scrollY,
+                scrollY: 0,
+                prevDisplayComponent: ROUTE_REGISTRY.Folder,
+                prevId: currentFolderId,
+                prevScrollY: window.scrollY,
               });
             }}
           >
@@ -92,17 +98,18 @@ export const Folder = () => {
             onClick={() => {
               updateLocalState({
                 displayComponent: ROUTE_REGISTRY.Image,
-                prevDisplayComponent: ROUTE_REGISTRY.Folder,
                 id: entry.id,
-                prevId: id,
-                scrollY: window.scrollY,
+                scrollY: 0,
+                prevDisplayComponent: ROUTE_REGISTRY.Folder,
+                prevId: currentFolderId,
+                prevScrollY: window.scrollY,
               });
             }}
           >
-            <Image src={entry.thumbImageUrl} alt={id}></Image>
+            <Image src={entry.thumbImageUrl} alt={currentFolderId}></Image>
           </ImageFrame>
-        )
-      )}
+        );
+      })}
     </Container>
   ) : null;
 };

@@ -17,7 +17,8 @@ export default () => {
           id,
           prevDisplayComponent: displayComponent,
           prevId: id,
-          scrollY: window.scrollY,
+          scrollY: 0,
+          prevScrollY: window.scrollY,
         });
       }}
     />

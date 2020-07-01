@@ -18,9 +18,10 @@ export default () => {
         updateLocalState({
           displayComponent: ROUTE_REGISTRY.Folder,
           id: FAVORITE_FOLDER,
+          scrollY: 0,
           prevDisplayComponent: displayComponent,
           prevId: id,
-          scrollY: window.scrollY,
+          prevScrollY: window.scrollY,
         });
       }}
     />

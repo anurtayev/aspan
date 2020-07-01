@@ -7,9 +7,10 @@ export function useLocalState() {
     query GetLocalState {
       displayComponent @client
       id @client
+      scrollY @client
       prevDisplayComponent @client
       prevId @client
-      scrollY @client
+      prevScrollY @client
     }
   `;
 
@@ -19,8 +20,11 @@ export function useLocalState() {
 export const useUpdateLocalState = () => {
   const client = useApolloClient();
 
-  return (data: LocalStateParams) =>
+  return (data: LocalStateParams) => {
+    console.log("==> Update local state", data);
+
     client.writeData({
       data,
     });
+  };
 };

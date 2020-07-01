@@ -1,8 +1,11 @@
 import React from "react";
 import { useQuery, useMutation } from "@apollo/react-hooks";
+import { Formik, Form, Field, FieldArray } from "formik";
+import styled from "styled-components";
+
 import { META_DATA, UPDATE_META_DATA } from "./queries";
-import Error from "components/Error";
-import Loading from "components/Loading";
+import { Error } from "components/Error";
+import { Loading } from "components/Loading";
 import {
   MetaData,
   MetaDataInput,
@@ -11,8 +14,6 @@ import {
   useLocalState,
   ROUTE_REGISTRY,
 } from "aspanUtils";
-import { Formik, Form, Field, FieldArray } from "formik";
-import styled from "styled-components";
 
 const FormFrame = styled.div`
   margin: 1em;
@@ -79,11 +80,10 @@ export const boxMetaData = (meta: MetaDataForm): MetaDataInput | null => {
   } else return null;
 };
 
-export default () => {
+export const Meta = () => {
   const { loading: stateLoading, data: stateData } = useLocalState();
-  if (stateLoading) return <Loading />;
 
-  const { id, prevDisplayComponent, prevId } = stateData;
+  const { id, prevDisplayComponent, prevId, prevScrollY } = stateData;
 
   const { loading, error, data } = useQuery(META_DATA, {
     fetchPolicy: "no-cache",
@@ -92,6 +92,7 @@ export default () => {
   const [saveMeta] = useMutation(UPDATE_META_DATA);
   const updateLocalState = useUpdateLocalState();
 
+  if (stateLoading) return <Loading />;
   if (loading) return <Loading />;
   if (error) return <Error />;
 
@@ -111,7 +112,8 @@ export default () => {
             prevDisplayComponent: ROUTE_REGISTRY.Meta,
             id: prevId,
             prevId: id,
-            scrollY: window.scrollY,
+            scrollY: prevScrollY,
+            prevScrollY: window.scrollY,
           });
         }}
       >

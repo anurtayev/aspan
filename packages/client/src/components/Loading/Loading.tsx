@@ -15,7 +15,7 @@ const CenteredParagraph = styled.p`
   font-size: 3em;
 `;
 
-export default ({ message = "" }: { message?: string }) => (
+export const Loading = ({ message = "" }: { message?: string }) => (
   <Frame>
     <CenteredParagraph>Loading...</CenteredParagraph>
   </Frame>

@@ -46,9 +46,10 @@ export type ID = string;
 export type LocalStateParams = {
   displayComponent: ROUTE_REGISTRY;
   id: ID;
-  prevDisplayComponent: ROUTE_REGISTRY;
-  prevId: ID;
   scrollY: number;
+  prevDisplayComponent: ROUTE_REGISTRY | null;
+  prevId: ID | null;
+  prevScrollY: number | null;
 };
 
 export enum ROUTE_REGISTRY {

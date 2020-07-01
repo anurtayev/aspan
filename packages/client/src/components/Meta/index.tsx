@@ -1,2 +1,1 @@
-import Meta from "./Meta";
-export default Meta;
+export * from "./Meta";

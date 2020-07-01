@@ -3,10 +3,10 @@ import styled from "styled-components";
 
 import { useLocalState, ROUTE_REGISTRY } from "aspanUtils";
 import { Folder } from "components/Folder";
-import Image from "components/Image";
-import Meta from "components/Meta";
-import Error from "components/Error";
-import Loading from "components/Loading";
+import { Image } from "components/Image";
+import { Meta } from "components/Meta";
+import { Error } from "components/Error";
+import { Loading } from "components/Loading";
 
 const Frame = styled.div`
   padding: 3em 0 0 0;

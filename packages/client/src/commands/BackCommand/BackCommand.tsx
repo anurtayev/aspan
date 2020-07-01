@@ -1,4 +1,5 @@
 import React from "react";
+
 import { ReactComponent as Icon } from "./Back.svg";
 import { useUpdateLocalState, useLocalState } from "aspanUtils";
 
@@ -8,7 +9,13 @@ export default () => {
 
   if (loading) return null;
 
-  const { id, prevId, displayComponent, prevDisplayComponent } = data;
+  const {
+    id,
+    prevId,
+    displayComponent,
+    prevDisplayComponent,
+    prevScrollY,
+  } = data;
 
   if (id === "/") return null;
 
@@ -20,7 +27,8 @@ export default () => {
           prevDisplayComponent: displayComponent,
           id: prevId,
           prevId: id,
-          scrollY: window.scrollY,
+          scrollY: prevScrollY,
+          prevScrollY: window.scrollY,
         });
       }}
     />
