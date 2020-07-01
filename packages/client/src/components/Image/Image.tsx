@@ -1,9 +1,10 @@
 import React from "react";
+import { useQuery } from "@apollo/react-hooks";
+import styled from "styled-components";
+
 import { ENTRY_DATA } from "./queries";
 import { Error } from "components/Error";
 import { Loading } from "components/Loading";
-import styled from "styled-components";
-import { useQuery } from "@apollo/react-hooks";
 import { useUpdateLocalState, useLocalState, ROUTE_REGISTRY } from "aspanUtils";
 
 const FlexImage = styled.img`
