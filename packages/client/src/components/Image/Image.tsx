@@ -33,7 +33,7 @@ export const Image = () => {
           displayComponent: prevDisplayComponent,
           id: prevId,
           scrollY: prevScrollY,
-          prevDisplayComponent: ROUTE_REGISTRY.Image,
+          prevDisplayComponent: ROUTE_REGISTRY.image,
           prevId: id,
           prevScrollY: window.scrollY,
         });

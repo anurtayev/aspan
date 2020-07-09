@@ -109,7 +109,7 @@ export const Meta = () => {
           });
           updateLocalState({
             displayComponent: prevDisplayComponent,
-            prevDisplayComponent: ROUTE_REGISTRY.Meta,
+            prevDisplayComponent: ROUTE_REGISTRY.meta,
             id: prevId,
             prevId: id,
             scrollY: prevScrollY,

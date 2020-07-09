@@ -14,11 +14,11 @@ const Frame = styled.div`
 
 const resolveComponent = (displayComponent: ROUTE_REGISTRY) => {
   switch (displayComponent) {
-    case ROUTE_REGISTRY.Meta:
+    case ROUTE_REGISTRY.meta:
       return <Meta />;
-    case ROUTE_REGISTRY.Image:
+    case ROUTE_REGISTRY.image:
       return <Image />;
-    case ROUTE_REGISTRY.Folder:
+    case ROUTE_REGISTRY.folder:
       return <Folder />;
     default:
       return <Error message="bad displayComponent" />;

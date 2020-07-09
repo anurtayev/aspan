@@ -44,7 +44,7 @@ const client = new ApolloClient({
 
 const STARTING_FOLDER = "/";
 const initialState: LocalStateParams = {
-  displayComponent: ROUTE_REGISTRY.Folder,
+  displayComponent: ROUTE_REGISTRY.folder,
   id: STARTING_FOLDER,
   scrollY: 0,
   prevDisplayComponent: null,

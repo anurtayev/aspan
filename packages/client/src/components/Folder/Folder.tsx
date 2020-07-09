@@ -80,10 +80,10 @@ export const Folder = () => {
             key={entry.id}
             onClick={() => {
               updateLocalState({
-                displayComponent: ROUTE_REGISTRY.Folder,
+                displayComponent: ROUTE_REGISTRY.folder,
                 id: entry.id,
                 scrollY: 0,
-                prevDisplayComponent: ROUTE_REGISTRY.Folder,
+                prevDisplayComponent: ROUTE_REGISTRY.folder,
                 prevId: currentFolderId,
                 prevScrollY: window.scrollY,
               });
@@ -97,10 +97,10 @@ export const Folder = () => {
             key={entry.id}
             onClick={() => {
               updateLocalState({
-                displayComponent: ROUTE_REGISTRY.Image,
+                displayComponent: ROUTE_REGISTRY.image,
                 id: entry.id,
                 scrollY: 0,
-                prevDisplayComponent: ROUTE_REGISTRY.Folder,
+                prevDisplayComponent: ROUTE_REGISTRY.folder,
                 prevId: currentFolderId,
                 prevScrollY: window.scrollY,
               });

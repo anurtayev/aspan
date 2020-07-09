@@ -53,14 +53,14 @@ export type LocalStateParams = {
 };
 
 export enum ROUTE_REGISTRY {
-  Folder,
-  Image,
-  Meta,
+  folder,
+  image,
+  meta,
 }
 
 export enum COMMAND_REGISTRY {
-  HomeCommand,
-  BackCommand,
-  MetaCommand,
-  FavoriteCommand,
+  home,
+  back,
+  meta,
+  favorite,
 }
