@@ -10,6 +10,7 @@ import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import HomeIcon from "@material-ui/icons/Home";
 import AssignmentIcon from "@material-ui/icons/Assignment";
+import Typography from "@material-ui/core/Typography";
 
 import {
   useCommands,
@@ -27,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
   },
   buttons: {
-    flexGrow: 1,
     display: "none",
     [theme.breakpoints.up("sm")]: {
       display: "block",
@@ -71,6 +71,9 @@ const useStyles = makeStyles((theme) => ({
         width: "20ch",
       },
     },
+  },
+  title: {
+    flexGrow: 1,
   },
 }));
 
@@ -139,6 +142,8 @@ export function Nav() {
     },
   };
 
+  console.log("==>", id);
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -161,6 +166,9 @@ export function Nav() {
                 ))}
             </>
           </div>
+          <Typography variant="h6" className={classes.title}>
+            Path: {id}
+          </Typography>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
