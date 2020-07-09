@@ -23,7 +23,7 @@ export const useUpdateLocalState = () => {
 
   return (data: LocalStateParams) => {
     client.writeData({
-      data,
+      data: { ...data, prevScrollY: window.scrollY },
     });
   };
 };

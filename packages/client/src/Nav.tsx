@@ -101,7 +101,7 @@ export function Nav() {
         id: HOME_FOLDER,
         prevId: id,
         scrollY: 0,
-        prevScrollY: window.scrollY,
+        prevScrollY: 0,
       },
     },
     [COMMAND_REGISTRY.meta]: {
@@ -112,7 +112,7 @@ export function Nav() {
         prevDisplayComponent: displayComponent,
         prevId: id,
         scrollY: 0,
-        prevScrollY: window.scrollY,
+        prevScrollY: 0,
       },
     },
     [COMMAND_REGISTRY.back]: {
@@ -123,7 +123,7 @@ export function Nav() {
         id: prevId,
         prevId: id,
         scrollY: prevScrollY,
-        prevScrollY: window.scrollY,
+        prevScrollY: 0,
       },
     },
     [COMMAND_REGISTRY.favorite]: {
@@ -134,7 +134,7 @@ export function Nav() {
         scrollY: 0,
         prevDisplayComponent: displayComponent,
         prevId: id,
-        prevScrollY: window.scrollY,
+        prevScrollY: 0,
       },
     },
   };
