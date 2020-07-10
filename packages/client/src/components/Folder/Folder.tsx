@@ -12,11 +12,11 @@ import {
   FolderElement,
   ROUTE_REGISTRY,
 } from "aspanUtils";
+import { MediaCard } from "./MediaCard";
 
 const Container = styled.div`
   display: flex;
   flex-wrap: wrap;
-  margin: 0 1em 0 0;
 `;
 
 const Frame = styled.div`

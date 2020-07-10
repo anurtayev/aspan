@@ -22,7 +22,8 @@ import {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    flexGrow: 0,
+    position: "sticky",
+    height: "5em",
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -145,45 +146,43 @@ export function Nav() {
   console.log("==>", id);
 
   return (
-    <div className={classes.root}>
-      <AppBar position="static">
-        <Toolbar>
-          <div className={classes.buttons}>
-            <>
-              {commandsData &&
-                commandsData.map((command: COMMAND_REGISTRY) => (
-                  <IconButton
-                    edge="start"
-                    className={classes.menuButton}
-                    color="inherit"
-                    aria-label="open drawer"
-                    onClick={() => {
-                      updateLocalState(commands[command].state);
-                    }}
-                  >
-                    {commands[command].icon}
-                  </IconButton>
-                ))}
-            </>
+    <AppBar position="sticky">
+      <Toolbar>
+        <div className={classes.buttons}>
+          <>
+            {commandsData &&
+              commandsData.map((command: COMMAND_REGISTRY) => (
+                <IconButton
+                  edge="start"
+                  className={classes.menuButton}
+                  color="inherit"
+                  aria-label="open drawer"
+                  onClick={() => {
+                    updateLocalState(commands[command].state);
+                  }}
+                >
+                  {commands[command].icon}
+                </IconButton>
+              ))}
+          </>
+        </div>
+        <Typography variant="h6" className={classes.title}>
+          Path: {id}
+        </Typography>
+        <div className={classes.search}>
+          <div className={classes.searchIcon}>
+            <SearchIcon />
           </div>
-          <Typography variant="h6" className={classes.title}>
-            Path: {id}
-          </Typography>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ "aria-label": "search" }}
-            />
-          </div>
-        </Toolbar>
-      </AppBar>
-    </div>
+          <InputBase
+            placeholder="Search…"
+            classes={{
+              root: classes.inputRoot,
+              input: classes.inputInput,
+            }}
+            inputProps={{ "aria-label": "search" }}
+          />
+        </div>
+      </Toolbar>
+    </AppBar>
   );
 }
