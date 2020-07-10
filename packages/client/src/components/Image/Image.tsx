@@ -6,10 +6,14 @@ import { ENTRY_DATA } from "./queries";
 import { Error } from "components/Error";
 import { Loading } from "components/Loading";
 import { useUpdateLocalState, useLocalState, ROUTE_REGISTRY } from "aspanUtils";
+import Fab from "@material-ui/core/Fab";
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
 const FlexImage = styled.img`
-  margin: 1em 1em 0 1em;
-  object-fit: contain;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
 `;
 
 export const Image = () => {
@@ -27,19 +31,24 @@ export const Image = () => {
   const { imageUrl } = data.getEntry;
 
   return (
-    <FlexImage
-      onClick={() => {
-        updateLocalState({
-          displayComponent: prevDisplayComponent,
-          id: prevId,
-          scrollY: prevScrollY,
-          prevDisplayComponent: ROUTE_REGISTRY.image,
-          prevId: id,
-          prevScrollY: window.scrollY,
-        });
-      }}
-      src={imageUrl}
-      alt={id}
-    />
+    <>
+      <FlexImage
+        onClick={() => {
+          updateLocalState({
+            displayComponent: prevDisplayComponent,
+            id: prevId,
+            scrollY: prevScrollY,
+            prevDisplayComponent: ROUTE_REGISTRY.image,
+            prevId: id,
+            prevScrollY: window.scrollY,
+          });
+        }}
+        src={imageUrl}
+        alt={id}
+      />
+      <Fab color="secondary" size="small" aria-label="scroll back to top">
+        <KeyboardArrowUpIcon />
+      </Fab>
+    </>
   );
 };
