@@ -1,12 +1,9 @@
-import { MetaData } from "../util";
+import { Maybe, MetaData, Scalars } from "../generated/graphql";
 
-export const addTag = ({
-  metaData,
-  tag
-}: {
-  metaData?: MetaData;
-  tag: string;
-}): MetaData => {
+export const addTag = (
+  metaData: Maybe<MetaData>,
+  tag: Scalars["String"]
+): MetaData => {
   if (!metaData) {
     return { __typename: "MetaData", tags: [tag] };
   }
@@ -26,13 +23,10 @@ export const addTag = ({
   return { ...metaData, tags: [...metaData.tags, tag] };
 };
 
-export const removeTag = ({
-  metaData,
-  tag
-}: {
-  metaData?: MetaData;
-  tag: string;
-}): MetaData => {
+export const removeTag = (
+  metaData: Maybe<MetaData>,
+  tag: Scalars["String"]
+): MetaData => {
   if (!metaData) {
     throw new Error("removeTag: metaData must be an instance of MetaData");
   }
@@ -51,13 +45,10 @@ export const removeTag = ({
   };
 };
 
-export const addAttribute = ({
-  metaData,
-  attribute
-}: {
-  metaData?: MetaData;
-  attribute: [string];
-}): MetaData => {
+export const addAttribute = (
+  metaData: Maybe<MetaData>,
+  attribute: Array<Scalars["String"]>
+): MetaData => {
   if (!metaData) {
     return { __typename: "MetaData", attributes: [attribute] };
   }
@@ -86,13 +77,10 @@ export const addAttribute = ({
   return { ...metaData, attributes: [...metaData.attributes, attribute] };
 };
 
-export const removeAttribute = ({
-  metaData,
-  attribute
-}: {
-  metaData?: MetaData;
-  attribute: string;
-}): MetaData => {
+export const removeAttribute = (
+  metaData: Maybe<MetaData>,
+  attribute: Scalars["String"]
+): MetaData => {
   if (!metaData) {
     throw new Error(
       "removeAttribute: metaData must be an instance of MetaData"
@@ -117,13 +105,10 @@ export const removeAttribute = ({
   };
 };
 
-export const setTitle = ({
-  metaData,
-  title
-}: {
-  metaData?: MetaData;
-  title: string;
-}): MetaData => {
+export const setTitle = (
+  metaData: Maybe<MetaData>,
+  title: Scalars["String"]
+): MetaData => {
   if (!metaData || typeof metaData !== "object") {
     return { __typename: "MetaData", title };
   }
@@ -131,13 +116,10 @@ export const setTitle = ({
   return { ...metaData, title };
 };
 
-export const setDescription = ({
-  metaData,
-  description
-}: {
-  metaData?: MetaData;
-  description: string;
-}): MetaData => {
+export const setDescription = (
+  metaData: Maybe<MetaData>,
+  description: Scalars["String"]
+): MetaData => {
   if (!metaData || typeof metaData !== "object") {
     return { __typename: "MetaData", description };
   }

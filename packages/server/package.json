@@ -1,6 +1,7 @@
 {
   "author": "",
   "dependencies": {
+    "@graphql-codegen/cli": "^1.19.0",
     "apollo-server": "^2.11.0",
     "dotenv": "^8.2.0",
     "fs-extra": "^9.0.0",
@@ -10,6 +11,10 @@
   },
   "description": "",
   "devDependencies": {
+    "@graphql-codegen/cli": "1.19.0",
+    "@graphql-codegen/introspection": "1.18.0",
+    "@graphql-codegen/typescript": "1.17.11",
+    "@graphql-codegen/typescript-resolvers": "1.17.10",
     "@types/fs-extra": "^8.1.0",
     "@types/glob": "^7.1.1",
     "@types/klaw-sync": "^6.0.0",
@@ -31,7 +36,7 @@
     "start": "run-p backpack picrepo",
     "backpack": "backpack dev",
     "picrepo": "docker-compose up",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "codegen": "graphql-codegen --config codegen.yml"
   },
   "version": "1.0.0"
 }

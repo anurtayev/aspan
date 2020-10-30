@@ -1,13 +1,14 @@
 import { Stats } from "fs";
 import { relative, basename, extname } from "path";
-import { MetaData, IOptions } from "../util";
+import { Maybe, MetaData } from "../generated/graphql";
+import { IOptions } from "../util";
 import klawSync, { Item } from "klaw-sync";
 import { metaFile, fsPath } from "./path";
 import { pathExistsSync, readJsonSync } from "fs-extra";
 
 export type MemoryRepoEntry = {
   stats: Stats;
-  metaData?: MetaData;
+  metaData: Maybe<MetaData>;
 };
 
 export type MemoryRepo = Map<string, MemoryRepoEntry>;
@@ -18,12 +19,12 @@ const getMetaData = ({
 }: {
   id: string;
   options: IOptions;
-}): MetaData | undefined => {
+}): Maybe<MetaData> => {
   const metaFileFSPath = fsPath(metaFile(id, options), options);
   if (pathExistsSync(metaFileFSPath)) {
     return readJsonSync(metaFileFSPath);
   } else {
-    return undefined;
+    return null;
   }
 };
 

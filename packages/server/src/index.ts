@@ -1,13 +1,17 @@
-import { ApolloServer } from "apollo-server";
-import schema from "./schema";
+import { ApolloServer, gql } from "apollo-server";
+import fs from "fs";
+import path from "path";
 import { options } from "./util";
 import { resolvers } from "./resolvers";
 import { repoCache, FileSystemDataSource } from "./repo";
 
+const typeDefs = gql(
+  fs.readFileSync(path.join(__dirname, "schema.graphql"), "utf8").toString()
+);
 const cache = repoCache(options);
 
 const server = new ApolloServer({
-  typeDefs: schema,
+  typeDefs,
   resolvers,
   context: { options },
   dataSources: () => {

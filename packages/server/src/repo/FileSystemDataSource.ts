@@ -1,6 +1,12 @@
 import { dirname, basename, extname } from "path";
 import { DataSource, DataSourceConfig } from "apollo-datasource";
-import { IOptions, FolderElement, MetaData } from "../util";
+import { IOptions } from "../util";
+import {
+  FolderElement,
+  Maybe,
+  MetaData,
+  MutationAddAttributeArgs
+} from "../generated/graphql";
 import { MemoryRepo, MemoryRepoEntry } from "../repo";
 import { IContext } from "../util";
 import {
@@ -27,7 +33,7 @@ export class FileSystemDataSource extends DataSource {
 
   public getEntry = (id: string) => {
     const rawEntry = this.cache.get(id);
-    if (!rawEntry) return undefined;
+    if (!rawEntry) return null;
     return this.expandEntry({ id, rawEntry });
   };
 
@@ -64,7 +70,7 @@ export class FileSystemDataSource extends DataSource {
         };
   };
 
-  public getFolderEntries = (id: string): Array<FolderElement> | undefined => {
+  public getFolderEntries = (id: string): Array<FolderElement> | null => {
     const retVal: Array<FolderElement> = [];
     for (const [key, rawEntry] of this.cache) {
       if (dirname(key) === id) {
@@ -72,10 +78,10 @@ export class FileSystemDataSource extends DataSource {
       }
     }
 
-    return retVal.length === 0 ? undefined : retVal;
+    return retVal.length === 0 ? null : retVal;
   };
 
-  public findEntries = (terms: string[]): Array<FolderElement> | undefined => {
+  public findEntries = (terms: string[]): Array<FolderElement> | null => {
     const retVal: Array<FolderElement> = [];
     for (const [key, rawEntry] of this.cache) {
       const { metaData } = rawEntry;
@@ -94,16 +100,18 @@ export class FileSystemDataSource extends DataSource {
       }
     }
 
-    return retVal.length === 0 ? undefined : retVal;
+    return retVal.length === 0 ? null : retVal;
   };
 
-  public getMetaData = (id: string): MetaData | undefined =>
-    this.cache.get(id)?.metaData;
+  public getMetaData = (id: string): Maybe<MetaData> => {
+    const metaData = this.cache.get(id)?.metaData;
+    return metaData ? metaData : null;
+  };
 
   public setMetaData = async (
     id: string,
-    metaData: MetaData | null
-  ): Promise<MetaData | undefined> => {
+    metaData: Maybe<MetaData>
+  ): Promise<Maybe<MetaData>> => {
     if (await pathExists(fsPath(id, this.options))) {
       if (
         metaData &&
@@ -125,62 +133,50 @@ export class FileSystemDataSource extends DataSource {
 
         const cacheEntry = this.cache.get(id);
         if (!cacheEntry) throw new Error("missing cache entry for " + id);
-        this.cache.set(id, { stats: cacheEntry.stats, metaData: undefined });
-        return undefined;
+        this.cache.set(id, { stats: cacheEntry.stats, metaData: null });
+        return null;
       }
     } else {
-      return undefined;
+      return null;
     }
   };
 
-  public addTag = async (
-    id: string,
-    tag: string
-  ): Promise<MetaData | undefined> =>
-    await this.setMetaData(id, addTag({ metaData: this.getMetaData(id), tag }));
+  public addTag = async (id: string, tag: string): Promise<MetaData | null> =>
+    await this.setMetaData(id, addTag(this.getMetaData(id), tag));
 
   public removeTag = async (
     id: string,
     tag: string
-  ): Promise<MetaData | undefined> =>
-    await this.setMetaData(
-      id,
-      removeTag({ metaData: this.getMetaData(id), tag })
-    );
+  ): Promise<MetaData | null> =>
+    await this.setMetaData(id, removeTag(this.getMetaData(id), tag));
 
-  public addAttribute = async (
-    id: string,
-    attribute: [string]
-  ): Promise<MetaData | undefined> =>
-    await this.setMetaData(
-      id,
-      addAttribute({ metaData: this.getMetaData(id), attribute })
-    );
+  public addAttribute = async ({
+    id,
+    attribute
+  }: MutationAddAttributeArgs): Promise<MetaData | null> =>
+    await this.setMetaData(id, addAttribute(this.getMetaData(id), attribute));
 
   public removeAttribute = async (
     id: string,
     attribute: string
-  ): Promise<MetaData | undefined> =>
+  ): Promise<MetaData | null> =>
     await this.setMetaData(
       id,
-      removeAttribute({ metaData: this.getMetaData(id), attribute })
+      removeAttribute(this.getMetaData(id), attribute)
     );
 
   public setTitle = async (
     id: string,
     title: string
-  ): Promise<MetaData | undefined> =>
-    await this.setMetaData(
-      id,
-      setTitle({ metaData: this.getMetaData(id), title })
-    );
+  ): Promise<MetaData | null> =>
+    await this.setMetaData(id, setTitle(this.getMetaData(id), title));
 
   public setDescription = async (
     id: string,
     description: string
-  ): Promise<MetaData | undefined> =>
+  ): Promise<MetaData | null> =>
     await this.setMetaData(
       id,
-      setDescription({ metaData: this.getMetaData(id), description })
+      setDescription(this.getMetaData(id), description)
     );
 }

@@ -1,4 +1,16 @@
-import { FolderElement, MetaData } from "../util";
+import {
+  FolderElement,
+  MutationAddAttributeArgs,
+  MutationAddTagArgs,
+  MutationRemoveAttributeArgs,
+  MutationRemoveTagArgs,
+  MutationSetDescriptionArgs,
+  MutationSetMetaDataArgs,
+  MutationSetTitleArgs,
+  QueryGetEntryArgs,
+  QueryGetFolderEntriesArgs,
+  Resolvers
+} from "../generated/graphql";
 import { IContext } from "../util";
 
 const metaData = (
@@ -19,11 +31,11 @@ const folderElementTypeResolver = (obj: FolderElement, _: any, __: any) => {
   return null;
 };
 
-export const resolvers = {
+export const resolvers: Resolvers<IContext> = {
   Query: {
     getFolderEntries(
       _: any,
-      { id }: { id: string },
+      { id }: QueryGetFolderEntriesArgs,
       { dataSources }: IContext
     ) {
       return id === ":favorite"
@@ -31,7 +43,7 @@ export const resolvers = {
         : dataSources.fs.getFolderEntries(id);
     },
 
-    getEntry(_: any, { id }: { id: string }, { dataSources }: IContext) {
+    getEntry(_: any, { id }: QueryGetEntryArgs, { dataSources }: IContext) {
       return dataSources.fs.getEntry(id);
     },
 
@@ -41,17 +53,13 @@ export const resolvers = {
   },
 
   Mutation: {
-    addTag(
-      _: any,
-      { id, tag }: { id: string; tag: string },
-      { dataSources }: IContext
-    ) {
+    addTag(_: any, { id, tag }: MutationAddTagArgs, { dataSources }: IContext) {
       return dataSources.fs.addTag(id, tag);
     },
 
     removeTag(
       _: any,
-      { id, tag }: { id: string; tag: string },
+      { id, tag }: MutationRemoveTagArgs,
       { dataSources }: IContext
     ) {
       return dataSources.fs.removeTag(id, tag);
@@ -59,15 +67,15 @@ export const resolvers = {
 
     addAttribute(
       _: any,
-      { id, attribute }: { id: string; attribute: [string] },
+      { id, attribute }: MutationAddAttributeArgs,
       { dataSources }: IContext
     ) {
-      return dataSources.fs.addAttribute(id, attribute);
+      return dataSources.fs.addAttribute({ id, attribute });
     },
 
     removeAttribute(
       _: any,
-      { id, attributeKey }: { id: string; attributeKey: string },
+      { id, attributeKey }: MutationRemoveAttributeArgs,
       { dataSources }: IContext
     ) {
       return dataSources.fs.addTag(id, attributeKey);
@@ -75,7 +83,7 @@ export const resolvers = {
 
     setTitle(
       _: any,
-      { id, title }: { id: string; title: string },
+      { id, title }: MutationSetTitleArgs,
       { dataSources }: IContext
     ) {
       return dataSources.fs.setTitle(id, title);
@@ -83,7 +91,7 @@ export const resolvers = {
 
     setDescription(
       _: any,
-      { id, description }: { id: string; description: string },
+      { id, description }: MutationSetDescriptionArgs,
       { dataSources }: IContext
     ) {
       return dataSources.fs.setDescription(id, description);
@@ -91,7 +99,7 @@ export const resolvers = {
 
     setMetaData(
       _: any,
-      { id, metaData }: { id: string; metaData: MetaData },
+      { id, metaData }: MutationSetMetaDataArgs,
       { dataSources }: IContext
     ) {
       return dataSources.fs.setMetaData(id, metaData);
