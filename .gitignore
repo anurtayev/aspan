@@ -2,3 +2,5 @@ node_modules
 .DS_Store
 build
 .env
+__generated__
+generated

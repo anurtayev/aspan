@@ -6,7 +6,6 @@ export const ENTRY_DATA = gql`
       ... on Entry {
         __typename
         id
-        name
       }
       ... on File {
         thumbImageUrl

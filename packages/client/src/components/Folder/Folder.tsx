@@ -6,13 +6,11 @@ import { ReactComponent as FolderIcon } from "./Folder.svg";
 import { Error } from "components/Error";
 import { Loading } from "components/Loading";
 import { FOLDER_ENTRIES } from "./queries";
+import { useUpdateLocalState, useLocalState, ROUTE_REGISTRY } from "aspanUtils";
 import {
-  useUpdateLocalState,
-  useLocalState,
-  FolderElement,
-  ROUTE_REGISTRY,
-} from "aspanUtils";
-import { MediaCard } from "./MediaCard";
+  GetFolderEntries,
+  GetFolderEntries_getFolderEntries,
+} from "./__generated__/GetFolderEntries";
 
 const Container = styled.div`
   display: flex;
@@ -68,13 +66,11 @@ export const Folder = () => {
   if (loading) return <Loading />;
   if (error) return <Error />;
 
-  const {
-    getFolderEntries: entries,
-  }: { getFolderEntries: FolderElement[] } = data;
+  const { getFolderEntries: entries }: GetFolderEntries = data;
 
   return entries ? (
     <Container>
-      {entries.map((entry: FolderElement) => {
+      {entries.map((entry: GetFolderEntries_getFolderEntries) => {
         return entry.__typename === "Folder" ? (
           <FolderFrame
             key={entry.id}
@@ -90,7 +86,7 @@ export const Folder = () => {
             }}
           >
             <FolderIcon></FolderIcon>
-            <SlimParagraph>{entry.name}</SlimParagraph>
+            <SlimParagraph>{entry.id}</SlimParagraph>
           </FolderFrame>
         ) : (
           <ImageFrame
