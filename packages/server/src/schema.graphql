@@ -1,35 +1,27 @@
 input MetaDataInput {
   tags: [String!]
   attributes: [[String!]!]
-  title: String
-  description: String
 }
 
 type MetaData {
   tags: [String!]
   attributes: [[String!]!]
-  title: String
-  description: String
 }
 
 interface Entry {
   id: ID!
   metaData: MetaData
-  name: String!
 }
 
 type Folder implements Entry {
   id: ID!
   metaData: MetaData
-  name: String!
-
   children: [Entry!]
 }
 
 type File implements Entry {
   id: ID!
   metaData: MetaData
-  name: String!
 
   size: Int!
   thumbImageUrl: String!
