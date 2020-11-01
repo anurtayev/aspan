@@ -104,25 +104,3 @@ export const removeAttribute = (
     ]
   };
 };
-
-export const setTitle = (
-  metaData: Maybe<MetaData>,
-  title: Scalars["String"]
-): MetaData => {
-  if (!metaData || typeof metaData !== "object") {
-    return { __typename: "MetaData", title };
-  }
-
-  return { ...metaData, title };
-};
-
-export const setDescription = (
-  metaData: Maybe<MetaData>,
-  description: Scalars["String"]
-): MetaData => {
-  if (!metaData || typeof metaData !== "object") {
-    return { __typename: "MetaData", description };
-  }
-
-  return { ...metaData, description };
-};

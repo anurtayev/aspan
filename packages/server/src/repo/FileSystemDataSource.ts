@@ -13,9 +13,7 @@ import {
   addTag,
   removeTag,
   addAttribute,
-  removeAttribute,
-  setTitle,
-  setDescription
+  removeAttribute
 } from "./metaDataHelpers";
 import { metaFile, metaFolder, fsPath } from "./path";
 import { ensureDir, writeJson, pathExists, remove } from "fs-extra";
@@ -46,7 +44,6 @@ export class FileSystemDataSource extends DataSource {
   }): FolderElement => {
     const stats = rawEntry.stats;
     const contentType = extname(id);
-    const name = basename(id);
     const dockerImageUrl = process.env.DOCKER_NETWORK_PICREPO_URL + id;
     const imageUrl = process.env.IMG_CDN_URL + id;
 
@@ -56,7 +53,6 @@ export class FileSystemDataSource extends DataSource {
           id,
           size: stats.size,
           contentType,
-          name,
           thumbImageUrl:
             process.env.THUMBOR_URL +
             `/unsafe/${process.env.THUMBS_LENGTH}x${process.env.THUMBS_WIDTH}/` +
@@ -65,8 +61,7 @@ export class FileSystemDataSource extends DataSource {
         }
       : {
           __typename: "Folder",
-          id,
-          name
+          id
         };
   };
 
@@ -87,11 +82,9 @@ export class FileSystemDataSource extends DataSource {
       const { metaData } = rawEntry;
       if (!metaData) continue;
 
-      const { title, description, tags, attributes } = metaData;
+      const { tags, attributes } = metaData;
 
       const searchString =
-        (title ? title : "") +
-        (description ? description : "") +
         (tags ? tags.join() : "") +
         (attributes ? attributes.map(attr => attr.join()).join() : "");
 
@@ -163,20 +156,5 @@ export class FileSystemDataSource extends DataSource {
     await this.setMetaData(
       id,
       removeAttribute(this.getMetaData(id), attribute)
-    );
-
-  public setTitle = async (
-    id: string,
-    title: string
-  ): Promise<MetaData | null> =>
-    await this.setMetaData(id, setTitle(this.getMetaData(id), title));
-
-  public setDescription = async (
-    id: string,
-    description: string
-  ): Promise<MetaData | null> =>
-    await this.setMetaData(
-      id,
-      setDescription(this.getMetaData(id), description)
     );
 }

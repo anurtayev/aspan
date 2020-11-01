@@ -81,22 +81,6 @@ export const resolvers: Resolvers<IContext> = {
       return dataSources.fs.addTag(id, attributeKey);
     },
 
-    setTitle(
-      _: any,
-      { id, title }: MutationSetTitleArgs,
-      { dataSources }: IContext
-    ) {
-      return dataSources.fs.setTitle(id, title);
-    },
-
-    setDescription(
-      _: any,
-      { id, description }: MutationSetDescriptionArgs,
-      { dataSources }: IContext
-    ) {
-      return dataSources.fs.setDescription(id, description);
-    },
-
     setMetaData(
       _: any,
       { id, metaData }: MutationSetMetaDataArgs,
