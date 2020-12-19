@@ -1,10 +1,10 @@
 import React from "react";
-import { Nav } from "./Nav";
-import { Router } from "./Router";
+import { Folder } from "components/Folder";
 
-export const App = () => (
-  <>
-    <Nav />
-    <Router />
-  </>
+const App = () => (
+  <div className="App">
+    <Folder />
+  </div>
 );
+
+export default App;
