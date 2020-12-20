@@ -1,6 +1,6 @@
-import { Stats } from "fs";
+import { Stats, statSync } from "fs";
 import { relative, basename, extname } from "path";
-import { Maybe, MetaData } from "../generated/graphql";
+import { Maybe, MetaData, Scalars } from "../generated/graphql";
 import { IOptions } from "../util";
 import klawSync, { Item } from "klaw-sync";
 import { metaFile, fsPath } from "./path";
@@ -11,7 +11,7 @@ export type MemoryRepoEntry = {
   metaData: Maybe<MetaData>;
 };
 
-export type MemoryRepo = Map<string, MemoryRepoEntry>;
+export type MemoryRepo = Map<Scalars["ID"], MemoryRepoEntry>;
 
 const getMetaData = ({
   id,
@@ -56,6 +56,9 @@ export const repoCache = (options: IOptions): MemoryRepo => {
     },
     new Map()
   );
+
+  const rootFolderStats = statSync(options.path);
+  returnValue.set("/", { stats: rootFolderStats, metaData: null });
 
   console.log(
     `walked repository in ${new Date().getTime() - startTime.getTime()}ms`

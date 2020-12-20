@@ -1,16 +1,4 @@
-import {
-  FolderElement,
-  MutationAddAttributeArgs,
-  MutationAddTagArgs,
-  MutationRemoveAttributeArgs,
-  MutationRemoveTagArgs,
-  MutationSetDescriptionArgs,
-  MutationSetMetaDataArgs,
-  MutationSetTitleArgs,
-  QueryGetEntryArgs,
-  QueryGetFolderEntriesArgs,
-  Resolvers
-} from "../generated/graphql";
+import { FolderElement, Resolvers } from "../generated/graphql";
 import { IContext } from "../util";
 
 const metaData = (
@@ -33,66 +21,62 @@ const folderElementTypeResolver = (obj: FolderElement, _: any, __: any) => {
 
 export const resolvers: Resolvers<IContext> = {
   Query: {
-    getFolderEntries(
-      _: any,
-      { id }: QueryGetFolderEntriesArgs,
-      { dataSources }: IContext
+    entries(
+      _,
+      { id },
+      {
+        dataSources: {
+          fs: { findEntries, getFolderEntries, getEntry }
+        }
+      }
     ) {
-      return id === ":favorite"
-        ? dataSources.fs.findEntries(["favorite"])
-        : dataSources.fs.getFolderEntries(id);
+      const folder = getEntry(id);
+
+      // return id === ":favorite"
+      // ? findEntries(["favorite"])
+      // : getFolderEntries(id);
+
+      return folder
+        ? id === ":favorite"
+          ? findEntries(["favorite"])
+          : getFolderEntries(id)
+        : null;
     },
 
-    getEntry(_: any, { id }: QueryGetEntryArgs, { dataSources }: IContext) {
+    entry(_, { id }, { dataSources }) {
       return dataSources.fs.getEntry(id);
     },
 
-    getFavorites(_: any, __: any, { dataSources }: IContext) {
+    favorites(_, __, { dataSources }) {
       return dataSources.fs.findEntries(["favorite"]);
     }
   },
 
   Mutation: {
-    addTag(_: any, { id, tag }: MutationAddTagArgs, { dataSources }: IContext) {
+    addTag(_, { id, tag }, { dataSources }) {
       return dataSources.fs.addTag(id, tag);
     },
 
-    removeTag(
-      _: any,
-      { id, tag }: MutationRemoveTagArgs,
-      { dataSources }: IContext
-    ) {
+    removeTag(_, { id, tag }, { dataSources }) {
       return dataSources.fs.removeTag(id, tag);
     },
 
-    addAttribute(
-      _: any,
-      { id, attribute }: MutationAddAttributeArgs,
-      { dataSources }: IContext
-    ) {
+    addAttribute(_: any, { id, attribute }, { dataSources }) {
       return dataSources.fs.addAttribute({ id, attribute });
     },
 
-    removeAttribute(
-      _: any,
-      { id, attributeKey }: MutationRemoveAttributeArgs,
-      { dataSources }: IContext
-    ) {
+    removeAttribute(_: any, { id, attributeKey }, { dataSources }) {
       return dataSources.fs.addTag(id, attributeKey);
     },
 
-    setMetaData(
-      _: any,
-      { id, metaData }: MutationSetMetaDataArgs,
-      { dataSources }: IContext
-    ) {
+    setMetaData(_: any, { id, metaData }, { dataSources }) {
       return dataSources.fs.setMetaData(id, metaData);
     }
   },
 
   Folder: {
     metaData,
-    children({ id }: { id: string }, _: any, { dataSources }: IContext) {
+    children({ id }, _, { dataSources }) {
       return dataSources.fs.getFolderEntries(id);
     }
   },

@@ -32,9 +32,27 @@ type File implements Entry {
 union FolderElement = File | Folder
 
 type Query {
-  getFolderEntries(id: String!): [FolderElement!]
-  getFavorites: [FolderElement!]
-  getEntry(id: String!): FolderElement
+  """
+  return values:
+    - null if no such folder
+    - empty array if folder is empty
+    - Array of FolderElement otherwise
+  """
+  entries(id: String!): [FolderElement!]
+
+  """
+  return values:
+    - empty array if folder is empty
+    - Array of FolderElement otherwise
+  """
+  favorites: [FolderElement!]!
+
+  """
+  return values:
+    - null if no such entry
+    - FolderElement otherwise
+  """
+  entry(id: String!): FolderElement
 }
 
 type Mutation {

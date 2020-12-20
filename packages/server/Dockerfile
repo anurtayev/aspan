@@ -8,5 +8,5 @@ RUN npm run lint && npm test && npm run prebuild
 FROM node:10
 WORKDIR /usr/src/app
 COPY --from=build /usr/src/app/build .
-EXPOSE 4000
+EXPOSE 4000 9229
 CMD [ "node", "bundle.js" ]

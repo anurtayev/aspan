@@ -5,7 +5,8 @@ import {
   FolderElement,
   Maybe,
   MetaData,
-  MutationAddAttributeArgs
+  MutationAddAttributeArgs,
+  Scalars
 } from "../generated/graphql";
 import { MemoryRepo, MemoryRepoEntry } from "../repo";
 import { IContext } from "../util";
@@ -29,7 +30,7 @@ export class FileSystemDataSource extends DataSource {
     this.options = config.context.options;
   }
 
-  public getEntry = (id: string) => {
+  public getEntry = (id: Scalars["ID"]): Maybe<FolderElement> => {
     const rawEntry = this.cache.get(id);
     if (!rawEntry) return null;
     return this.expandEntry({ id, rawEntry });
@@ -65,7 +66,7 @@ export class FileSystemDataSource extends DataSource {
         };
   };
 
-  public getFolderEntries = (id: string): Array<FolderElement> | null => {
+  public getFolderEntries = (id: string): Array<FolderElement> => {
     const retVal: Array<FolderElement> = [];
     for (const [key, rawEntry] of this.cache) {
       if (dirname(key) === id) {
@@ -73,10 +74,10 @@ export class FileSystemDataSource extends DataSource {
       }
     }
 
-    return retVal.length === 0 ? null : retVal;
+    return retVal;
   };
 
-  public findEntries = (terms: string[]): Array<FolderElement> | null => {
+  public findEntries = (terms: string[]): Array<FolderElement> => {
     const retVal: Array<FolderElement> = [];
     for (const [key, rawEntry] of this.cache) {
       const { metaData } = rawEntry;
@@ -93,7 +94,7 @@ export class FileSystemDataSource extends DataSource {
       }
     }
 
-    return retVal.length === 0 ? null : retVal;
+    return retVal;
   };
 
   public getMetaData = (id: string): Maybe<MetaData> => {

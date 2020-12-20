@@ -15,8 +15,8 @@
         "description": "",
         "fields": [
           {
-            "name": "getFolderEntries",
-            "description": "",
+            "name": "entries",
+            "description": "return values:\n  - null if no such folder\n  - empty array if folder is empty\n  - Array of FolderElement otherwise",
             "args": [
               {
                 "name": "id",
@@ -50,19 +50,23 @@
             "deprecationReason": null
           },
           {
-            "name": "getFavorites",
-            "description": "",
+            "name": "favorites",
+            "description": "return values:\n  - empty array if folder is empty\n  - Array of FolderElement otherwise",
             "args": [],
             "type": {
-              "kind": "LIST",
+              "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "NON_NULL",
+                "kind": "LIST",
                 "name": null,
                 "ofType": {
-                  "kind": "UNION",
-                  "name": "FolderElement",
-                  "ofType": null
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "UNION",
+                    "name": "FolderElement",
+                    "ofType": null
+                  }
                 }
               }
             },
@@ -70,8 +74,8 @@
             "deprecationReason": null
           },
           {
-            "name": "getEntry",
-            "description": "",
+            "name": "entry",
+            "description": "return values:\n  - null if no such entry\n  - FolderElement otherwise",
             "args": [
               {
                 "name": "id",

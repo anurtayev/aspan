@@ -36,7 +36,7 @@
     "start": "run-p backpack picrepo",
     "backpack": "backpack dev",
     "picrepo": "docker-compose up",
-    "codegen": "graphql-codegen --config codegen.yml"
+    "graphql": "graphql-codegen --config codegen.yml"
   },
   "version": "1.0.0"
 }
