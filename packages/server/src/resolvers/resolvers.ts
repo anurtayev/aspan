@@ -32,11 +32,9 @@ export const resolvers: Resolvers<IContext> = {
     ) {
       const folder = getEntry(id);
 
-      // return id === ":favorite"
-      // ? findEntries(["favorite"])
-      // : getFolderEntries(id);
-
-      return folder
+      return (id === "/"
+      ? true
+      : getEntry(id))
         ? id === ":favorite"
           ? findEntries(["favorite"])
           : getFolderEntries(id)

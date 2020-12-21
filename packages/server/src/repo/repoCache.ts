@@ -57,9 +57,6 @@ export const repoCache = (options: IOptions): MemoryRepo => {
     new Map()
   );
 
-  const rootFolderStats = statSync(options.path);
-  returnValue.set("/", { stats: rootFolderStats, metaData: null });
-
   console.log(
     `walked repository in ${new Date().getTime() - startTime.getTime()}ms`
   );

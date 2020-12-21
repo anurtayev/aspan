@@ -1,10 +1,24 @@
 import React from "react";
-import { Folder } from "components/Folder";
+import { Switch, Route, Redirect } from "react-router-dom";
+
+import { FolderScreen } from "components/FolderScreen";
+import { Nav } from "components/Nav";
 
 const App = () => (
-  <div className="App">
-    <Folder />
-  </div>
+  <>
+    <Nav />
+    <Switch>
+      <Route exact path="/">
+        <Redirect to="/folder" />
+      </Route>
+      <Route exact path="/folder">
+        <FolderScreen />
+      </Route>
+      <Route path="/folder/:id">
+        <FolderScreen />
+      </Route>
+    </Switch>
+  </>
 );
 
 export default App;

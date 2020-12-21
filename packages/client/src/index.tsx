@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import { ThemeProvider } from "styled-components";
+import { BrowserRouter as Router } from "react-router-dom";
 
 import "./index.css";
 import App from "./App";
@@ -19,7 +20,9 @@ ReactDOM.render(
       }
     >
       <ThemeProvider theme={defaultTheme}>
-        <App />
+        <Router>
+          <App />
+        </Router>
       </ThemeProvider>
     </ApolloProvider>
   </React.StrictMode>,
