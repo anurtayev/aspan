@@ -1,12 +1,18 @@
 import React from "react";
-import { FileFrame } from "./File.styles";
+import { Frame } from "./File.styles";
+import { useHistory } from "react-router-dom";
 
 type FileParams = { id: string; thumbImageUrl: string; imageUrl: string };
 
 export const File = ({ id, thumbImageUrl, imageUrl }: FileParams) => {
+  const history = useHistory();
   return (
-    <FileFrame>
+    <Frame
+      onClick={() => {
+        history.push("/image" + id);
+      }}
+    >
       <img src={thumbImageUrl} alt="" />
-    </FileFrame>
+    </Frame>
   );
 };

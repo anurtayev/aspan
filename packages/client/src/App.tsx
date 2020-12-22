@@ -2,6 +2,7 @@ import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 
 import { FolderScreen } from "components/FolderScreen";
+import { ImageScreen } from "components/ImageScreen";
 import { Nav } from "components/Nav";
 
 const App = () => (
@@ -11,11 +12,11 @@ const App = () => (
       <Route exact path="/">
         <Redirect to="/folder" />
       </Route>
-      <Route exact path="/folder">
+      <Route path="/folder">
         <FolderScreen />
       </Route>
-      <Route path="/folder/:id">
-        <FolderScreen />
+      <Route path="/image">
+        <ImageScreen />
       </Route>
     </Switch>
   </>
