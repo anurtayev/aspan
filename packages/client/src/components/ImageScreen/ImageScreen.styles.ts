@@ -1,7 +1,15 @@
 import styled from "styled-components";
 
 export const Frame = styled.div`
-  border: 1px solid green;
-  margin: 1rem;
-  padding: 1rem;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const Image = styled.img`
+  max-width: 100%;
+  max-height: 100%;
 `;

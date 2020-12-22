@@ -1,10 +1,6 @@
 import styled from "styled-components";
 
-export const Frame = styled.div`
-  margin: 1rem;
-  border: 1px solid black;
-  padding: 0.5rem;
-`;
+export const Frame = styled.div``;
 
 export const ActionButton = styled.div`
   font-size: 2rem;

@@ -14,6 +14,11 @@ export const Nav = () => {
             &#x2302;
           </ActionButton>
         </Route>
+        <Route path="/image">
+          <ActionButton onClick={() => history.push("/meta")}>
+            &#x1f3f7;
+          </ActionButton>
+        </Route>
       </Switch>
     </Frame>
   );

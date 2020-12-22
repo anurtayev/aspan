@@ -1,1 +1,1 @@
-export const c1 = true;
+export const pathPrefix = { folder: "/folder", image: "/image", meta: "/meta" };

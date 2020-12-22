@@ -1,17 +1,25 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
 
-import { Frame } from "./ImageScreen.styles";
-
-const PATH_PREFIX = "/image";
+import { Frame, Image } from "./ImageScreen.styles";
+import { pathPrefix } from "common";
 
 export const ImageScreen = () => {
+  const history = useHistory();
   const location = useLocation();
-  const id = location.pathname.replace(PATH_PREFIX, "");
+  const id = location.pathname.replace(pathPrefix.image, "");
 
   return (
     <Frame>
-      <img src={id} alt="" />
+      <Image
+        src={process.env.REACT_APP_IMG_CDN_URL + id}
+        alt=""
+        onClick={() => {
+          history.push(
+            pathPrefix.folder + id.split("/").slice(0, -1).join("/")
+          );
+        }}
+      />
     </Frame>
   );
 };
