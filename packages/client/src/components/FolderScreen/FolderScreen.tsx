@@ -2,7 +2,7 @@ import React from "react";
 import { useQuery } from "@apollo/client";
 import { useLocation } from "react-router-dom";
 
-import { GetFolderEntries, GetFolderEntriesVariables } from "common";
+import { GetFolderEntries, GetFolderEntriesVariables, entryType } from "common";
 import { FOLDER_ENTRIES } from "./queries";
 import { FolderScreenFrame } from "./FolderScreen.styles";
 import { File } from "./File";
@@ -30,13 +30,29 @@ export const FolderScreen = () => {
 
   return (
     <FolderScreenFrame>
-      {entries.map((entry) =>
-        entry.__typename === "File" ? (
-          <File key={entry.id} {...entry} />
-        ) : (
-          <Folder key={entry.id} {...entry} />
-        )
-      )}
+      {entries
+        .sort((a, b) => {
+          if (
+            a.__typename === entryType.folder &&
+            b.__typename === entryType.file
+          )
+            return -1;
+          else if (
+            a.__typename === entryType.file &&
+            b.__typename === entryType.folder
+          )
+            return 1;
+          else if (a.id < b.id) return -1;
+          else if (a.id > b.id) return 1;
+          else return 0;
+        })
+        .map((entry) =>
+          entry.__typename === "File" ? (
+            <File key={entry.id} {...entry} />
+          ) : (
+            <Folder key={entry.id} {...entry} />
+          )
+        )}
     </FolderScreenFrame>
   );
 };
