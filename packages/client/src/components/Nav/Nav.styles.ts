@@ -1,6 +1,10 @@
 import styled from "styled-components";
 
-export const Frame = styled.div``;
+export const Frame = styled.div`
+  min-height: 5em;
+  display: flex;
+  align-items: center;
+`;
 
 export const ActionButton = styled.div`
   font-size: 2rem;

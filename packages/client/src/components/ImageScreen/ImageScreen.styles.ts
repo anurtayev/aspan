@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
 export const Frame = styled.div`
-  text-align: center;
-  width: 100%;
-  height: 100%;
+  min-height: 0;
+  flex: 1;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 `;
@@ -12,4 +12,7 @@ export const Frame = styled.div`
 export const Image = styled.img`
   max-width: 100%;
   max-height: 100%;
+  height: auto;
+  width: auto;
+  display: block;
 `;
