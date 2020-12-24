@@ -1,17 +1,32 @@
 import styled from "styled-components";
 
 export const Frame = styled.div`
-  min-height: 5em;
   display: flex;
-  align-items: center;
 `;
 
 export const ActionButton = styled.div`
   font-size: 2rem;
+  width: 4rem;
+  height: 4rem;
   display: flex;
-  width: 2rem;
-  height: 2rem;
-  justify-content: center;
   align-items: center;
-  background: aquamarine;
+  justify-content: center;
+  border-radius: 2rem;
+  background: green;
+  margin: 1rem 0 1rem 1rem;
+  cursor: default;
+
+  background-position: center;
+  transition: background 0.8s;
+
+  &:hover {
+    background: #47a7f5 radial-gradient(cirle, transparent 1%, #47a7f5 1%)
+      center/15000%;
+  }
+
+  &:active {
+    background-color: lime;
+    background-size: 100%;
+    transition: background 0s;
+  }
 `;
