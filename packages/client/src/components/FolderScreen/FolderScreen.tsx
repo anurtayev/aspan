@@ -1,24 +1,25 @@
 import React from "react";
 import { useQuery } from "@apollo/client";
-import { useLocation } from "react-router-dom";
 
-import { GetFolderEntries, GetFolderEntriesVariables, entryType } from "common";
+import {
+  GetFolderEntries,
+  GetFolderEntriesVariables,
+  entryType,
+  useEntryId,
+} from "common";
 import { FOLDER_ENTRIES } from "./queries";
 import { FolderScreenFrame } from "./FolderScreen.styles";
 import { File } from "./File";
 import { Folder } from "./Folder";
 
-const FOLDER_PATH_PREFIX = "/folder";
-
 export const FolderScreen = () => {
-  const location = useLocation();
-  const id = location.pathname.replace(FOLDER_PATH_PREFIX, "");
+  const entryId = useEntryId();
 
   const { loading, error, data } = useQuery<
     GetFolderEntries,
     GetFolderEntriesVariables
   >(FOLDER_ENTRIES, {
-    variables: { id: id || "/" },
+    variables: { id: entryId || "/" },
     fetchPolicy: "no-cache",
   });
 

@@ -1,43 +1,68 @@
 import React from "react";
-import { useLocation, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Switch, Route } from "react-router-dom";
 
 import { Frame, ActionButton } from "./Nav.styles";
-import { pathPrefix } from "common";
+import { useEntryId, pathPrefix } from "common";
 
 export const Nav = () => {
   const history = useHistory();
-  const location = useLocation();
-  const folderPath = location.pathname.replace(pathPrefix.folder, "");
-  const isHomeFolder = folderPath === "" || folderPath === "/";
+  const entryId = useEntryId();
+  const isHomeFolder = entryId === "" || entryId === "/";
+
+  const goHome = () => history.push(pathPrefix.folder);
 
   return (
     <Frame>
       <Switch>
+        {/** Folder */}
         <Route path={pathPrefix.folder}>
           {/** Home */}
-          <ActionButton onClick={() => history.push(pathPrefix.folder)}>
-            &#x1F3E0;
-          </ActionButton>
+          <ActionButton onClick={goHome}>&#x1F3E0;</ActionButton>
 
           {/** Parent folder */}
           {!isHomeFolder && (
             <ActionButton
               onClick={() =>
                 history.push(
-                  pathPrefix.folder +
-                    folderPath.split("/").slice(0, -1).join("/")
+                  pathPrefix.folder + entryId.split("/").slice(0, -1).join("/")
                 )
               }
             >
               &#x21e7;
             </ActionButton>
           )}
+
+          {/** Meta */}
+          {!isHomeFolder && (
+            <ActionButton
+              onClick={() => history.push(pathPrefix.meta + entryId)}
+            >
+              &#x1f3f7;
+            </ActionButton>
+          )}
         </Route>
+
+        {/** Image */}
         <Route path={pathPrefix.image}>
-          <ActionButton onClick={() => history.push(pathPrefix.meta)}>
+          {/** Home */}
+          <ActionButton onClick={goHome}>&#x1F3E0;</ActionButton>
+
+          {/** Meta */}
+          <ActionButton onClick={() => history.push(pathPrefix.meta + entryId)}>
             &#x1f3f7;
           </ActionButton>
+        </Route>
+
+        {/** Meta */}
+        <Route path={pathPrefix.folder}>
+          {/** Home */}
+          <ActionButton onClick={goHome}>&#x1F3E0;</ActionButton>
+        </Route>
+
+        {/** Catch all */}
+        <Route>
+          <ActionButton onClick={goHome}>&#x1F3E0;</ActionButton>
         </Route>
       </Switch>
     </Frame>
