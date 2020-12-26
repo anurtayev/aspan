@@ -11,8 +11,7 @@ export const File = ({ id, thumbImageUrl, imageUrl }: FileParams) => {
       onClick={() => {
         history.push("/image" + id);
       }}
-    >
-      <img src={thumbImageUrl} alt="" />
-    </Frame>
+      thumbImageUrl={thumbImageUrl}
+    />
   );
 };
