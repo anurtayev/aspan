@@ -15,3 +15,8 @@ export const useEntryId = () => {
   const location = useLocation();
   return location.pathname.replace(removePathPrefixRegExp, "");
 };
+
+export enum systemAttributes {
+  favorite = "favorite",
+  hidden = "hidden",
+}
