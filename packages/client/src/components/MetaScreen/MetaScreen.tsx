@@ -1,52 +1,22 @@
 import React from "react";
 import { useQuery, useMutation } from "@apollo/client";
-import { useField, Form, Field, FieldArray } from "formik";
+import { Form, Field, FieldArray } from "formik";
+import { useHistory } from "react-router-dom";
 
 import {
   useEntryId,
   GetMetaData,
   GetMetaDataVariables,
-  GetMetaData_entry_metaData,
-  MetaDataInput,
+  pathPrefix,
 } from "common";
-import { Frame } from "./MetaScreen.styles";
 import { GET_METADATA, SET_METADATA } from "./queries";
-
-const getInitialValues = (
-  metaData: GetMetaData_entry_metaData | null
-): MetaDataInput => {
-  return {
-    tags: (metaData && metaData.tags) || [],
-    attributes: (metaData && metaData.attributes) || [[]],
-  };
-};
-
-const AttributeField = ({ name }: { name: string }) => {
-  const [field, meta, helpers] = useField<string[]>(name);
-  return (
-    <div>
-      <input
-        type="text"
-        name={field.name + ".key"}
-        value={field.value[0]}
-        onChange={(e) => {
-          helpers.setValue([e.target.value, field.value[1]]);
-        }}
-      />
-      <input
-        type="text"
-        name={field.name + ".value"}
-        value={field.value[1]}
-        onChange={(e) => {
-          helpers.setValue([field.value[0], e.target.value]);
-        }}
-      />
-      {meta.touched && meta.error && <div className="error">{meta.error}</div>}
-    </div>
-  );
-};
+import { NewAttribute } from "./NewAttribute";
+import { NewTag } from "./NewTag";
+import { Attribute } from "./Attribute";
+import { Frame } from "./MetaScreen.styles";
 
 export const MetaScreen = () => {
+  const history = useHistory();
   const entryId = useEntryId();
 
   const { loading, error, data: getData } = useQuery<
@@ -67,46 +37,43 @@ export const MetaScreen = () => {
 
   return (
     <Frame
-      initialValues={getInitialValues(metaData)}
+      initialValues={
+        (metaData && {
+          tags: metaData.tags,
+          attributes: metaData.attributes,
+        }) ||
+        {}
+      }
       onSubmit={(values, { setSubmitting }) => {
         setMetaData({ variables: { id: entryId, metaData: values } });
         setSubmitting(false);
+        history.push(
+          (__typename === "Folder" ? pathPrefix.folder : pathPrefix.image) +
+            entryId
+        );
       }}
     >
       {({ isSubmitting, values }) => (
         <Form>
           <div>
-            {__typename} - {id}
+            {__typename}: {id.split("/").slice(-1)[0]}
           </div>
 
           <div>TAGS</div>
           <FieldArray
             name="tags"
-            render={(arrayHelpers) => (
+            render={({ remove, push }) => (
               <div>
-                {values.tags && values.tags.length > 0 ? (
+                {values.tags &&
                   values.tags.map((tag: string, index: number) => (
                     <div key={index}>
                       <Field name={`tags.${index}`} />
-                      <button
-                        type="button"
-                        onClick={() => arrayHelpers.remove(index)}
-                      >
-                        -
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => arrayHelpers.insert(index, "")}
-                      >
-                        +
+                      <button type="button" onClick={() => remove(index)}>
+                        &#x232b;
                       </button>
                     </div>
-                  ))
-                ) : (
-                  <button type="button" onClick={() => arrayHelpers.push("")}>
-                    Add a tag
-                  </button>
-                )}
+                  ))}
+                <NewTag push={push} />
               </div>
             )}
           />
@@ -114,36 +81,21 @@ export const MetaScreen = () => {
           <div>ATTRIBUTES</div>
           <FieldArray
             name="attributes"
-            render={(arrayHelpers) => (
+            render={({ remove, push }) => (
               <div>
-                {values.attributes && values.attributes.length > 0 ? (
+                {values.attributes &&
                   values.attributes.map(
                     (attribute: string[], index: number) => (
                       <div key={index}>
-                        <AttributeField name={`attributes.${index}`} />
-                        <button
-                          type="button"
-                          onClick={() => arrayHelpers.remove(index)}
-                        >
-                          -
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => arrayHelpers.insert(index, ["", ""])}
-                        >
-                          +
-                        </button>
+                        <Attribute
+                          name={`attributes.${index}`}
+                          index={index}
+                          remove={remove}
+                        />
                       </div>
                     )
-                  )
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => arrayHelpers.push(["", ""])}
-                  >
-                    Add an attribute
-                  </button>
-                )}
+                  )}
+                <NewAttribute push={push} />
               </div>
             )}
           />

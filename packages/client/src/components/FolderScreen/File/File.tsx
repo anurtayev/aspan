@@ -6,6 +6,7 @@ type FileParams = { id: string; thumbImageUrl: string; imageUrl: string };
 
 export const File = ({ id, thumbImageUrl, imageUrl }: FileParams) => {
   const history = useHistory();
+
   return (
     <Frame
       onClick={() => {

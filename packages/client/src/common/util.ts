@@ -1,19 +1,23 @@
 import { useLocation } from "react-router-dom";
 
-export const pathPrefix = { folder: "/folder", image: "/image", meta: "/meta" };
+export const pathPrefix: { [key: string]: string } = {
+  folder: "/folder",
+  image: "/image",
+  meta: "/meta",
+};
 
 export enum entryType {
   folder = "Folder",
   file = "File",
 }
 
-const removePathPrefixRegExp = new RegExp(
+const pathPrefixesRegExp = new RegExp(
   `^(${pathPrefix.folder}|${pathPrefix.image}|${pathPrefix.meta})`
 );
 
 export const useEntryId = () => {
-  const location = useLocation();
-  return location.pathname.replace(removePathPrefixRegExp, "");
+  const { pathname } = useLocation();
+  return pathname.replace(pathPrefixesRegExp, "");
 };
 
 export enum systemAttributes {
