@@ -9,6 +9,8 @@ import { pathExistsSync, readJsonSync } from "fs-extra";
 export type MemoryRepoEntry = {
   stats: Stats;
   metaData: Maybe<MetaData>;
+  prev?: string;
+  next?: string;
 };
 
 export type MemoryRepo = Map<Scalars["ID"], MemoryRepoEntry>;
@@ -31,28 +33,56 @@ const getMetaData = ({
 export const repoCache = (options: IOptions): MemoryRepo => {
   const startTime = new Date();
   const paths = klawSync(options.path);
-  let totalEntries = 0;
-  let includedEntries = 0;
 
-  const returnValue = paths.reduce(
-    (accumulator: MemoryRepo, currentValue: Item) => {
-      totalEntries++;
-      const id = "/" + relative(options.path, currentValue.path);
-
-      if (
+  const filteredEntries = paths
+    .map(({ stats, path }) => ({
+      stats,
+      id: "/" + relative(options.path, path)
+    }))
+    .filter(
+      ({ id, stats }) =>
         !basename(id).startsWith(".") &&
         basename(id) !== options.metaFolder &&
-        (currentValue.stats.isDirectory() ||
+        (stats.isDirectory() ||
           options.exts.includes(extname(basename(id)).toLowerCase()))
-      ) {
-        accumulator.set(id, {
-          stats: currentValue.stats,
-          metaData: getMetaData({ id, options })
-        });
-        includedEntries++;
-      }
+    );
 
-      return accumulator;
+  const sortedKeys = filteredEntries
+    .map(element => element.id)
+    .sort((a, b) => {
+      const aPathElems = a.split("/");
+      const bPathElems = b.split("/");
+      if (aPathElems.length < bPathElems.length) return -1;
+      else if (aPathElems.length > bPathElems.length) return 1;
+      else if (a < b) return -1;
+      else if (a > b) return 1;
+      else return 0;
+    });
+
+  const cache = filteredEntries.reduce(
+    (accumulator: MemoryRepo, { id, stats }: { id: string; stats: Stats }) => {
+      const index = sortedKeys.indexOf(id);
+
+      const prev =
+        index > 0 &&
+        JSON.stringify(id.split("/").slice(1, -1)) ===
+          JSON.stringify(sortedKeys[index - 1].split("/").slice(1, -1))
+          ? sortedKeys[index - 1]
+          : undefined;
+
+      const next =
+        index < sortedKeys.length - 1 &&
+        JSON.stringify(id.split("/").slice(1, -1)) ===
+          JSON.stringify(sortedKeys[index + 1].split("/").slice(1, -1))
+          ? sortedKeys[index + 1]
+          : undefined;
+
+      return accumulator.set(id, {
+        stats,
+        metaData: getMetaData({ id, options }),
+        prev,
+        next
+      });
     },
     new Map()
   );
@@ -60,8 +90,8 @@ export const repoCache = (options: IOptions): MemoryRepo => {
   console.log(
     `walked repository in ${new Date().getTime() - startTime.getTime()}ms`
   );
-  console.log(`processed ${totalEntries} entries`);
-  console.log(`showing ${includedEntries} entries`);
+  console.log(`processed ${paths.length} entries`);
+  console.log(`showing ${cache.size} entries`);
 
-  return returnValue;
+  return cache;
 };

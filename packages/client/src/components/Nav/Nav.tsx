@@ -2,8 +2,8 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import { Switch, Route } from "react-router-dom";
 
-import { Frame, ActionButton } from "./Nav.styles";
 import { useEntryId, pathPrefix } from "common";
+import { Frame, ActionButton, Id } from "./Nav.styles";
 
 export const Nav = () => {
   const history = useHistory();
@@ -65,6 +65,7 @@ export const Nav = () => {
           <ActionButton onClick={goHome}>&#x1F3E0;</ActionButton>
         </Route>
       </Switch>
+      <Id>{entryId}</Id>
     </Frame>
   );
 };

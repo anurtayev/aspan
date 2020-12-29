@@ -30,3 +30,11 @@ export const ActionButton = styled.div`
     transition: background 0s;
   }
 `;
+
+export const Id = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 2rem;
+  margin-left: auto;
+  margin-right: 2rem;
+`;
