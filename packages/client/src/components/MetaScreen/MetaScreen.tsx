@@ -16,7 +16,14 @@ import { NewAttribute } from "./NewAttribute";
 import { NewTag } from "./NewTag";
 import { Attribute } from "./Attribute";
 import { Tag } from "./Tag";
-import { Frame, EntryName, Section, PictureSymbol } from "./MetaScreen.styles";
+import {
+  Frame,
+  EntryName,
+  Section,
+  PictureSymbol,
+  SubmitButton,
+  SectionHeader,
+} from "./MetaScreen.styles";
 
 export const MetaScreen = () => {
   const history = useHistory();
@@ -69,7 +76,7 @@ export const MetaScreen = () => {
           </Section>
 
           <Section>
-            <h5>TAGS</h5>
+            <SectionHeader>TAGS</SectionHeader>
             <FieldArray
               name="tags"
               render={({ remove, push }) => (
@@ -90,7 +97,7 @@ export const MetaScreen = () => {
           </Section>
 
           <Section>
-            <h5>ATTRIBUTES</h5>
+            <SectionHeader>ATTRIBUTES</SectionHeader>
             <FieldArray
               name="attributes"
               render={({ remove, push }) => (
@@ -113,9 +120,9 @@ export const MetaScreen = () => {
           </Section>
 
           <Section>
-            <Button type="submit" disabled={isSubmitting}>
+            <SubmitButton type="submit" disabled={isSubmitting}>
               Submit
-            </Button>
+            </SubmitButton>
             <Button type="button" onClick={goBack}>
               Cancel
             </Button>

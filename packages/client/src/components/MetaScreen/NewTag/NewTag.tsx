@@ -23,7 +23,7 @@ export const NewTag = ({ push }: Params) => {
           setNewTag("");
         }}
       >
-        {Characters.check}
+        {Characters.plus}
       </SmallButton>
     </FormLine>
   );

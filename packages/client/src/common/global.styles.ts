@@ -16,9 +16,16 @@ export const SmallButton = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: red;
+  background: lightgrey;
+  border: 1px solid;
   width: 3rem;
+  border-radius: 1.5rem;
   text-align: center;
+  cursor: default;
+
+  &:hover {
+    background: darkgrey;
+  }
 `;
 
 export const InputBox = styled.input`

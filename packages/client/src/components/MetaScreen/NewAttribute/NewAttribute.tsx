@@ -33,7 +33,7 @@ export const NewAttribute = ({ push }: Params) => {
           setNewValue("");
         }}
       >
-        {Characters.check}
+        {Characters.plus}
       </SmallButton>
     </FormLine>
   );

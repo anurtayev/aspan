@@ -30,4 +30,6 @@ export enum Characters {
   delete = "\u{232b}",
   file = "\u{1F5BC}",
   folder = "\u{1F4C1}",
+  plus = "\u{002b}",
+  multiply = "\u{00d7}",
 }

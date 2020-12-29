@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Form } from "formik";
+import { Button } from "common";
 
 export const Frame = styled(Form)`
   display: flex;
@@ -8,7 +9,7 @@ export const Frame = styled(Form)`
 `;
 
 export const Section = styled.div`
-  margin: 2rem;
+  margin: 1rem 0 0 2rem;
 `;
 
 export const PictureSymbol = styled.span`
@@ -18,4 +19,12 @@ export const PictureSymbol = styled.span`
 export const EntryName = styled.span`
   font-size: 2rem;
   margin: 0 0 0 1rem;
+`;
+
+export const SubmitButton = styled(Button)`
+  background: deepskyblue;
+`;
+
+export const SectionHeader = styled.h5`
+  color: red;
 `;

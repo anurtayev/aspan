@@ -26,7 +26,7 @@ export const Attribute = ({ name, index, remove }: Params) => {
         }}
       />
       <SmallButton onClick={() => remove(index)}>
-        {Characters.delete}
+        {Characters.multiply}
       </SmallButton>
     </FormLine>
   );

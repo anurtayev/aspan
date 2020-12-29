@@ -19,7 +19,7 @@ export const Tag = ({ remove, name, index }: Params) => {
         }}
       />
       <SmallButton onClick={() => remove(index)}>
-        {Characters.delete}
+        {Characters.multiply}
       </SmallButton>
     </FormLine>
   );
