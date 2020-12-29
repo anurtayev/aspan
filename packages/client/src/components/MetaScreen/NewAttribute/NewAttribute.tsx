@@ -1,13 +1,22 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { Characters, SmallButton, InputBox, FormLine } from "common";
 
-type Params = { push: Function };
+type Params = {
+  push: Function;
+  setNewValue: Function;
+  setNewKey: Function;
+  newValue: string;
+  newKey: string;
+};
 
-export const NewAttribute = ({ push }: Params) => {
-  const [newKey, setNewKey] = useState("");
-  const [newValue, setNewValue] = useState("");
-
+export const NewAttribute = ({
+  push,
+  newKey,
+  newValue,
+  setNewValue,
+  setNewKey,
+}: Params) => {
   return (
     <FormLine>
       <InputBox

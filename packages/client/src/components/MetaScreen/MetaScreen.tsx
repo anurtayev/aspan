@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { FieldArray, Formik } from "formik";
 import { useHistory } from "react-router-dom";
@@ -28,6 +28,10 @@ import {
 export const MetaScreen = () => {
   const history = useHistory();
   const entryId = useEntryId();
+
+  const [newKey, setNewKey] = useState("");
+  const [newValue, setNewValue] = useState("");
+  const [newTag, setNewTag] = useState("");
 
   const { loading, error, data: getData } = useQuery<
     GetMetaData,
@@ -61,6 +65,17 @@ export const MetaScreen = () => {
         {}
       }
       onSubmit={(values, { setSubmitting }) => {
+        if (newKey && newValue) {
+          values.attributes = [
+            ...(values.attributes ? values.attributes : []),
+            [newKey, newValue],
+          ];
+        }
+
+        if (newTag) {
+          values.tags = [...(values.tags ? values.tags : []), newTag];
+        }
+
         setMetaData({ variables: { id: entryId, metaData: values } });
         setSubmitting(false);
         goBack();
@@ -90,7 +105,7 @@ export const MetaScreen = () => {
                         index={index}
                       />
                     ))}
-                  <NewTag push={push} />
+                  <NewTag setNewTag={setNewTag} newTag={newTag} push={push} />
                 </>
               )}
             />
@@ -113,7 +128,13 @@ export const MetaScreen = () => {
                         />
                       )
                     )}
-                  <NewAttribute push={push} />
+                  <NewAttribute
+                    push={push}
+                    newKey={newKey}
+                    newValue={newValue}
+                    setNewKey={setNewKey}
+                    setNewValue={setNewValue}
+                  />
                 </>
               )}
             />

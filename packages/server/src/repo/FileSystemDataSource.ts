@@ -110,8 +110,18 @@ export class FileSystemDataSource extends DataSource {
       if (
         metaData &&
         typeof metaData === "object" &&
-        Reflect.ownKeys(metaData).length > 0
+        Reflect.ownKeys(metaData).length > 0 &&
+        ((metaData.tags && metaData.tags.length > 0) ||
+          (metaData.attributes && metaData.attributes.length > 0))
       ) {
+        // remove empty fiedls
+        if (metaData.tags && metaData.tags.length === 0) {
+          delete metaData.tags;
+        }
+        if (metaData.attributes && metaData.attributes.length === 0) {
+          delete metaData.attributes;
+        }
+
         await ensureDir(fsPath(metaFolder(id, this.options), this.options));
         await writeJson(
           fsPath(metaFile(id, this.options), this.options),

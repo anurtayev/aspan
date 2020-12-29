@@ -1,12 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { SmallButton, Characters, InputBox, FormLine } from "common";
 
-type Params = { push: Function };
+type Params = { setNewTag: Function; newTag: string; push: Function };
 
-export const NewTag = ({ push }: Params) => {
-  const [newTag, setNewTag] = useState("");
-
+export const NewTag = ({ setNewTag, newTag, push }: Params) => {
   return (
     <FormLine>
       <InputBox
