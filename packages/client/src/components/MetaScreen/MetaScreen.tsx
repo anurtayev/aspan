@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery, useMutation } from "@apollo/client";
-import { Form, Field, FieldArray } from "formik";
+import { FieldArray, Formik } from "formik";
 import { useHistory } from "react-router-dom";
 
 import {
@@ -8,12 +8,15 @@ import {
   GetMetaData,
   GetMetaDataVariables,
   pathPrefix,
+  Characters,
+  Button,
 } from "common";
 import { GET_METADATA, SET_METADATA } from "./queries";
 import { NewAttribute } from "./NewAttribute";
 import { NewTag } from "./NewTag";
 import { Attribute } from "./Attribute";
-import { Frame } from "./MetaScreen.styles";
+import { Tag } from "./Tag";
+import { Frame, EntryName, Section, PictureSymbol } from "./MetaScreen.styles";
 
 export const MetaScreen = () => {
   const history = useHistory();
@@ -35,8 +38,14 @@ export const MetaScreen = () => {
 
   const { __typename, id, metaData } = getData.entry;
 
+  const goBack = () => {
+    history.push(
+      (__typename === "Folder" ? pathPrefix.folder : pathPrefix.image) + entryId
+    );
+  };
+
   return (
-    <Frame
+    <Formik
       initialValues={
         (metaData && {
           tags: metaData.tags,
@@ -47,64 +56,72 @@ export const MetaScreen = () => {
       onSubmit={(values, { setSubmitting }) => {
         setMetaData({ variables: { id: entryId, metaData: values } });
         setSubmitting(false);
-        history.push(
-          (__typename === "Folder" ? pathPrefix.folder : pathPrefix.image) +
-            entryId
-        );
+        goBack();
       }}
     >
       {({ isSubmitting, values }) => (
-        <Form>
-          <div>
-            {__typename}: {id.split("/").slice(-1)[0]}
-          </div>
+        <Frame>
+          <Section>
+            <PictureSymbol>
+              {__typename === "Folder" ? Characters.folder : Characters.file}
+            </PictureSymbol>
+            <EntryName>{id.split("/").slice(-1)[0]}</EntryName>
+          </Section>
 
-          <div>TAGS</div>
-          <FieldArray
-            name="tags"
-            render={({ remove, push }) => (
-              <div>
-                {values.tags &&
-                  values.tags.map((tag: string, index: number) => (
-                    <div key={index}>
-                      <Field name={`tags.${index}`} />
-                      <button type="button" onClick={() => remove(index)}>
-                        &#x232b;
-                      </button>
-                    </div>
-                  ))}
-                <NewTag push={push} />
-              </div>
-            )}
-          />
+          <Section>
+            <h5>TAGS</h5>
+            <FieldArray
+              name="tags"
+              render={({ remove, push }) => (
+                <>
+                  {values.tags &&
+                    values.tags.map((tag: string, index: number) => (
+                      <Tag
+                        key={index}
+                        name={`tags.${index}`}
+                        remove={remove}
+                        index={index}
+                      />
+                    ))}
+                  <NewTag push={push} />
+                </>
+              )}
+            />
+          </Section>
 
-          <div>ATTRIBUTES</div>
-          <FieldArray
-            name="attributes"
-            render={({ remove, push }) => (
-              <div>
-                {values.attributes &&
-                  values.attributes.map(
-                    (attribute: string[], index: number) => (
-                      <div key={index}>
+          <Section>
+            <h5>ATTRIBUTES</h5>
+            <FieldArray
+              name="attributes"
+              render={({ remove, push }) => (
+                <>
+                  {values.attributes &&
+                    values.attributes.map(
+                      (attribute: string[], index: number) => (
                         <Attribute
+                          key={index}
                           name={`attributes.${index}`}
                           index={index}
                           remove={remove}
                         />
-                      </div>
-                    )
-                  )}
-                <NewAttribute push={push} />
-              </div>
-            )}
-          />
+                      )
+                    )}
+                  <NewAttribute push={push} />
+                </>
+              )}
+            />
+          </Section>
 
-          <button type="submit" disabled={isSubmitting}>
-            Submit
-          </button>
-        </Form>
+          <Section>
+            <Button type="submit" disabled={isSubmitting}>
+              Submit
+            </Button>
+            <Button type="button" onClick={goBack}>
+              Cancel
+            </Button>
+          </Section>
+        </Frame>
       )}
-    </Frame>
+    </Formik>
   );
 };

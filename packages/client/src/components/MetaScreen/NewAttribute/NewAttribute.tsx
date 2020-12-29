@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Frame } from "./NewAttribute.styles";
+import { Characters, SmallButton, InputBox, FormLine } from "common";
 
 type Params = { push: Function };
 
@@ -9,8 +9,8 @@ export const NewAttribute = ({ push }: Params) => {
   const [newValue, setNewValue] = useState("");
 
   return (
-    <Frame>
-      <input
+    <FormLine>
+      <InputBox
         type="text"
         name="newKey"
         value={newKey}
@@ -18,7 +18,7 @@ export const NewAttribute = ({ push }: Params) => {
           setNewKey(e.target.value);
         }}
       />
-      <input
+      <InputBox
         type="text"
         name="newValue"
         value={newValue}
@@ -26,16 +26,15 @@ export const NewAttribute = ({ push }: Params) => {
           setNewValue(e.target.value);
         }}
       />
-      <button
-        type="button"
+      <SmallButton
         onClick={() => {
           push([newKey, newValue]);
           setNewKey("");
           setNewValue("");
         }}
       >
-        &#x2713;
-      </button>
-    </Frame>
+        {Characters.check}
+      </SmallButton>
+    </FormLine>
   );
 };

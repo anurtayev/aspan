@@ -15,7 +15,7 @@ export const Nav = () => {
   return (
     <Frame>
       <Switch>
-        {/** Folder */}
+        {/** FOLDER SCREEN */}
         <Route path={pathPrefix.folder}>
           {/** Home */}
           <ActionButton onClick={goHome}>&#x1F3E0;</ActionButton>
@@ -43,7 +43,7 @@ export const Nav = () => {
           )}
         </Route>
 
-        {/** Image */}
+        {/** IMAGE SCREEN */}
         <Route path={pathPrefix.image}>
           {/** Home */}
           <ActionButton onClick={goHome}>&#x1F3E0;</ActionButton>
@@ -54,7 +54,7 @@ export const Nav = () => {
           </ActionButton>
         </Route>
 
-        {/** Meta */}
+        {/** META SCREEN */}
         <Route path={pathPrefix.folder}>
           {/** Home */}
           <ActionButton onClick={goHome}>&#x1F3E0;</ActionButton>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Frame } from "./NewTag.styles";
+import { SmallButton, Characters, InputBox, FormLine } from "common";
 
 type Params = { push: Function };
 
@@ -8,8 +8,8 @@ export const NewTag = ({ push }: Params) => {
   const [newTag, setNewTag] = useState("");
 
   return (
-    <Frame>
-      <input
+    <FormLine>
+      <InputBox
         type="text"
         name="newValue"
         value={newTag}
@@ -17,15 +17,14 @@ export const NewTag = ({ push }: Params) => {
           setNewTag(e.target.value);
         }}
       />
-      <button
-        type="button"
+      <SmallButton
         onClick={() => {
           push(newTag);
           setNewTag("");
         }}
       >
-        &#x2713;
-      </button>
-    </Frame>
+        {Characters.check}
+      </SmallButton>
+    </FormLine>
   );
 };

@@ -24,3 +24,10 @@ export enum systemAttributes {
   favorite = "favorite",
   hidden = "hidden",
 }
+
+export enum Characters {
+  check = "\u{2713}",
+  delete = "\u{232b}",
+  file = "\u{1F5BC}",
+  folder = "\u{1F4C1}",
+}
