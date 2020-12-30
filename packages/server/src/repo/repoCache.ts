@@ -48,6 +48,7 @@ export const repoCache = (options: IOptions): MemoryRepo => {
     );
 
   const sortedKeys = filteredEntries
+    .filter(({ stats }) => !stats.isDirectory())
     .map(element => element.id)
     .sort((a, b) => {
       const aPathElems = a.split("/");
@@ -61,21 +62,27 @@ export const repoCache = (options: IOptions): MemoryRepo => {
 
   const cache = filteredEntries.reduce(
     (accumulator: MemoryRepo, { id, stats }: { id: string; stats: Stats }) => {
-      const index = sortedKeys.indexOf(id);
+      let prev, next;
 
-      const prev =
-        index > 0 &&
-        JSON.stringify(id.split("/").slice(1, -1)) ===
-          JSON.stringify(sortedKeys[index - 1].split("/").slice(1, -1))
-          ? sortedKeys[index - 1]
-          : undefined;
+      if (!stats.isDirectory()) {
+        const index = sortedKeys.indexOf(id);
 
-      const next =
-        index < sortedKeys.length - 1 &&
-        JSON.stringify(id.split("/").slice(1, -1)) ===
-          JSON.stringify(sortedKeys[index + 1].split("/").slice(1, -1))
-          ? sortedKeys[index + 1]
-          : undefined;
+        if (
+          index > 0 &&
+          JSON.stringify(id.split("/").slice(1, -1)) ===
+            JSON.stringify(sortedKeys[index - 1].split("/").slice(1, -1))
+        ) {
+          prev = sortedKeys[index - 1];
+        }
+
+        if (
+          index < sortedKeys.length - 1 &&
+          JSON.stringify(id.split("/").slice(1, -1)) ===
+            JSON.stringify(sortedKeys[index + 1].split("/").slice(1, -1))
+        ) {
+          next = sortedKeys[index + 1];
+        }
+      }
 
       return accumulator.set(id, {
         stats,

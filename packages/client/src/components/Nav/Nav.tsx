@@ -2,7 +2,7 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import { Switch, Route } from "react-router-dom";
 
-import { useEntryId, pathPrefix } from "common";
+import { useEntryId, pathPrefix, Characters } from "common";
 import { Frame, ActionButton, Id } from "./Nav.styles";
 
 export const Nav = () => {
@@ -18,7 +18,7 @@ export const Nav = () => {
         {/** FOLDER SCREEN */}
         <Route path={pathPrefix.folder}>
           {/** Home */}
-          <ActionButton onClick={goHome}>&#x1F3E0;</ActionButton>
+          <ActionButton onClick={goHome}>{Characters.home};</ActionButton>
 
           {/** Parent folder */}
           {!isHomeFolder && (
@@ -29,7 +29,7 @@ export const Nav = () => {
                 )
               }
             >
-              &#x21e7;
+              {Characters.arrowUp}
             </ActionButton>
           )}
 
@@ -38,7 +38,7 @@ export const Nav = () => {
             <ActionButton
               onClick={() => history.push(pathPrefix.meta + entryId)}
             >
-              &#x1f3f7;
+              {Characters.label}
             </ActionButton>
           )}
         </Route>
@@ -46,23 +46,23 @@ export const Nav = () => {
         {/** IMAGE SCREEN */}
         <Route path={pathPrefix.image}>
           {/** Home */}
-          <ActionButton onClick={goHome}>&#x1F3E0;</ActionButton>
+          <ActionButton onClick={goHome}>{Characters.home};</ActionButton>
 
           {/** Meta */}
           <ActionButton onClick={() => history.push(pathPrefix.meta + entryId)}>
-            &#x1f3f7;
+            {Characters.label}
           </ActionButton>
         </Route>
 
         {/** META SCREEN */}
         <Route path={pathPrefix.folder}>
           {/** Home */}
-          <ActionButton onClick={goHome}>&#x1F3E0;</ActionButton>
+          <ActionButton onClick={goHome}>{Characters.home};</ActionButton>
         </Route>
 
         {/** Catch all */}
         <Route>
-          <ActionButton onClick={goHome}>&#x1F3E0;</ActionButton>
+          <ActionButton onClick={goHome}>{Characters.home};</ActionButton>
         </Route>
       </Switch>
       <Id>{entryId}</Id>

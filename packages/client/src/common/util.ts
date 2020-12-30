@@ -32,4 +32,7 @@ export enum Characters {
   folder = "\u{1F4C1}",
   plus = "\u{002b}",
   multiply = "\u{00d7}",
+  home = "\u{1F3E0}",
+  arrowUp = "\u{21e7}",
+  label = "\u{1f3f7}",
 }
