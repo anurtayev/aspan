@@ -38,12 +38,11 @@ export class FileSystemDataSource extends DataSource {
 
   public expandEntry = ({
     id,
-    rawEntry
+    rawEntry: { stats, prev, next }
   }: {
     id: string;
     rawEntry: MemoryRepoEntry;
   }): FolderElement => {
-    const stats = rawEntry.stats;
     const contentType = extname(id);
     const dockerImageUrl = process.env.DOCKER_NETWORK_PICREPO_URL + id;
     const imageUrl = process.env.IMG_CDN_URL + id;
@@ -58,7 +57,9 @@ export class FileSystemDataSource extends DataSource {
             process.env.THUMBOR_URL +
             `/unsafe/${process.env.THUMBS_LENGTH}x${process.env.THUMBS_WIDTH}/` +
             encodeURIComponent(dockerImageUrl),
-          imageUrl
+          imageUrl,
+          prev,
+          next
         }
       : {
           __typename: "Folder",

@@ -41,6 +41,44 @@ export interface GetFolderEntriesVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: GetEntry
+// ====================================================
+
+export interface GetEntry_entry_Folder {
+  __typename: "Folder";
+  id: string;
+}
+
+export interface GetEntry_entry_File {
+  __typename: "File";
+  id: string;
+  thumbImageUrl: string;
+  imageUrl: string;
+  prev: string | null;
+  next: string | null;
+}
+
+export type GetEntry_entry = GetEntry_entry_Folder | GetEntry_entry_File;
+
+export interface GetEntry {
+  /**
+   * return values:
+   *   - null if no such entry
+   *   - FolderElement otherwise
+   */
+  entry: GetEntry_entry | null;
+}
+
+export interface GetEntryVariables {
+  id: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: GetMetaData
 // ====================================================
 

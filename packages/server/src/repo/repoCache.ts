@@ -9,8 +9,8 @@ import { pathExistsSync, readJsonSync } from "fs-extra";
 export type MemoryRepoEntry = {
   stats: Stats;
   metaData: Maybe<MetaData>;
-  prev?: string;
-  next?: string;
+  prev?: Scalars["String"];
+  next?: Scalars["String"];
 };
 
 export type MemoryRepo = Map<Scalars["ID"], MemoryRepoEntry>;

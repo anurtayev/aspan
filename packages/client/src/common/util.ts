@@ -34,5 +34,7 @@ export enum Characters {
   multiply = "\u{00d7}",
   home = "\u{1F3E0}",
   arrowUp = "\u{21e7}",
+  arrowLeft = "\u{21e6}",
+  arrowRight = "\u{21e8}",
   label = "\u{1f3f7}",
 }

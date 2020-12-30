@@ -27,6 +27,8 @@ type File implements Entry {
   thumbImageUrl: String!
   imageUrl: String!
   contentType: String!
+  prev: String
+  next: String
 }
 
 union FolderElement = File | Folder

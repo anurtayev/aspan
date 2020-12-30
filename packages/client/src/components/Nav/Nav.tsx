@@ -18,7 +18,7 @@ export const Nav = () => {
         {/** FOLDER SCREEN */}
         <Route path={pathPrefix.folder}>
           {/** Home */}
-          <ActionButton onClick={goHome}>{Characters.home};</ActionButton>
+          <ActionButton onClick={goHome}>{Characters.home}</ActionButton>
 
           {/** Parent folder */}
           {!isHomeFolder && (
@@ -46,7 +46,7 @@ export const Nav = () => {
         {/** IMAGE SCREEN */}
         <Route path={pathPrefix.image}>
           {/** Home */}
-          <ActionButton onClick={goHome}>{Characters.home};</ActionButton>
+          <ActionButton onClick={goHome}>{Characters.home}</ActionButton>
 
           {/** Meta */}
           <ActionButton onClick={() => history.push(pathPrefix.meta + entryId)}>
@@ -57,12 +57,12 @@ export const Nav = () => {
         {/** META SCREEN */}
         <Route path={pathPrefix.folder}>
           {/** Home */}
-          <ActionButton onClick={goHome}>{Characters.home};</ActionButton>
+          <ActionButton onClick={goHome}>{Characters.home}</ActionButton>
         </Route>
 
         {/** Catch all */}
         <Route>
-          <ActionButton onClick={goHome}>{Characters.home};</ActionButton>
+          <ActionButton onClick={goHome}>{Characters.home}</ActionButton>
         </Route>
       </Switch>
       <Id>{entryId}</Id>
