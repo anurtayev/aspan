@@ -8,7 +8,7 @@ import {
   MutationAddAttributeArgs,
   Scalars
 } from "../generated/graphql";
-import { MemoryRepo, MemoryRepoEntry } from "../repo";
+import { Cache, CacheEntry, Repository } from "../repo";
 import { IContext } from "../util";
 import {
   addTag,
@@ -22,7 +22,7 @@ import { ensureDir, writeJson, pathExists, remove } from "fs-extra";
 export class FileSystemDataSource extends DataSource {
   options!: IOptions;
 
-  constructor(readonly cache: MemoryRepo) {
+  constructor(readonly repository: Repository) {
     super();
   }
 
@@ -30,8 +30,16 @@ export class FileSystemDataSource extends DataSource {
     this.options = config.context.options;
   }
 
+  get tags() {
+    return Array.from(this.repository.tags);
+  }
+
+  get attributes() {
+    return Array.from(this.repository.attributes);
+  }
+
   public getEntry = (id: Scalars["ID"]): Maybe<FolderElement> => {
-    const rawEntry = this.cache.get(id);
+    const rawEntry = this.repository.cache.get(id);
     if (!rawEntry) return null;
     return this.expandEntry({ id, rawEntry });
   };
@@ -41,7 +49,7 @@ export class FileSystemDataSource extends DataSource {
     rawEntry: { stats, prev, next }
   }: {
     id: string;
-    rawEntry: MemoryRepoEntry;
+    rawEntry: CacheEntry;
   }): FolderElement => {
     const contentType = extname(id);
     const dockerImageUrl = process.env.DOCKER_NETWORK_PICREPO_URL + id;
@@ -69,7 +77,7 @@ export class FileSystemDataSource extends DataSource {
 
   public getFolderEntries = (id: string): Array<FolderElement> => {
     const retVal: Array<FolderElement> = [];
-    for (const [key, rawEntry] of this.cache) {
+    for (const [key, rawEntry] of this.repository.cache) {
       if (dirname(key) === id) {
         retVal.push(this.expandEntry({ id: key, rawEntry }));
       }
@@ -80,7 +88,7 @@ export class FileSystemDataSource extends DataSource {
 
   public findEntries = (terms: string[]): Array<FolderElement> => {
     const retVal: Array<FolderElement> = [];
-    for (const [key, rawEntry] of this.cache) {
+    for (const [key, rawEntry] of this.repository.cache) {
       const { metaData } = rawEntry;
       if (!metaData) continue;
 
@@ -99,7 +107,7 @@ export class FileSystemDataSource extends DataSource {
   };
 
   public getMetaData = (id: string): Maybe<MetaData> => {
-    const metaData = this.cache.get(id)?.metaData;
+    const metaData = this.repository.cache.get(id)?.metaData;
     return metaData ? metaData : null;
   };
 
@@ -129,16 +137,19 @@ export class FileSystemDataSource extends DataSource {
           metaData
         );
 
-        const cacheEntry = this.cache.get(id);
+        const cacheEntry = this.repository.cache.get(id);
         if (!cacheEntry) throw new Error("missing cache entry for " + id);
-        this.cache.set(id, { stats: cacheEntry.stats, metaData });
+        this.repository.cache.set(id, { stats: cacheEntry.stats, metaData });
         return metaData;
       } else {
         remove(fsPath(metaFile(id, this.options), this.options));
 
-        const cacheEntry = this.cache.get(id);
+        const cacheEntry = this.repository.cache.get(id);
         if (!cacheEntry) throw new Error("missing cache entry for " + id);
-        this.cache.set(id, { stats: cacheEntry.stats, metaData: null });
+        this.repository.cache.set(id, {
+          stats: cacheEntry.stats,
+          metaData: null
+        });
         return null;
       }
     } else {

@@ -47,6 +47,14 @@ export const resolvers: Resolvers<IContext> = {
 
     favorites(_, __, { dataSources }) {
       return dataSources.fs.findEntries(["favorite"]);
+    },
+
+    tags(_, __, { dataSources: { fs } }) {
+      return fs.tags;
+    },
+
+    attributes(_, __, { dataSources: { fs } }) {
+      return fs.attributes;
     }
   },
 

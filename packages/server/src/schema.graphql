@@ -55,6 +55,16 @@ type Query {
     - FolderElement otherwise
   """
   entry(id: String!): FolderElement
+
+  """
+  returns list of all tags used in repository
+  """
+  tags: [String!]!
+
+  """
+  returns list of all attributes used in repository
+  """
+  attributes: [String!]!
 }
 
 type Mutation {

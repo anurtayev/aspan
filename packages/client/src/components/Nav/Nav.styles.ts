@@ -15,6 +15,7 @@ export const ActionButton = styled.div`
   background: green;
   margin: 1rem 0 1rem 1rem;
   cursor: default;
+  flex-shrink: 0;
 
   background-position: center;
   transition: background 0.8s;

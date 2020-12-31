@@ -6,14 +6,19 @@ import klawSync, { Item } from "klaw-sync";
 import { metaFile, fsPath } from "./path";
 import { pathExistsSync, readJsonSync } from "fs-extra";
 
-export type MemoryRepoEntry = {
+export type Tags = Set<string>;
+export type Attributes = Set<string>;
+
+export type CacheEntry = {
   stats: Stats;
   metaData: Maybe<MetaData>;
   prev?: Scalars["String"];
   next?: Scalars["String"];
 };
 
-export type MemoryRepo = Map<Scalars["ID"], MemoryRepoEntry>;
+export type Cache = Map<Scalars["ID"], CacheEntry>;
+
+export type Repository = { tags: Tags; attributes: Attributes; cache: Cache };
 
 const getMetaData = ({
   id,
@@ -30,7 +35,7 @@ const getMetaData = ({
   }
 };
 
-export const repoCache = (options: IOptions): MemoryRepo => {
+export const repoCache = (options: IOptions): Repository => {
   const startTime = new Date();
   const paths = klawSync(options.path);
 
@@ -60,45 +65,57 @@ export const repoCache = (options: IOptions): MemoryRepo => {
       else return 0;
     });
 
-  const cache = filteredEntries.reduce(
-    (accumulator: MemoryRepo, { id, stats }: { id: string; stats: Stats }) => {
-      let prev, next;
+  const repository: Repository = {
+    tags: new Set(),
+    attributes: new Set(),
+    cache: new Map()
+  };
 
-      if (!stats.isDirectory()) {
-        const index = sortedKeys.indexOf(id);
+  const cache = filteredEntries.reduce((repository, { id, stats }) => {
+    let prev, next;
 
-        if (
-          index > 0 &&
-          JSON.stringify(id.split("/").slice(1, -1)) ===
-            JSON.stringify(sortedKeys[index - 1].split("/").slice(1, -1))
-        ) {
-          prev = sortedKeys[index - 1];
-        }
+    if (!stats.isDirectory()) {
+      const index = sortedKeys.indexOf(id);
 
-        if (
-          index < sortedKeys.length - 1 &&
-          JSON.stringify(id.split("/").slice(1, -1)) ===
-            JSON.stringify(sortedKeys[index + 1].split("/").slice(1, -1))
-        ) {
-          next = sortedKeys[index + 1];
-        }
+      if (
+        index > 0 &&
+        JSON.stringify(id.split("/").slice(1, -1)) ===
+          JSON.stringify(sortedKeys[index - 1].split("/").slice(1, -1))
+      ) {
+        prev = sortedKeys[index - 1];
       }
 
-      return accumulator.set(id, {
-        stats,
-        metaData: getMetaData({ id, options }),
-        prev,
-        next
-      });
-    },
-    new Map()
-  );
+      if (
+        index < sortedKeys.length - 1 &&
+        JSON.stringify(id.split("/").slice(1, -1)) ===
+          JSON.stringify(sortedKeys[index + 1].split("/").slice(1, -1))
+      ) {
+        next = sortedKeys[index + 1];
+      }
+    }
+
+    const metaData = getMetaData({ id, options });
+
+    repository.cache.set(id, {
+      stats,
+      metaData,
+      prev,
+      next
+    });
+
+    metaData?.tags?.forEach(tag => repository.tags.add(tag));
+    metaData?.attributes?.forEach(attribute =>
+      repository.attributes.add(attribute[0])
+    );
+
+    return repository;
+  }, repository);
 
   console.log(
     `walked repository in ${new Date().getTime() - startTime.getTime()}ms`
   );
   console.log(`processed ${paths.length} entries`);
-  console.log(`showing ${cache.size} entries`);
+  console.log(`showing ${repository.cache.size} entries`);
 
-  return cache;
+  return repository;
 };

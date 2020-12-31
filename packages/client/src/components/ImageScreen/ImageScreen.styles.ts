@@ -29,6 +29,7 @@ const SlideButton = styled.div`
   justify-content: center;
   align-items: center;
   background: aqua;
+  cursor: default;
 `;
 
 export const LeftSlideButton = styled(SlideButton)`

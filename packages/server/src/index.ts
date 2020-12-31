@@ -3,12 +3,12 @@ import fs from "fs";
 import path from "path";
 import { options } from "./util";
 import { resolvers } from "./resolvers";
-import { repoCache, FileSystemDataSource } from "./repo";
+import { repoCache, FileSystemDataSource, Repository } from "./repo";
 
 const typeDefs = gql(
   fs.readFileSync(path.join(__dirname, "schema.graphql"), "utf8").toString()
 );
-const cache = repoCache(options);
+const repository: Repository = repoCache(options);
 
 const server = new ApolloServer({
   typeDefs,
@@ -16,7 +16,7 @@ const server = new ApolloServer({
   context: { options },
   dataSources: () => {
     return {
-      fs: new FileSystemDataSource(cache)
+      fs: new FileSystemDataSource(repository)
     };
   }
 });
