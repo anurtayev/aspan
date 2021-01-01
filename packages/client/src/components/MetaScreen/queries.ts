@@ -12,6 +12,10 @@ export const GET_METADATA = gql`
         }
       }
     }
+
+    tags
+
+    attributes
   }
 `;
 

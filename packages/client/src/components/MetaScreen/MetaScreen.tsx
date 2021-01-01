@@ -33,21 +33,25 @@ export const MetaScreen = () => {
   const [newValue, setNewValue] = useState("");
   const [newTag, setNewTag] = useState("");
 
-  const { loading, error, data: getData } = useQuery<
-    GetMetaData,
-    GetMetaDataVariables
-  >(GET_METADATA, {
-    variables: { id: entryId },
-    fetchPolicy: "no-cache",
-  });
+  const { loading, error, data } = useQuery<GetMetaData, GetMetaDataVariables>(
+    GET_METADATA,
+    {
+      variables: { id: entryId },
+      fetchPolicy: "no-cache",
+    }
+  );
 
   const [setMetaData] = useMutation(SET_METADATA);
 
   if (loading) return <p>Loading...</p>;
-  if (error || !getData) return <p>Error :(</p>;
-  if (!getData.entry) return <p>Error. No such entry</p>;
+  if (error || !data) return <p>Error :(</p>;
+  if (!data.entry) return <p>Error. No such entry</p>;
 
-  const { __typename, id, metaData } = getData.entry;
+  const {
+    entry: { __typename, id, metaData },
+    tags,
+    attributes,
+  } = data;
 
   const goBack = () => {
     history.push(
@@ -103,9 +107,15 @@ export const MetaScreen = () => {
                         name={`tags.${index}`}
                         remove={remove}
                         index={index}
+                        tags={tags}
                       />
                     ))}
-                  <NewTag setNewTag={setNewTag} newTag={newTag} push={push} />
+                  <NewTag
+                    setNewTag={setNewTag}
+                    newTag={newTag}
+                    push={push}
+                    tags={tags}
+                  />
                 </>
               )}
             />
@@ -125,6 +135,7 @@ export const MetaScreen = () => {
                           name={`attributes.${index}`}
                           index={index}
                           remove={remove}
+                          attributes={attributes}
                         />
                       )
                     )}
@@ -134,6 +145,7 @@ export const MetaScreen = () => {
                     newValue={newValue}
                     setNewKey={setNewKey}
                     setNewValue={setNewValue}
+                    attributes={attributes}
                   />
                 </>
               )}

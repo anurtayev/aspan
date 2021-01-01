@@ -101,6 +101,14 @@ export interface GetMetaData {
    *   - FolderElement otherwise
    */
   entry: GetMetaData_entry | null;
+  /**
+   * returns list of all tags used in repository
+   */
+  tags: string[];
+  /**
+   * returns list of all attributes used in repository
+   */
+  attributes: string[];
 }
 
 export interface GetMetaDataVariables {
