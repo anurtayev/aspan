@@ -44,3 +44,7 @@ export const Button = styled.button`
   margin: 0 1rem 0 0;
   width: 10rem;
 `;
+
+export const ErrorMessage = styled.h6`
+  color: red;
+`;

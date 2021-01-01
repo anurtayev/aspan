@@ -24,7 +24,7 @@ export const Tag = ({ remove, name, index, tags }: Params) => {
         />
         <SmallButton onClick={() => remove(index)}>
           {Characters.multiply}
-        </SmallButton>{" "}
+        </SmallButton>
       </FormLine>
       <Selections
         currentValue={field.value}

@@ -1,6 +1,14 @@
 import React from "react";
+import { useFormikContext } from "formik";
 
-import { Characters, SmallButton, InputBox, FormLine } from "common";
+import {
+  Characters,
+  SmallButton,
+  InputBox,
+  FormLine,
+  MetaDataInput,
+  ErrorMessage,
+} from "common";
 import { Selections } from "components/MetaScreen/Selections";
 
 type Params = {
@@ -9,7 +17,9 @@ type Params = {
   setNewKey: Function;
   newValue: string;
   newKey: string;
-  attributes: string[];
+  availableAttributesKeys: string[];
+  isNewKeyError: boolean;
+  setIsNewKeyError: Function;
 };
 
 export const NewAttribute = ({
@@ -18,8 +28,30 @@ export const NewAttribute = ({
   newValue,
   setNewValue,
   setNewKey,
-  attributes,
+  availableAttributesKeys,
+  isNewKeyError,
+  setIsNewKeyError,
 }: Params) => {
+  const {
+    values: { attributes },
+  } = useFormikContext<MetaDataInput>();
+
+  const attributesKeys = attributes
+    ? attributes.reduce((acc, current) => {
+        acc.push(current[0]);
+        return acc;
+      }, [])
+    : [];
+
+  const setNewKeyValue = (value: string) => {
+    if (attributesKeys.includes(value)) {
+      setIsNewKeyError(true);
+    } else {
+      setIsNewKeyError(false);
+    }
+    setNewKey(value);
+  };
+
   return (
     <>
       <FormLine>
@@ -28,7 +60,7 @@ export const NewAttribute = ({
           name="newKey"
           value={newKey}
           onChange={(e) => {
-            setNewKey(e.target.value);
+            setNewKeyValue(e.target.value);
           }}
           autoComplete="off"
         />
@@ -52,9 +84,10 @@ export const NewAttribute = ({
       </FormLine>
       <Selections
         currentValue={newKey}
-        selections={attributes}
-        setNewValue={setNewKey}
+        selections={availableAttributesKeys}
+        setNewValue={setNewKeyValue}
       />
+      {isNewKeyError && <ErrorMessage>No duplicates</ErrorMessage>}
     </>
   );
 };

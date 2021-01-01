@@ -1,5 +1,5 @@
 import styled from "styled-components";
 
-export const PositionedFrame = styled.div`
-  position: absolute;
+export const NewTagErrorMessage = styled.h6`
+  color: red;
 `;

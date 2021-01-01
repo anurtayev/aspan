@@ -32,6 +32,8 @@ export const MetaScreen = () => {
   const [newKey, setNewKey] = useState("");
   const [newValue, setNewValue] = useState("");
   const [newTag, setNewTag] = useState("");
+  const [isNewTagError, setIsNewTagError] = useState(false);
+  const [isNewKeyError, setIsNewKeyError] = useState(false);
 
   const { loading, error, data } = useQuery<GetMetaData, GetMetaDataVariables>(
     GET_METADATA,
@@ -69,14 +71,14 @@ export const MetaScreen = () => {
         {}
       }
       onSubmit={(values, { setSubmitting }) => {
-        if (newKey && newValue) {
+        if (newKey && newValue && !isNewKeyError) {
           values.attributes = [
             ...(values.attributes ? values.attributes : []),
             [newKey, newValue],
           ];
         }
 
-        if (newTag) {
+        if (newTag && !isNewTagError) {
           values.tags = [...(values.tags ? values.tags : []), newTag];
         }
 
@@ -114,7 +116,9 @@ export const MetaScreen = () => {
                     setNewTag={setNewTag}
                     newTag={newTag}
                     push={push}
-                    tags={tags}
+                    availableTags={tags}
+                    setIsNewTagError={setIsNewTagError}
+                    isNewTagError={isNewTagError}
                   />
                 </>
               )}
@@ -145,7 +149,9 @@ export const MetaScreen = () => {
                     newValue={newValue}
                     setNewKey={setNewKey}
                     setNewValue={setNewValue}
-                    attributes={attributes}
+                    availableAttributesKeys={attributes}
+                    isNewKeyError={isNewKeyError}
+                    setIsNewKeyError={setIsNewKeyError}
                   />
                 </>
               )}
