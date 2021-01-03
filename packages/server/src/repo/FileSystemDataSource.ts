@@ -5,6 +5,7 @@ import {
   FolderElement,
   Maybe,
   MetaData,
+  MetaDataInput,
   MutationAddAttributeArgs,
   Scalars
 } from "../generated/graphql";
@@ -14,7 +15,8 @@ import {
   addTag,
   removeTag,
   addAttribute,
-  removeAttribute
+  removeAttribute,
+  satisfiesFilter
 } from "./metaDataHelpers";
 import { metaFile, metaFolder, fsPath } from "./path";
 import { ensureDir, writeJson, pathExists, remove } from "fs-extra";
@@ -75,10 +77,15 @@ export class FileSystemDataSource extends DataSource {
         };
   };
 
-  public getFolderEntries = (id: string): Array<FolderElement> => {
+  public getFolderEntries = (
+    id: string,
+    filterMetaData: Maybe<MetaDataInput> | undefined
+  ): Array<FolderElement> => {
     const retVal: Array<FolderElement> = [];
     for (const [key, rawEntry] of this.repository.cache) {
-      if (dirname(key) === id) {
+      const { metaData } = rawEntry;
+
+      if (dirname(key) === id && satisfiesFilter(metaData, filterMetaData)) {
         retVal.push(this.expandEntry({ id: key, rawEntry }));
       }
     }
@@ -86,19 +93,28 @@ export class FileSystemDataSource extends DataSource {
     return retVal;
   };
 
-  public findEntries = (terms: string[]): Array<FolderElement> => {
+  public findEntries = (
+    idSubstring: Maybe<string> | undefined,
+    filterMetaData: Maybe<MetaDataInput> | undefined
+  ): Array<FolderElement> => {
     const retVal: Array<FolderElement> = [];
     for (const [key, rawEntry] of this.repository.cache) {
       const { metaData } = rawEntry;
-      if (!metaData) continue;
+      const isFilterPresent =
+        filterMetaData &&
+        typeof filterMetaData === "object" &&
+        (filterMetaData.tags || filterMetaData.attributes);
 
-      const { tags, attributes } = metaData;
-
-      const searchString =
-        (tags ? tags.join() : "") +
-        (attributes ? attributes.map(attr => attr.join()).join() : "");
-
-      if (terms.every(term => searchString.includes(term))) {
+      if (
+        (idSubstring && !isFilterPresent && key.includes(idSubstring)) ||
+        (!idSubstring &&
+          isFilterPresent &&
+          satisfiesFilter(metaData, filterMetaData)) ||
+        (idSubstring &&
+          isFilterPresent &&
+          key.includes(idSubstring) &&
+          satisfiesFilter(metaData, filterMetaData))
+      ) {
         retVal.push(this.expandEntry({ id: key, rawEntry }));
       }
     }

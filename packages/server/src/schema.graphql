@@ -40,14 +40,14 @@ type Query {
     - empty array if folder is empty
     - Array of FolderElement otherwise
   """
-  entries(id: String!): [FolderElement!]
+  entries(id: String!, filterMetaData: MetaDataInput): [FolderElement!]
 
   """
   return values:
     - empty array if folder is empty
     - Array of FolderElement otherwise
   """
-  favorites: [FolderElement!]!
+  search(idSubstring: String, filterMetaData: MetaDataInput): [FolderElement!]!
 
   """
   return values:

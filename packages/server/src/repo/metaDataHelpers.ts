@@ -1,4 +1,4 @@
-import { Maybe, MetaData, Scalars } from "../generated/graphql";
+import { Maybe, MetaData, MetaDataInput, Scalars } from "../generated/graphql";
 
 export const addTag = (
   metaData: Maybe<MetaData>,
@@ -103,4 +103,41 @@ export const removeAttribute = (
       ...metaData.attributes.slice(attributeIndex + 1)
     ]
   };
+};
+
+export const satisfiesFilter = (
+  metaData: Maybe<MetaData>,
+  filterMetaData: Maybe<MetaDataInput> | undefined
+): boolean => {
+  // no filter
+  if (
+    !filterMetaData ||
+    typeof filterMetaData !== "object" ||
+    (!filterMetaData.tags && !filterMetaData.attributes)
+  )
+    return true;
+
+  // there is a filter but no metadata
+  if (!metaData) return false;
+
+  // check if all filter tags are subset of tags
+  if (
+    filterMetaData.tags &&
+    !filterMetaData.tags?.every(tag => metaData.tags?.includes(tag))
+  )
+    return false;
+
+  // check if filter attributes are subset of attributes
+  // and have matching values
+  if (
+    filterMetaData.attributes &&
+    !filterMetaData.attributes?.every(([filterKey, filterValue]) =>
+      metaData.attributes?.some(
+        ([key, value]) => key === filterKey && value === filterValue
+      )
+    )
+  )
+    return false;
+
+  return true;
 };

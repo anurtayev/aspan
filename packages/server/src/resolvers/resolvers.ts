@@ -23,21 +23,17 @@ export const resolvers: Resolvers<IContext> = {
   Query: {
     entries(
       _,
-      { id },
+      { id, filterMetaData },
       {
         dataSources: {
-          fs: { findEntries, getFolderEntries, getEntry }
+          fs: { getFolderEntries, getEntry }
         }
       }
     ) {
-      const folder = getEntry(id);
-
       return (id === "/"
       ? true
       : getEntry(id))
-        ? id === ":favorite"
-          ? findEntries(["favorite"])
-          : getFolderEntries(id)
+        ? getFolderEntries(id, filterMetaData)
         : null;
     },
 
@@ -45,8 +41,13 @@ export const resolvers: Resolvers<IContext> = {
       return dataSources.fs.getEntry(id);
     },
 
-    favorites(_, __, { dataSources }) {
-      return dataSources.fs.findEntries(["favorite"]);
+    search(_, { idSubstring, filterMetaData }, { dataSources }) {
+      if (!idSubstring && !filterMetaData) {
+        throw new Error(
+          "Either idSubstring or filterMetaData must be specified"
+        );
+      }
+      return dataSources.fs.findEntries(idSubstring, filterMetaData);
     },
 
     tags(_, __, { dataSources: { fs } }) {
@@ -83,7 +84,7 @@ export const resolvers: Resolvers<IContext> = {
   Folder: {
     metaData,
     children({ id }, _, { dataSources }) {
-      return dataSources.fs.getFolderEntries(id);
+      return dataSources.fs.getFolderEntries(id, undefined);
     }
   },
 
