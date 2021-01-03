@@ -1,4 +1,5 @@
 import { useField } from "formik";
+import { useState } from "react";
 
 import { Characters, SmallButton, InputBox, FormLine } from "common";
 import { Selections } from "components/MetaScreen/Selections";
@@ -12,6 +13,7 @@ type Params = {
 
 export const Attribute = ({ name, index, remove, attributes }: Params) => {
   const [field, meta, helpers] = useField<string[]>(name);
+  const [isFocused, setIsFocused] = useState<boolean>();
 
   return (
     <>
@@ -24,6 +26,8 @@ export const Attribute = ({ name, index, remove, attributes }: Params) => {
             helpers.setValue([e.target.value, field.value[1]]);
           }}
           autoComplete="off"
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
         />
         <InputBox
           type="text"
@@ -37,13 +41,15 @@ export const Attribute = ({ name, index, remove, attributes }: Params) => {
           {Characters.multiply}
         </SmallButton>
       </FormLine>
-      <Selections
-        currentValue={field.value[0]}
-        selections={attributes}
-        setNewValue={(value: string) => {
-          helpers.setValue([value, field.value[1]]);
-        }}
-      />
+      {isFocused && (
+        <Selections
+          currentValue={field.value[0]}
+          selections={attributes}
+          setNewValue={(value: string) => {
+            helpers.setValue([value, field.value[1]]);
+          }}
+        />
+      )}
     </>
   );
 };

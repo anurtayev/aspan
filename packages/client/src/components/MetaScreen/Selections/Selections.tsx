@@ -9,18 +9,18 @@ type Params = {
 };
 
 export const Selections = ({
-  currentValue: newValue,
+  currentValue,
   selections,
   setNewValue,
 }: Params) => {
   const filteredSelections = selections.filter((selection) =>
-    selection.includes(newValue)
+    selection.includes(currentValue)
   );
 
-  return newValue &&
+  return currentValue &&
     (filteredSelections.length > 1 ||
       (filteredSelections.length === 1 &&
-        filteredSelections[0] !== newValue)) ? (
+        filteredSelections[0] !== currentValue)) ? (
     <PositionedFrame>
       <SelectionFrame>
         {filteredSelections.map((selection) => (

@@ -132,6 +132,10 @@ export class FileSystemDataSource extends DataSource {
     metaData: Maybe<MetaData>
   ): Promise<Maybe<MetaData>> => {
     if (await pathExists(fsPath(id, this.options))) {
+      const cacheEntry = this.repository.cache.get(id);
+      if (!cacheEntry) throw new Error("missing cache entry for " + id);
+      const { stats, prev, next } = cacheEntry;
+
       if (
         metaData &&
         typeof metaData === "object" &&
@@ -153,18 +157,20 @@ export class FileSystemDataSource extends DataSource {
           metaData
         );
 
-        const cacheEntry = this.repository.cache.get(id);
-        if (!cacheEntry) throw new Error("missing cache entry for " + id);
-        this.repository.cache.set(id, { stats: cacheEntry.stats, metaData });
+        this.repository.cache.set(id, { stats, metaData, prev, next });
+        metaData.tags?.forEach(tag => this.repository.tags.add(tag));
+        metaData.attributes?.forEach(([key]) =>
+          this.repository.attributes.add(key)
+        );
         return metaData;
       } else {
         remove(fsPath(metaFile(id, this.options), this.options));
 
-        const cacheEntry = this.repository.cache.get(id);
-        if (!cacheEntry) throw new Error("missing cache entry for " + id);
         this.repository.cache.set(id, {
           stats: cacheEntry.stats,
-          metaData: null
+          metaData: null,
+          prev,
+          next
         });
         return null;
       }
