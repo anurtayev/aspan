@@ -4,6 +4,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import { FolderScreen } from "components/FolderScreen";
 import { ImageScreen } from "components/ImageScreen";
 import { MetaScreen } from "components/MetaScreen";
+import { SearchScreen } from "components/SearchScreen";
 import { Nav } from "components/Nav";
 import { pathPrefix } from "common";
 
@@ -22,6 +23,9 @@ const App = () => (
       </Route>
       <Route path={pathPrefix.meta}>
         <MetaScreen />
+      </Route>
+      <Route path={pathPrefix.search}>
+        <SearchScreen />
       </Route>
       <Route>
         <div>Under construction</div>

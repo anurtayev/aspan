@@ -1,9 +1,11 @@
 import { useLocation } from "react-router-dom";
+import { MetaDataInput } from "./graphqlTypes";
 
 export const pathPrefix: { [key: string]: string } = {
   folder: "/folder",
   image: "/image",
   meta: "/meta",
+  search: "/search",
 };
 
 export enum entryType {
@@ -37,4 +39,11 @@ export enum Characters {
   arrowLeft = "\u{21e6}",
   arrowRight = "\u{21e8}",
   label = "\u{1f3f7}",
+  magnifyingGlass = "\u{1F50D}",
 }
+
+export type MetaDataForm = MetaDataInput & {
+  newTag: string;
+  newKey: string;
+  newValue: string;
+};

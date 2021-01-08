@@ -144,6 +144,26 @@ export interface SetMetaDataVariables {
 // @generated
 // This file was automatically generated and should not be edited.
 
+// ====================================================
+// GraphQL query operation: GetExistingMetaKeys
+// ====================================================
+
+export interface GetExistingMetaKeys {
+  /**
+   * returns list of all tags used in repository
+   */
+  tags: string[];
+  /**
+   * returns list of all attributes used in repository
+   */
+  attributes: string[];
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
 //==============================================================
 // START Enums and Input Objects
 //==============================================================

@@ -7,7 +7,7 @@ export const SelectionFrame = styled.div`
   width: 10rem;
   border: 1px solid;
   top: -1rem;
-  background: aqua;
+  background: cornsilk;
   font-size: 1.2rem;
   overflow: scroll;
   cursor: default;

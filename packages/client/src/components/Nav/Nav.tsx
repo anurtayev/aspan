@@ -41,6 +41,13 @@ export const Nav = () => {
               {Characters.label}
             </ActionButton>
           )}
+
+          {/** Search */}
+          {!isHomeFolder && (
+            <ActionButton onClick={() => history.push(pathPrefix.search)}>
+              {Characters.magnifyingGlass}
+            </ActionButton>
+          )}
         </Route>
 
         {/** IMAGE SCREEN */}

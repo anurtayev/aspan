@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { useQuery, useMutation } from "@apollo/client";
-import { FieldArray, Formik } from "formik";
+import { Formik } from "formik";
 import { useHistory } from "react-router-dom";
 
 import {
@@ -10,35 +10,26 @@ import {
   pathPrefix,
   Characters,
   Button,
+  MetaDataForm,
 } from "common";
+import { MetaDataPartialForm } from "components/MetaDataPartialForm";
 import { GET_METADATA, SET_METADATA } from "./queries";
-import { NewAttribute } from "./NewAttribute";
-import { NewTag } from "./NewTag";
-import { Attribute } from "./Attribute";
-import { Tag } from "./Tag";
 import {
-  Frame,
+  FlexForm,
   EntryName,
   Section,
   PictureSymbol,
   SubmitButton,
-  SectionHeader,
 } from "./MetaScreen.styles";
 
 export const MetaScreen = () => {
   const history = useHistory();
-  const entryId = useEntryId();
-
-  const [newKey, setNewKey] = useState("");
-  const [newValue, setNewValue] = useState("");
-  const [newTag, setNewTag] = useState("");
-  const [isNewTagError, setIsNewTagError] = useState(false);
-  const [isNewKeyError, setIsNewKeyError] = useState(false);
+  const id = useEntryId();
 
   const { loading, error, data } = useQuery<GetMetaData, GetMetaDataVariables>(
     GET_METADATA,
     {
-      variables: { id: entryId },
+      variables: { id },
       fetchPolicy: "no-cache",
     }
   );
@@ -50,45 +41,48 @@ export const MetaScreen = () => {
   if (!data.entry) return <p>Error. No such entry</p>;
 
   const {
-    entry: { __typename, id, metaData },
-    tags,
-    attributes,
+    entry: { __typename, metaData },
+    tags: availableTags,
+    attributes: availableAttributes,
   } = data;
 
   const goBack = () => {
     history.push(
-      (__typename === "Folder" ? pathPrefix.folder : pathPrefix.image) + entryId
+      (__typename === "Folder" ? pathPrefix.folder : pathPrefix.image) + id
     );
+  };
+
+  const initialValues: MetaDataForm = {
+    tags: metaData && metaData.tags ? metaData.tags : [],
+    attributes: metaData && metaData.attributes ? metaData.attributes : [],
+    newTag: "",
+    newKey: "",
+    newValue: "",
   };
 
   return (
     <Formik
-      initialValues={
-        (metaData && {
-          tags: metaData.tags,
-          attributes: metaData.attributes,
-        }) ||
-        {}
-      }
+      initialValues={initialValues}
       onSubmit={(values, { setSubmitting }) => {
-        if (newKey && newValue && !isNewKeyError) {
-          values.attributes = [
-            ...(values.attributes ? values.attributes : []),
-            [newKey, newValue],
-          ];
-        }
-
-        if (newTag && !isNewTagError) {
-          values.tags = [...(values.tags ? values.tags : []), newTag];
-        }
-
-        setMetaData({ variables: { id: entryId, metaData: values } });
+        const { newKey, newValue, newTag, tags, attributes } = values;
+        setMetaData({
+          variables: {
+            id,
+            metaData: {
+              tags: [...(tags ? tags : []), ...(newTag ? [newTag] : [])],
+              attributes: [
+                ...(attributes ? attributes : []),
+                ...(newKey && newValue ? [[newKey, newValue]] : []),
+              ],
+            },
+          },
+        });
         setSubmitting(false);
         goBack();
       }}
     >
-      {({ isSubmitting, values }) => (
-        <Frame>
+      {({ isSubmitting }) => (
+        <FlexForm>
           <Section>
             <PictureSymbol>
               {__typename === "Folder" ? Characters.folder : Characters.file}
@@ -96,67 +90,10 @@ export const MetaScreen = () => {
             <EntryName>{id.split("/").slice(-1)[0]}</EntryName>
           </Section>
 
-          <Section>
-            <SectionHeader>TAGS</SectionHeader>
-            <FieldArray
-              name="tags"
-              render={({ remove, push }) => (
-                <>
-                  {values.tags &&
-                    values.tags.map((tag: string, index: number) => (
-                      <Tag
-                        key={index}
-                        name={`tags.${index}`}
-                        remove={remove}
-                        index={index}
-                        tags={tags}
-                      />
-                    ))}
-                  <NewTag
-                    setNewTag={setNewTag}
-                    newTag={newTag}
-                    push={push}
-                    availableTags={tags}
-                    setIsNewTagError={setIsNewTagError}
-                    isNewTagError={isNewTagError}
-                  />
-                </>
-              )}
-            />
-          </Section>
-
-          <Section>
-            <SectionHeader>ATTRIBUTES</SectionHeader>
-            <FieldArray
-              name="attributes"
-              render={({ remove, push }) => (
-                <>
-                  {values.attributes &&
-                    values.attributes.map(
-                      (attribute: string[], index: number) => (
-                        <Attribute
-                          key={index}
-                          name={`attributes.${index}`}
-                          index={index}
-                          remove={remove}
-                          attributes={attributes}
-                        />
-                      )
-                    )}
-                  <NewAttribute
-                    push={push}
-                    newKey={newKey}
-                    newValue={newValue}
-                    setNewKey={setNewKey}
-                    setNewValue={setNewValue}
-                    availableAttributesKeys={attributes}
-                    isNewKeyError={isNewKeyError}
-                    setIsNewKeyError={setIsNewKeyError}
-                  />
-                </>
-              )}
-            />
-          </Section>
+          <MetaDataPartialForm
+            availableAttributes={availableAttributes}
+            availableTags={availableTags}
+          />
 
           <Section>
             <SubmitButton type="submit" disabled={isSubmitting}>
@@ -166,7 +103,7 @@ export const MetaScreen = () => {
               Cancel
             </Button>
           </Section>
-        </Frame>
+        </FlexForm>
       )}
     </Formik>
   );

@@ -12,14 +12,14 @@ export const EntryFrame = `
 `;
 
 export const SmallButton = styled.div`
-  font-size: 2rem;
+  font-size: 1rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   background: lightgrey;
   border: 1px solid;
-  width: 3rem;
-  border-radius: 1.5rem;
+  width: 2rem;
+  border-radius: 0 50% 50% 0;
   text-align: center;
   cursor: default;
 
@@ -28,15 +28,11 @@ export const SmallButton = styled.div`
   }
 `;
 
-export const InputBox = styled.input`
-  margin: 0 1rem 0 0;
-  font-size: 1.5rem;
-`;
-
 export const FormLine = styled.div`
-  height: 3rem;
+  height: 2rem;
+  font-size: 1.2rem;
   display: flex;
-  margin: 0 0 1rem 0;
+  margin: 0 1rem 1rem 0;
 `;
 
 export const Button = styled.button`

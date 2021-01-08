@@ -28,3 +28,14 @@ export const SubmitButton = styled(Button)`
 export const SectionHeader = styled.h5`
   color: red;
 `;
+
+export const ElemBox = styled.div`
+  border: 1px solid;
+  padding: 0 0.5rem 0 0.5rem;
+  background: lightgrey;
+`;
+
+export const ExistingItemsBox = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
