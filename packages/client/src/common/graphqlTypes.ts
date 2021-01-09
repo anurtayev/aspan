@@ -4,35 +4,40 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: GetFolderEntries
+// GraphQL query operation: GetEntries
 // ====================================================
 
-export interface GetFolderEntries_entries_Folder {
+export interface GetEntries_entries_Folder {
   __typename: "Folder";
   id: string;
 }
 
-export interface GetFolderEntries_entries_File {
+export interface GetEntries_entries_File {
   __typename: "File";
   id: string;
   thumbImageUrl: string;
   imageUrl: string;
 }
 
-export type GetFolderEntries_entries = GetFolderEntries_entries_Folder | GetFolderEntries_entries_File;
+export type GetEntries_entries = GetEntries_entries_Folder | GetEntries_entries_File;
 
-export interface GetFolderEntries {
+export interface GetEntries {
   /**
+   * returns list of File and Folder objects.
+   * 
+   * parameters:
+   *   - id: if not given or doesn't start with '/' then search
    * return values:
    *   - null if no such folder
    *   - empty array if folder is empty
    *   - Array of FolderElement otherwise
    */
-  entries: GetFolderEntries_entries[] | null;
+  entries: GetEntries_entries[] | null;
 }
 
-export interface GetFolderEntriesVariables {
-  id: string;
+export interface GetEntriesVariables {
+  id?: string | null;
+  filterMetaData?: MetaDataInput | null;
 }
 
 /* tslint:disable */

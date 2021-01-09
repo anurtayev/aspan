@@ -1,27 +1,46 @@
 import React from "react";
 import { useQuery } from "@apollo/client";
+import { useLocation } from "react-router-dom";
 
-import {
-  GetFolderEntries,
-  GetFolderEntriesVariables,
-  entryType,
-  useEntryId,
-} from "common";
+import { GetEntries, GetEntriesVariables, entryType, getId } from "common";
 import { FOLDER_ENTRIES } from "./queries";
 import { FolderScreenFrame } from "./FolderScreen.styles";
 import { File } from "./File";
 import { Folder } from "./Folder";
 
-export const FolderScreen = () => {
-  const entryId = useEntryId();
+const parseQueryString = (queryString: string) => {
+  const params = new URLSearchParams(queryString);
+  return {
+    idSubstring: params.get("idSubstring"),
+    tags: params.getAll("tags"),
+    attributes: params.getAll("attributes").map((elem) => elem.split(",")),
+  };
+};
 
-  const { loading, error, data } = useQuery<
-    GetFolderEntries,
-    GetFolderEntriesVariables
-  >(FOLDER_ENTRIES, {
-    variables: { id: entryId || "/" },
-    fetchPolicy: "no-cache",
-  });
+export const FolderScreen = () => {
+  const { pathname, search } = useLocation();
+  const id = getId(pathname);
+  const { idSubstring, tags, attributes } = parseQueryString(search);
+
+  const { loading, error, data } = useQuery<GetEntries, GetEntriesVariables>(
+    FOLDER_ENTRIES,
+    {
+      variables: {
+        id: id || idSubstring ? id || idSubstring : undefined,
+        filterMetaData:
+          (tags && tags.length > 0) || (attributes && attributes.length > 0)
+            ? {
+                tags: tags && tags.length > 0 ? tags : undefined,
+                attributes:
+                  attributes && attributes.length > 0 ? attributes : undefined,
+              }
+            : undefined,
+      },
+      fetchPolicy: "no-cache",
+    }
+  );
+
+  if (id && idSubstring) return <p></p>;
 
   if (loading) return <p>Loading...</p>;
   if (error || !data) return <p>Error :(</p>;

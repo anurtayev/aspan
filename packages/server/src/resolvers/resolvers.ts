@@ -26,28 +26,28 @@ export const resolvers: Resolvers<IContext> = {
       { id, filterMetaData },
       {
         dataSources: {
-          fs: { getFolderEntries, getEntry }
+          fs: { getFolderEntries, getEntry, findEntries }
         }
       }
     ) {
-      return (id === "/"
-      ? true
-      : getEntry(id))
-        ? getFolderEntries(id, filterMetaData)
-        : null;
+      if (id && id.startsWith("/")) {
+        return (id === "/"
+        ? true
+        : getEntry(id))
+          ? getFolderEntries(id, filterMetaData)
+          : null;
+      } else {
+        if (!id && !filterMetaData) {
+          throw new Error(
+            "Either idSubstring or filterMetaData must be specified"
+          );
+        }
+        return findEntries(id, filterMetaData);
+      }
     },
 
     entry(_, { id }, { dataSources }) {
       return dataSources.fs.getEntry(id);
-    },
-
-    search(_, { idSubstring, filterMetaData }, { dataSources }) {
-      if (!idSubstring && !filterMetaData) {
-        throw new Error(
-          "Either idSubstring or filterMetaData must be specified"
-        );
-      }
-      return dataSources.fs.findEntries(idSubstring, filterMetaData);
     },
 
     tags(_, __, { dataSources: { fs } }) {

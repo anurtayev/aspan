@@ -16,19 +16,15 @@
         "fields": [
           {
             "name": "entries",
-            "description": "return values:\n  - null if no such folder\n  - empty array if folder is empty\n  - Array of FolderElement otherwise",
+            "description": "returns list of File and Folder objects.\n\nparameters:\n  - id: if not given or doesn't start with '/' then search\nreturn values:\n  - null if no such folder\n  - empty array if folder is empty\n  - Array of FolderElement otherwise",
             "args": [
               {
                 "name": "id",
                 "description": null,
                 "type": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  }
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
                 },
                 "defaultValue": null
               },
@@ -53,51 +49,6 @@
                   "kind": "UNION",
                   "name": "FolderElement",
                   "ofType": null
-                }
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "search",
-            "description": "return values:\n  - empty array if folder is empty\n  - Array of FolderElement otherwise",
-            "args": [
-              {
-                "name": "idSubstring",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": null
-              },
-              {
-                "name": "filterMetaData",
-                "description": null,
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "MetaDataInput",
-                  "ofType": null
-                },
-                "defaultValue": null
-              }
-            ],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "UNION",
-                    "name": "FolderElement",
-                    "ofType": null
-                  }
                 }
               }
             },

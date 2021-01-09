@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
 export const FOLDER_ENTRIES = gql`
-  query GetFolderEntries($id: String!) {
-    entries(id: $id) {
+  query GetEntries($id: String, $filterMetaData: MetaDataInput) {
+    entries(id: $id, filterMetaData: $filterMetaData) {
       ... on Entry {
         __typename
         id

@@ -10,12 +10,12 @@ export const Nav = () => {
   const entryId = useEntryId();
   const isHomeFolder = entryId === "" || entryId === "/";
 
-  const goHome = () => history.push(pathPrefix.folder);
+  const goHome = () => history.push(pathPrefix.folder + "/");
 
   return (
     <Frame>
       <Switch>
-        {/** FOLDER SCREEN */}
+        {/** ============================= FOLDER SCREEN */}
         <Route path={pathPrefix.folder}>
           {/** Home */}
           <ActionButton onClick={goHome}>{Characters.home}</ActionButton>
@@ -43,14 +43,12 @@ export const Nav = () => {
           )}
 
           {/** Search */}
-          {!isHomeFolder && (
-            <ActionButton onClick={() => history.push(pathPrefix.search)}>
-              {Characters.magnifyingGlass}
-            </ActionButton>
-          )}
+          <ActionButton onClick={() => history.push(pathPrefix.search)}>
+            {Characters.magnifyingGlass}
+          </ActionButton>
         </Route>
 
-        {/** IMAGE SCREEN */}
+        {/** ============================= IMAGE SCREEN */}
         <Route path={pathPrefix.image}>
           {/** Home */}
           <ActionButton onClick={goHome}>{Characters.home}</ActionButton>
@@ -59,12 +57,22 @@ export const Nav = () => {
           <ActionButton onClick={() => history.push(pathPrefix.meta + entryId)}>
             {Characters.label}
           </ActionButton>
+
+          {/** Search */}
+          <ActionButton onClick={() => history.push(pathPrefix.search)}>
+            {Characters.magnifyingGlass}
+          </ActionButton>
         </Route>
 
-        {/** META SCREEN */}
-        <Route path={pathPrefix.folder}>
+        {/** ============================= META SCREEN */}
+        <Route path={pathPrefix.meta}>
           {/** Home */}
           <ActionButton onClick={goHome}>{Characters.home}</ActionButton>
+
+          {/** Search */}
+          <ActionButton onClick={() => history.push(pathPrefix.search)}>
+            {Characters.magnifyingGlass}
+          </ActionButton>
         </Route>
 
         {/** Catch all */}

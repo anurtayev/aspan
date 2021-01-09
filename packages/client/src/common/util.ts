@@ -17,6 +17,9 @@ const pathPrefixesRegExp = new RegExp(
   `^(${pathPrefix.folder}|${pathPrefix.image}|${pathPrefix.meta})`
 );
 
+export const getId = (pathname: string) =>
+  pathname.replace(pathPrefixesRegExp, "");
+
 export const useEntryId = () => {
   const { pathname } = useLocation();
   return pathname.replace(pathPrefixesRegExp, "");

@@ -35,19 +35,14 @@ union FolderElement = File | Folder
 
 type Query {
   """
+  returns list of File and Folder objects.
+
   return values:
     - null if no such folder
     - empty array if folder is empty
     - Array of FolderElement otherwise
   """
-  entries(id: String!, filterMetaData: MetaDataInput): [FolderElement!]
-
-  """
-  return values:
-    - empty array if folder is empty
-    - Array of FolderElement otherwise
-  """
-  search(idSubstring: String, filterMetaData: MetaDataInput): [FolderElement!]!
+  entries(id: String, filterMetaData: MetaDataInput): [FolderElement!]
 
   """
   return values:

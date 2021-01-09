@@ -43,8 +43,51 @@ export const SearchScreen = () => {
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={(values, { setSubmitting }) => {
+      onSubmit={(
+        { idSubstring, tags, attributes, newTag, newKey, newValue },
+        { setSubmitting }
+      ) => {
         setSubmitting(false);
+
+        tags = [...(tags ? tags : []), ...(newTag ? [newTag] : [])];
+        attributes = [
+          ...(attributes ? attributes : []),
+          ...(newKey && newValue ? [[newKey, newValue]] : []),
+        ];
+
+        let queryString = "";
+
+        if (
+          idSubstring ||
+          (tags && tags.length > 0) ||
+          (attributes && attributes.length > 0)
+        ) {
+          const idSubstringPart = idSubstring
+            ? "idSubstring=" + idSubstring
+            : "";
+
+          const tagsPart =
+            tags && tags.length > 0
+              ? tags.map((tag) => "tags=" + tag).join("&")
+              : "";
+
+          const attributesPart =
+            attributes && attributes.length > 0
+              ? attributes
+                  .map((attribute) => "attributes=" + attribute.join(","))
+                  .join("&")
+              : "";
+
+          queryString =
+            "?" +
+            idSubstringPart +
+            (idSubstringPart ? "&" : "") +
+            tagsPart +
+            (idSubstringPart || tagsPart ? "&" : "") +
+            attributesPart;
+        }
+
+        history.push(pathPrefix.folder + queryString);
       }}
     >
       {({ isSubmitting, values: { idSubstring } }) => (

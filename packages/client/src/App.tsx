@@ -13,7 +13,7 @@ const App = () => (
     <Nav />
     <Switch>
       <Route exact path="/">
-        <Redirect to={pathPrefix.folder} />
+        <Redirect to={pathPrefix.folder + "/"} />
       </Route>
       <Route path={pathPrefix.folder}>
         <FolderScreen />
