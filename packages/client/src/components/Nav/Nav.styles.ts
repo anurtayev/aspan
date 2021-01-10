@@ -35,7 +35,7 @@ export const ActionButton = styled.div`
 export const Id = styled.div`
   display: flex;
   align-items: center;
-  font-size: 2rem;
+  font-size: 0.5rem;
   margin-left: auto;
   margin-right: 2rem;
 `;

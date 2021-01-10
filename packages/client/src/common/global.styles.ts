@@ -7,8 +7,8 @@ export const EntryFrame = `
   max-width: 150px;
   height: 150px;
   margin: .2rem;
-  background: navy;
-  border-radius: 1rem;
+  background: darkslategrey;
+  border-radius: .4rem;
 `;
 
 export const SmallButton = styled.div`
