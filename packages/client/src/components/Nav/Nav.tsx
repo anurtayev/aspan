@@ -26,7 +26,7 @@ export const Nav = () => {
               onClick={() => {
                 const folder = entryId.split("/").slice(0, -1).join("/");
 
-                history.push(pathPrefix.folder + folder || "/");
+                history.push(pathPrefix.folder + (folder || "/"));
               }}
             >
               {Characters.arrowUp}
