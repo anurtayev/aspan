@@ -23,11 +23,11 @@ export const Nav = () => {
           {/** Parent folder */}
           {!isHomeFolder && (
             <ActionButton
-              onClick={() =>
-                history.push(
-                  pathPrefix.folder + entryId.split("/").slice(0, -1).join("/")
-                )
-              }
+              onClick={() => {
+                const folder = entryId.split("/").slice(0, -1).join("/");
+
+                history.push(pathPrefix.folder + folder || "/");
+              }}
             >
               {Characters.arrowUp}
             </ActionButton>

@@ -21,7 +21,6 @@ export const PaddedSpan = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   color: white;
-  font-weight: bold;
-  font-size: 1.5rem;
+  font-size: 0.5;
   text-align: center;
 `;

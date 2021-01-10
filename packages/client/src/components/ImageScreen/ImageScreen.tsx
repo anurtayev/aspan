@@ -41,9 +41,8 @@ export const ImageScreen = () => {
         src={process.env.REACT_APP_IMG_CDN_URL + entryId}
         alt=""
         onClick={() => {
-          history.push(
-            pathPrefix.folder + entryId.split("/").slice(0, -1).join("/")
-          );
+          const folder = entryId.split("/").slice(0, -1).join("/");
+          history.push(pathPrefix.folder + folder || "/");
         }}
       />
       {prev && (
