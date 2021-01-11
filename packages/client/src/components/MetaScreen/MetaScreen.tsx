@@ -69,10 +69,12 @@ export const MetaScreen = () => {
           variables: {
             id,
             metaData: {
-              tags: [...(tags ? tags : []), ...(newTag ? [newTag] : [])],
+              tags: [...(tags ? tags : []), ...(newTag ? [newTag.trim()] : [])],
               attributes: [
                 ...(attributes ? attributes : []),
-                ...(newKey && newValue ? [[newKey, newValue]] : []),
+                ...(newKey && newValue
+                  ? [[newKey.trim(), newValue.trim()]]
+                  : []),
               ],
             },
           },
