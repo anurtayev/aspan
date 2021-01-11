@@ -84,5 +84,9 @@ export const getFolderPathname = ({
   return pathPrefix.folder + id + queryString;
 };
 
-export const getLastPointer = (ctx: AspanContextType) =>
-  ctx.returnPositions[0].slice(-1)[0];
+export const getLastPointer = (ctx: AspanContextType) => {
+  const pointers = ctx.returnPositions[0];
+  const lastPointer = pointers.slice(-1)[0];
+  ctx.returnPositions[1](pointers.slice(0, -1));
+  return lastPointer;
+};
