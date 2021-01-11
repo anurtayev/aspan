@@ -1,14 +1,24 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { Switch, Route } from "react-router-dom";
 
-import { useEntryId, pathPrefix, Characters } from "common";
+import {
+  useEntryId,
+  pathPrefix,
+  Characters,
+  AspanContext,
+  getLastPointer,
+  getFolderPathname,
+} from "common";
 import { Frame, ActionButton, Id } from "./Nav.styles";
 
 export const Nav = () => {
   const history = useHistory();
   const entryId = useEntryId();
   const isHomeFolder = entryId === "" || entryId === "/";
+  const ctx = useContext(AspanContext);
+
+  if (!ctx) return <p>Error :(</p>;
 
   const goHome = () => history.push(pathPrefix.folder + "/");
 
@@ -23,11 +33,9 @@ export const Nav = () => {
           {/** Parent folder */}
           {!isHomeFolder && (
             <ActionButton
-              onClick={() => {
-                const folder = entryId.split("/").slice(0, -1).join("/");
-
-                history.push(pathPrefix.folder + (folder || "/"));
-              }}
+              onClick={() =>
+                history.push(getFolderPathname(getLastPointer(ctx)))
+              }
             >
               {Characters.arrowUp}
             </ActionButton>

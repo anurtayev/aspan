@@ -60,7 +60,7 @@ export const MetaDataPartialForm = ({
                 />
                 <SmallButton
                   onClick={() => {
-                    push(newTag);
+                    push(newTag.trim());
                     setFieldValue("newTag", "");
                   }}
                 >
@@ -114,7 +114,7 @@ export const MetaDataPartialForm = ({
                 <Field name="newValue" />
                 <SmallButton
                   onClick={() => {
-                    push([newKey, newValue]);
+                    push([newKey.trim(), newValue.trim()]);
                     setFieldValue("newKey", "");
                     setFieldValue("newValue", "");
                   }}
