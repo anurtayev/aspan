@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useQuery } from "@apollo/client";
 import { Field, Formik } from "formik";
 import { useHistory } from "react-router-dom";
 
 import {
-  pathPrefix,
   GetExistingMetaKeys,
   Button,
   MetaDataForm,
   FormLine,
+  getFolderPathname,
+  AspanContext,
+  getLastPointer,
 } from "common";
 import { MetaDataPartialForm } from "components/MetaDataPartialForm";
 import { GET_EXISTING_META_KEYS } from "./queries";
@@ -21,13 +23,14 @@ import {
 
 export const SearchScreen = () => {
   const history = useHistory();
+  const ctx = useContext(AspanContext);
 
   const { loading, error, data } = useQuery<GetExistingMetaKeys>(
     GET_EXISTING_META_KEYS
   );
 
   if (loading) return <p>Loading...</p>;
-  if (error || !data) return <p>Error :(</p>;
+  if (error || !data || !ctx) return <p>Error :(</p>;
 
   const { tags: availableTags, attributes: availableAttributes } = data;
 
@@ -55,39 +58,15 @@ export const SearchScreen = () => {
           ...(newKey && newValue ? [[newKey, newValue]] : []),
         ];
 
-        let queryString = "";
-
-        if (
-          idSubstring ||
-          (tags && tags.length > 0) ||
-          (attributes && attributes.length > 0)
-        ) {
-          const idSubstringPart = idSubstring
-            ? "idSubstring=" + idSubstring
-            : "";
-
-          const tagsPart =
-            tags && tags.length > 0
-              ? tags.map((tag) => "tags=" + tag).join("&")
-              : "";
-
-          const attributesPart =
-            attributes && attributes.length > 0
-              ? attributes
-                  .map((attribute) => "attributes=" + attribute.join(","))
-                  .join("&")
-              : "";
-
-          queryString =
-            "?" +
-            idSubstringPart +
-            (idSubstringPart ? "&" : "") +
-            tagsPart +
-            (idSubstringPart || tagsPart ? "&" : "") +
-            attributesPart;
-        }
-
-        history.push(pathPrefix.folder + queryString);
+        history.push(
+          getFolderPathname({
+            id: "",
+            scrollTop: 0,
+            tags,
+            attributes,
+            idSubstring,
+          })
+        );
       }}
     >
       {({ isSubmitting, values: { idSubstring } }) => (
@@ -110,7 +89,9 @@ export const SearchScreen = () => {
             </SubmitButton>
             <Button
               type="button"
-              onClick={() => history.push(pathPrefix.folder + "/")}
+              onClick={() =>
+                history.push(getFolderPathname(getLastPointer(ctx)))
+              }
             >
               Cancel
             </Button>

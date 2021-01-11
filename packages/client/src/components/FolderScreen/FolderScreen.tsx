@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { useLocation } from "react-router-dom";
 
-import { GetEntries, GetEntriesVariables, entryType, getId } from "common";
+import {
+  GetEntries,
+  GetEntriesVariables,
+  entryType,
+  getId,
+  AspanContext,
+} from "common";
 import { FOLDER_ENTRIES } from "./queries";
 import { FolderScreenFrame } from "./FolderScreen.styles";
 import { File } from "./File";
@@ -14,13 +20,16 @@ const parseQueryString = (queryString: string) => {
     idSubstring: params.get("idSubstring"),
     tags: params.getAll("tags"),
     attributes: params.getAll("attributes").map((elem) => elem.split(",")),
+    scrollTop: Number(params.get("scrollTop")),
   };
 };
 
 export const FolderScreen = () => {
   const { pathname, search } = useLocation();
   const id = getId(pathname);
-  const { idSubstring, tags, attributes } = parseQueryString(search);
+  const { idSubstring, tags, attributes, scrollTop } = parseQueryString(search);
+  const divRef = React.createRef<HTMLDivElement>();
+  const ctx = useContext(AspanContext);
 
   const { loading, error, data } = useQuery<GetEntries, GetEntriesVariables>(
     FOLDER_ENTRIES,
@@ -40,6 +49,12 @@ export const FolderScreen = () => {
     }
   );
 
+  useEffect(() => {
+    if (divRef.current) {
+      divRef.current.scrollTo(0, scrollTop);
+    }
+  }, [divRef, scrollTop]);
+
   if (id && idSubstring) return <p></p>;
 
   if (loading) return <p>Loading...</p>;
@@ -49,7 +64,24 @@ export const FolderScreen = () => {
   const { entries } = data;
 
   return (
-    <FolderScreenFrame>
+    <FolderScreenFrame
+      ref={divRef}
+      onClick={() => {
+        if (ctx && divRef.current) {
+          const currentHistory = ctx.returnPositions[0];
+          ctx.returnPositions[1]([
+            ...currentHistory,
+            {
+              id,
+              scrollTop: divRef.current.scrollTop,
+              idSubstring,
+              tags,
+              attributes,
+            },
+          ]);
+        }
+      }}
+    >
       {entries
         .sort((a, b) => {
           if (

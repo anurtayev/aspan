@@ -7,7 +7,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { defaultTheme } from "common";
+import { defaultTheme, AspanContextComponent } from "common";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -21,7 +21,9 @@ ReactDOM.render(
     >
       <ThemeProvider theme={defaultTheme}>
         <Router>
-          <App />
+          <AspanContextComponent>
+            <App />
+          </AspanContextComponent>
         </Router>
       </ThemeProvider>
     </ApolloProvider>

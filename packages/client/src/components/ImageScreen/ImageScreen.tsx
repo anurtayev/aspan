@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 
@@ -9,6 +9,9 @@ import {
   GetEntryVariables,
   GetEntry_entry_File,
   Characters,
+  AspanContext,
+  getFolderPathname,
+  getLastPointer,
 } from "common";
 import {
   Frame,
@@ -20,30 +23,29 @@ import { GET_ENTRY } from "./queries";
 
 export const ImageScreen = () => {
   const history = useHistory();
-  const entryId = useEntryId();
+  const id = useEntryId();
+  const ctx = useContext(AspanContext);
 
   const { loading, error, data } = useQuery<GetEntry, GetEntryVariables>(
     GET_ENTRY,
     {
-      variables: { id: entryId },
+      variables: { id },
       fetchPolicy: "no-cache",
     }
   );
 
   if (loading) return <p>Loading...</p>;
   if (error || !data) return <p>Error :(</p>;
-  if (!data.entry) return <p>Error. No such entry</p>;
+  if (!data.entry || !ctx)
+    return <p>Error. No such entry or AspanContext is missing</p>;
 
   const { next, prev } = data.entry as GetEntry_entry_File;
   return (
     <Frame>
       <Image
-        src={process.env.REACT_APP_IMG_CDN_URL + entryId}
+        src={process.env.REACT_APP_IMG_CDN_URL + id}
         alt=""
-        onClick={() => {
-          const folder = entryId.split("/").slice(0, -1).join("/");
-          history.push(pathPrefix.folder + folder || "/");
-        }}
+        onClick={() => history.push(getFolderPathname(getLastPointer(ctx)))}
       />
       {prev && (
         <LeftSlideButton onClick={() => history.push(pathPrefix.image + prev)}>

@@ -1,6 +1,8 @@
 import { useLocation } from "react-router-dom";
 import { MetaDataInput } from "./graphqlTypes";
 
+import { Pointer, AspanContextType } from "./context";
+
 export const pathPrefix: { [key: string]: string } = {
   folder: "/folder",
   image: "/image",
@@ -50,3 +52,37 @@ export type MetaDataForm = MetaDataInput & {
   newKey: string;
   newValue: string;
 };
+
+export const getFolderPathname = ({
+  id,
+  scrollTop,
+  tags,
+  attributes,
+  idSubstring,
+}: Pointer) => {
+  let queryString = "";
+
+  const idSubstringPart = idSubstring ? "&idSubstring=" + idSubstring : "";
+
+  const tagsPart =
+    tags && tags.length > 0 ? tags.map((tag) => "tags=" + tag).join("&") : "";
+
+  const attributesPart =
+    attributes && attributes.length > 0
+      ? attributes
+          .map((attribute) => "attributes=" + attribute.join(","))
+          .join("&")
+      : "";
+
+  queryString =
+    "?scrollTop=" +
+    scrollTop +
+    idSubstringPart +
+    (tagsPart ? "&" + tagsPart : "") +
+    (attributesPart ? "&" + attributesPart : "");
+
+  return pathPrefix.folder + id + queryString;
+};
+
+export const getLastPointer = (ctx: AspanContextType) =>
+  ctx.returnPositions[0].slice(-1)[0];
