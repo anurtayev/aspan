@@ -1,9 +1,9 @@
 import gql from "graphql-tag";
 
 export const GET_METADATA = gql`
-  query GetMetaData($id: String!) {
-    entry(id: $id) {
-      ... on Entry {
+  query GetMetaData($entryId: String!) {
+    entry(entryId: $entryId) {
+      ... on AbstractEntry {
         __typename
         id
         metaData {

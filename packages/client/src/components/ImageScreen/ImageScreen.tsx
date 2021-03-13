@@ -7,7 +7,6 @@ import {
   useEntryId,
   GetEntry,
   GetEntryVariables,
-  GetEntry_entry_File,
   Characters,
   AspanContext,
   getFolderPathname,
@@ -23,13 +22,13 @@ import { GET_ENTRY } from "./queries";
 
 export const ImageScreen = () => {
   const history = useHistory();
-  const id = useEntryId();
+  const entryId = useEntryId();
   const ctx = useContext(AspanContext);
 
   const { loading, error, data } = useQuery<GetEntry, GetEntryVariables>(
     GET_ENTRY,
     {
-      variables: { id },
+      variables: { entryId },
       fetchPolicy: "no-cache",
     }
   );
@@ -39,21 +38,25 @@ export const ImageScreen = () => {
   if (!data.entry || !ctx)
     return <p>Error. No such entry or AspanContext is missing</p>;
 
-  const { next, prev } = data.entry as GetEntry_entry_File;
+  // const { next, prev } = data.entry as GetEntry_entry_File;
   return (
     <Frame>
       <Image
-        src={process.env.REACT_APP_IMG_CDN_URL + id}
+        src={process.env.REACT_APP_IMG_CDN_URL + entryId}
         alt=""
         onClick={() => history.push(getFolderPathname(getLastPointer(ctx)))}
       />
-      {prev && (
-        <LeftSlideButton onClick={() => history.push(pathPrefix.image + prev)}>
+      {false && (
+        <LeftSlideButton
+          onClick={() => history.push(pathPrefix.image + "prev")}
+        >
           {Characters.arrowLeft}
         </LeftSlideButton>
       )}
-      {next && (
-        <RightSlideButton onClick={() => history.push(pathPrefix.image + next)}>
+      {false && (
+        <RightSlideButton
+          onClick={() => history.push(pathPrefix.image + "next")}
+        >
           {Characters.arrowRight}
         </RightSlideButton>
       )}

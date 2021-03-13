@@ -8,7 +8,13 @@ import { repoCache, FileSystemDataSource, Repository } from "./repo";
 const typeDefs = gql(
   fs.readFileSync(path.join(__dirname, "schema.graphql"), "utf8").toString()
 );
+
+const startTime = new Date();
 const repository: Repository = repoCache(options);
+console.log(
+  `walked repository in ${new Date().getTime() - startTime.getTime()}ms`
+);
+console.log(`found ${repository.cache.size} entries`);
 
 const server = new ApolloServer({
   typeDefs,

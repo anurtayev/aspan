@@ -2,7 +2,7 @@ import { dirname, basename, extname } from "path";
 import { DataSource, DataSourceConfig } from "apollo-datasource";
 import { IOptions } from "../util";
 import {
-  FolderElement,
+  Entry,
   Maybe,
   MetaData,
   MetaDataInput,
@@ -40,7 +40,7 @@ export class FileSystemDataSource extends DataSource {
     return Array.from(this.repository.attributes);
   }
 
-  public getEntry = (id: Scalars["ID"]): Maybe<FolderElement> => {
+  public getEntry = (id: Scalars["ID"]): Maybe<Entry> => {
     const rawEntry = this.repository.cache.get(id);
     if (!rawEntry) return null;
     return this.expandEntry({ id, rawEntry });
@@ -48,28 +48,25 @@ export class FileSystemDataSource extends DataSource {
 
   public expandEntry = ({
     id,
-    rawEntry: { stats, prev, next }
+    rawEntry: { __typename }
   }: {
     id: string;
     rawEntry: CacheEntry;
-  }): FolderElement => {
+  }): Entry => {
     const contentType = extname(id);
     const dockerImageUrl = process.env.DOCKER_NETWORK_PICREPO_URL + id;
     const imageUrl = process.env.IMG_CDN_URL + id;
 
-    return stats.isFile()
+    return __typename === "File"
       ? {
           __typename: "File",
           id,
-          size: stats.size,
           contentType,
           thumbImageUrl:
             process.env.THUMBOR_URL +
             `/unsafe/${process.env.THUMBS_LENGTH}x${process.env.THUMBS_WIDTH}/` +
             encodeURIComponent(dockerImageUrl),
-          imageUrl,
-          prev,
-          next
+          imageUrl
         }
       : {
           __typename: "Folder",
@@ -78,14 +75,17 @@ export class FileSystemDataSource extends DataSource {
   };
 
   public getFolderEntries = (
-    id: string,
+    folderId: string,
     filterMetaData: Maybe<MetaDataInput> | undefined
-  ): Array<FolderElement> => {
-    const retVal: Array<FolderElement> = [];
+  ): Array<Entry> => {
+    const retVal: Array<Entry> = [];
     for (const [key, rawEntry] of this.repository.cache) {
       const { metaData } = rawEntry;
 
-      if (dirname(key) === id && satisfiesFilter(metaData, filterMetaData)) {
+      if (
+        dirname(key) === folderId &&
+        satisfiesFilter(metaData, filterMetaData)
+      ) {
         retVal.push(this.expandEntry({ id: key, rawEntry }));
       }
     }
@@ -93,28 +93,14 @@ export class FileSystemDataSource extends DataSource {
     return retVal;
   };
 
-  public findEntries = (
-    idSubstring: Maybe<string> | undefined,
-    filterMetaData: Maybe<MetaDataInput> | undefined
-  ): Array<FolderElement> => {
-    const retVal: Array<FolderElement> = [];
+  public findEntries = (filterMetaData: MetaDataInput): Array<Entry> | null => {
+    if (!filterMetaData.tags && !filterMetaData.attributes) return null;
+    const retVal: Array<Entry> = [];
+
     for (const [key, rawEntry] of this.repository.cache) {
       const { metaData } = rawEntry;
-      const isFilterPresent =
-        filterMetaData &&
-        typeof filterMetaData === "object" &&
-        (filterMetaData.tags || filterMetaData.attributes);
 
-      if (
-        (idSubstring && !isFilterPresent && key.includes(idSubstring)) ||
-        (!idSubstring &&
-          isFilterPresent &&
-          satisfiesFilter(metaData, filterMetaData)) ||
-        (idSubstring &&
-          isFilterPresent &&
-          key.includes(idSubstring) &&
-          satisfiesFilter(metaData, filterMetaData))
-      ) {
+      if (satisfiesFilter(metaData, filterMetaData)) {
         retVal.push(this.expandEntry({ id: key, rawEntry }));
       }
     }
@@ -134,7 +120,7 @@ export class FileSystemDataSource extends DataSource {
     if (await pathExists(fsPath(id, this.options))) {
       const cacheEntry = this.repository.cache.get(id);
       if (!cacheEntry) throw new Error("missing cache entry for " + id);
-      const { stats, prev, next } = cacheEntry;
+      const { __typename } = cacheEntry;
 
       if (
         metaData &&
@@ -157,7 +143,7 @@ export class FileSystemDataSource extends DataSource {
           metaData
         );
 
-        this.repository.cache.set(id, { stats, metaData, prev, next });
+        this.repository.cache.set(id, { __typename, metaData });
         metaData.tags?.forEach(tag => this.repository.tags.add(tag));
         metaData.attributes?.forEach(([key]) =>
           this.repository.attributes.add(key)
@@ -167,10 +153,8 @@ export class FileSystemDataSource extends DataSource {
         remove(fsPath(metaFile(id, this.options), this.options));
 
         this.repository.cache.set(id, {
-          stats: cacheEntry.stats,
-          metaData: null,
-          prev,
-          next
+          __typename,
+          metaData: null
         });
         return null;
       }

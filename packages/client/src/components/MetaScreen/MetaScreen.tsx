@@ -24,12 +24,12 @@ import {
 
 export const MetaScreen = () => {
   const history = useHistory();
-  const id = useEntryId();
+  const entryId = useEntryId();
 
   const { loading, error, data } = useQuery<GetMetaData, GetMetaDataVariables>(
     GET_METADATA,
     {
-      variables: { id },
+      variables: { entryId },
       fetchPolicy: "no-cache",
     }
   );
@@ -48,7 +48,7 @@ export const MetaScreen = () => {
 
   const goBack = () => {
     history.push(
-      (__typename === "Folder" ? pathPrefix.folder : pathPrefix.image) + id
+      (__typename === "Folder" ? pathPrefix.folder : pathPrefix.image) + entryId
     );
   };
 
@@ -67,7 +67,7 @@ export const MetaScreen = () => {
         const { newKey, newValue, newTag, tags, attributes } = values;
         setMetaData({
           variables: {
-            id,
+            id: entryId,
             metaData: {
               tags: [...(tags ? tags : []), ...(newTag ? [newTag.trim()] : [])],
               attributes: [
@@ -89,7 +89,7 @@ export const MetaScreen = () => {
             <PictureSymbol>
               {__typename === "Folder" ? Characters.folder : Characters.file}
             </PictureSymbol>
-            <EntryName>{id.split("/").slice(-1)[0]}</EntryName>
+            <EntryName>{entryId.split("/").slice(-1)[0]}</EntryName>
           </Section>
 
           <MetaDataPartialForm

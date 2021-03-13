@@ -8,48 +8,31 @@ type MetaData {
   attributes: [[String!]!]
 }
 
-interface Entry {
+interface AbstractEntry {
   id: ID!
   metaData: MetaData
 }
 
-type Folder implements Entry {
+type Folder implements AbstractEntry {
   id: ID!
   metaData: MetaData
-  children: [Entry!]
 }
 
-type File implements Entry {
+type File implements AbstractEntry {
   id: ID!
   metaData: MetaData
 
-  size: Int!
   thumbImageUrl: String!
   imageUrl: String!
   contentType: String!
-  prev: String
-  next: String
 }
 
-union FolderElement = File | Folder
+union Entry = File | Folder
 
 type Query {
-  """
-  returns list of File and Folder objects.
+  entries(folderId: String, filterMetaData: MetaDataInput): [Entry!]
 
-  return values:
-    - null if no such folder
-    - empty array if folder is empty
-    - Array of FolderElement otherwise
-  """
-  entries(id: String, filterMetaData: MetaDataInput): [FolderElement!]
-
-  """
-  return values:
-    - null if no such entry
-    - FolderElement otherwise
-  """
-  entry(id: String!): FolderElement
+  entry(entryId: String): Entry
 
   """
   returns list of all tags used in repository

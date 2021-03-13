@@ -22,22 +22,11 @@ export interface GetEntries_entries_File {
 export type GetEntries_entries = GetEntries_entries_Folder | GetEntries_entries_File;
 
 export interface GetEntries {
-  /**
-   * returns list of File and Folder objects.
-   * 
-   * parameters:
-   *   - id: if not given or doesn't start with '/' then search
-   * return values:
-   *   - null if no such folder
-   *   - empty array if folder is empty
-   *   - Array of FolderElement otherwise
-   */
   entries: GetEntries_entries[] | null;
 }
 
 export interface GetEntriesVariables {
-  id?: string | null;
-  filterMetaData?: MetaDataInput | null;
+  folderId: string;
 }
 
 /* tslint:disable */
@@ -59,23 +48,16 @@ export interface GetEntry_entry_File {
   id: string;
   thumbImageUrl: string;
   imageUrl: string;
-  prev: string | null;
-  next: string | null;
 }
 
 export type GetEntry_entry = GetEntry_entry_Folder | GetEntry_entry_File;
 
 export interface GetEntry {
-  /**
-   * return values:
-   *   - null if no such entry
-   *   - FolderElement otherwise
-   */
   entry: GetEntry_entry | null;
 }
 
 export interface GetEntryVariables {
-  id: string;
+  entryId: string;
 }
 
 /* tslint:disable */
@@ -100,11 +82,6 @@ export interface GetMetaData_entry {
 }
 
 export interface GetMetaData {
-  /**
-   * return values:
-   *   - null if no such entry
-   *   - FolderElement otherwise
-   */
   entry: GetMetaData_entry | null;
   /**
    * returns list of all tags used in repository
@@ -117,7 +94,7 @@ export interface GetMetaData {
 }
 
 export interface GetMetaDataVariables {
-  id: string;
+  entryId: string;
 }
 
 /* tslint:disable */

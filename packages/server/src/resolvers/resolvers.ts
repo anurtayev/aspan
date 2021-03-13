@@ -1,4 +1,4 @@
-import { FolderElement, Resolvers } from "../generated/graphql";
+import { Entry, Resolvers } from "../generated/graphql";
 import { IContext } from "../util";
 
 const metaData = (
@@ -9,7 +9,7 @@ const metaData = (
   return dataSources.fs.getMetaData(id);
 };
 
-const folderElementTypeResolver = (obj: FolderElement, _: any, __: any) => {
+const folderElementTypeResolver = (obj: Entry, _: any, __: any) => {
   if (obj.__typename === "File") {
     return "File";
   }
@@ -23,31 +23,24 @@ export const resolvers: Resolvers<IContext> = {
   Query: {
     entries(
       _,
-      { id, filterMetaData },
+      { folderId, filterMetaData },
       {
         dataSources: {
-          fs: { getFolderEntries, getEntry, findEntries }
+          fs: { getFolderEntries, findEntries }
         }
       }
     ) {
-      if (id && id.startsWith("/")) {
-        return (id === "/"
-        ? true
-        : getEntry(id))
-          ? getFolderEntries(id, filterMetaData)
-          : null;
-      } else {
-        if (!id && !filterMetaData) {
-          throw new Error(
-            "Either idSubstring or filterMetaData must be specified"
-          );
-        }
-        return findEntries(id, filterMetaData);
-      }
+      if (folderId) return getFolderEntries(folderId, filterMetaData);
+
+      if (filterMetaData) return findEntries(filterMetaData);
+
+      return null;
     },
 
-    entry(_, { id }, { dataSources }) {
-      return dataSources.fs.getEntry(id);
+    entry(_, { entryId }, { dataSources }) {
+      if (!entryId) return null;
+
+      return dataSources.fs.getEntry(entryId);
     },
 
     tags(_, __, { dataSources: { fs } }) {
@@ -82,17 +75,14 @@ export const resolvers: Resolvers<IContext> = {
   },
 
   Folder: {
-    metaData,
-    children({ id }, _, { dataSources }) {
-      return dataSources.fs.getFolderEntries(id, undefined);
-    }
+    metaData
   },
 
   File: {
     metaData
   },
 
-  FolderElement: {
+  AbstractEntry: {
     __resolveType: folderElementTypeResolver
   },
 
