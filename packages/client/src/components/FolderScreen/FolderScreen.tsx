@@ -76,9 +76,18 @@ export const FolderScreen = () => {
         ...accumulator,
         {
           ...entry,
-          prev: index === 0 ? undefined : entries[index - 1].id,
+          prev:
+            entry.__typename === entryType.file
+              ? index === 0
+                ? undefined
+                : entries[index - 1].id
+              : undefined,
           next:
-            index === entries.length - 1 ? undefined : entries[index + 1].id,
+            entry.__typename === entryType.file
+              ? index === entries.length - 1
+                ? undefined
+                : entries[index + 1].id
+              : undefined,
         },
       ];
     }, [] as Array<GetEntries_entries>);

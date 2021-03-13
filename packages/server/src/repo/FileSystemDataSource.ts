@@ -74,33 +74,25 @@ export class FileSystemDataSource extends DataSource {
         };
   };
 
-  public getFolderEntries = (
-    folderId: string,
+  public getEntries = (
+    folderId: Maybe<string> | undefined,
     filterMetaData: Maybe<MetaDataInput> | undefined
-  ): Array<Entry> => {
-    const retVal: Array<Entry> = [];
+  ): Array<Entry> | null => {
+    if (
+      (!folderId && !filterMetaData) ||
+      (filterMetaData && !filterMetaData.tags && !filterMetaData.attributes)
+    )
+      return null;
+
+    let retVal = null;
     for (const [key, rawEntry] of this.repository.cache) {
       const { metaData } = rawEntry;
 
       if (
-        dirname(key) === folderId &&
+        (folderId ? dirname(key) === folderId : true) &&
         satisfiesFilter(metaData, filterMetaData)
       ) {
-        retVal.push(this.expandEntry({ id: key, rawEntry }));
-      }
-    }
-
-    return retVal;
-  };
-
-  public findEntries = (filterMetaData: MetaDataInput): Array<Entry> | null => {
-    if (!filterMetaData.tags && !filterMetaData.attributes) return null;
-    const retVal: Array<Entry> = [];
-
-    for (const [key, rawEntry] of this.repository.cache) {
-      const { metaData } = rawEntry;
-
-      if (satisfiesFilter(metaData, filterMetaData)) {
+        if (!retVal) retVal = [];
         retVal.push(this.expandEntry({ id: key, rawEntry }));
       }
     }

@@ -3,5 +3,6 @@
   "editor.wordWrap": "wordWrapColumn",
   "css.lint.unknownAtRules": "ignore",
   "editor.formatOnType": true,
-  "editor.formatOnPaste": true
+  "editor.formatOnPaste": true,
+  "editor.tabSize": 2
 }

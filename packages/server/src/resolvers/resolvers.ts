@@ -26,15 +26,11 @@ export const resolvers: Resolvers<IContext> = {
       { folderId, filterMetaData },
       {
         dataSources: {
-          fs: { getFolderEntries, findEntries }
+          fs: { getEntries }
         }
       }
     ) {
-      if (folderId) return getFolderEntries(folderId, filterMetaData);
-
-      if (filterMetaData) return findEntries(filterMetaData);
-
-      return null;
+      return getEntries(folderId, filterMetaData);
     },
 
     entry(_, { entryId }, { dataSources }) {
