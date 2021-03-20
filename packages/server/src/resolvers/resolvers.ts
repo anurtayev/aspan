@@ -23,20 +23,22 @@ export const resolvers: Resolvers<IContext> = {
   Query: {
     entries(
       _,
-      { folderId, filterMetaData },
+      { id, metaDataInput },
       {
         dataSources: {
-          fs: { getEntries }
+          fs: { getEntries, search }
         }
       }
     ) {
-      return getEntries(folderId, filterMetaData);
+      if (id) return getEntries(id);
+
+      if (metaDataInput) return search(metaDataInput);
+
+      return [];
     },
 
-    entry(_, { entryId }, { dataSources }) {
-      if (!entryId) return null;
-
-      return dataSources.fs.getEntry(entryId);
+    entry(_, { id }, { dataSources }) {
+      return dataSources.fs.getEntry(id);
     },
 
     tags(_, __, { dataSources: { fs } }) {
@@ -65,8 +67,8 @@ export const resolvers: Resolvers<IContext> = {
       return dataSources.fs.addTag(id, attributeKey);
     },
 
-    setMetaData(_: any, { id, metaData }, { dataSources }) {
-      return dataSources.fs.setMetaData(id, metaData);
+    setMetaData(_: any, { id, metaDataInput }, { dataSources }) {
+      return dataSources.fs.setMetaData(id, metaDataInput);
     }
   },
 

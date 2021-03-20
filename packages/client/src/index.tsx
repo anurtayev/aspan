@@ -5,7 +5,7 @@ import { ThemeProvider } from "styled-components";
 import { BrowserRouter as Router } from "react-router-dom";
 
 import "./index.css";
-import App from "./App";
+import { App } from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { defaultTheme, AspanContextComponent } from "common";
 

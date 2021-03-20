@@ -1,16 +1,12 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { useHistory } from "react-router-dom";
-import { useQuery } from "@apollo/client";
 
 import {
   pathPrefix,
   useEntryId,
-  GetEntry,
-  GetEntryVariables,
   Characters,
-  AspanContext,
   getFolderPathname,
-  getLastPointer,
+  AspanContext,
 } from "common";
 import {
   Frame,
@@ -18,44 +14,42 @@ import {
   LeftSlideButton,
   RightSlideButton,
 } from "./ImageScreen.styles";
-import { GET_ENTRY } from "./queries";
 
 export const ImageScreen = () => {
   const history = useHistory();
   const entryId = useEntryId();
   const ctx = useContext(AspanContext);
 
-  const { loading, error, data } = useQuery<GetEntry, GetEntryVariables>(
-    GET_ENTRY,
-    {
-      variables: { entryId },
-      fetchPolicy: "no-cache",
-    }
-  );
+  if (!ctx?.repoVariables) throw new Error("context error");
 
-  if (loading) return <p>Loading...</p>;
-  if (error || !data) return <p>Error :(</p>;
-  if (!data.entry || !ctx)
-    return <p>Error. No such entry or AspanContext is missing</p>;
+  const {
+    repoVariables,
+    repo: { entries },
+  } = ctx;
 
-  // const { next, prev } = data.entry as GetEntry_entry_File;
+  const entry = entries.find((entry) => entry.id === entryId);
+
+  if (!entry || entry.__typename !== "File") throw new Error("entry not found");
+
   return (
     <Frame>
       <Image
         src={process.env.REACT_APP_IMG_CDN_URL + entryId}
         alt=""
-        onClick={() => history.push(getFolderPathname(getLastPointer(ctx)))}
+        onClick={() => history.push(getFolderPathname(repoVariables))}
       />
-      {false && (
+      {entry.prev && (
         <LeftSlideButton
-          onClick={() => history.push(pathPrefix.image + "prev")}
+          onClick={() => {
+            history.push(pathPrefix.image + entry.prev);
+          }}
         >
           {Characters.arrowLeft}
         </LeftSlideButton>
       )}
-      {false && (
+      {entry.next && (
         <RightSlideButton
-          onClick={() => history.push(pathPrefix.image + "next")}
+          onClick={() => history.push(pathPrefix.image + entry.next)}
         >
           {Characters.arrowRight}
         </RightSlideButton>

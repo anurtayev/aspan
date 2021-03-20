@@ -1,7 +1,5 @@
 import { useLocation } from "react-router-dom";
-import { MetaDataInput } from "./graphqlTypes";
-
-import { Pointer, AspanContextType } from "./context";
+import { MetaDataInput, RepoVariables } from "./graphqlTypes";
 
 export const pathPrefix: { [key: string]: string } = {
   folder: "/folder",
@@ -15,12 +13,9 @@ export enum entryType {
   file = "File",
 }
 
-const pathPrefixesRegExp = new RegExp(
+export const pathPrefixesRegExp = new RegExp(
   `^(${pathPrefix.folder}|${pathPrefix.image}|${pathPrefix.meta})`
 );
-
-export const getId = (pathname: string) =>
-  pathname.replace(pathPrefixesRegExp, "");
 
 export const useEntryId = () => {
   const { pathname } = useLocation();
@@ -53,40 +48,36 @@ export type MetaDataForm = MetaDataInput & {
   newValue: string;
 };
 
-export const getFolderPathname = ({
-  id,
-  scrollTop,
-  tags,
-  attributes,
-  idSubstring,
-}: Pointer) => {
-  let queryString = "";
+export const getFolderPathname = (repoVariables: RepoVariables) => {
+  const { id, metaDataInput } = repoVariables;
 
-  const idSubstringPart = idSubstring ? "&idSubstring=" + idSubstring : "";
+  if (id) return pathPrefix.folder + id;
 
-  const tagsPart =
-    tags && tags.length > 0 ? tags.map((tag) => "tags=" + tag).join("&") : "";
+  if (metaDataInput) {
+    const { tags, attributes } = metaDataInput;
+    let queryString = "";
 
-  const attributesPart =
-    attributes && attributes.length > 0
-      ? attributes
-          .map((attribute) => "attributes=" + attribute.join(","))
-          .join("&")
-      : "";
+    const tagsPart =
+      tags && tags.length > 0
+        ? tags.map((tag: string) => "tags=" + tag).join("&")
+        : "";
 
-  queryString =
-    "?scrollTop=" +
-    scrollTop +
-    idSubstringPart +
-    (tagsPart ? "&" + tagsPart : "") +
-    (attributesPart ? "&" + attributesPart : "");
+    const attributesPart =
+      attributes && attributes.length > 0
+        ? attributes
+            .map((attribute) => "attributes=" + attribute.join(","))
+            .join("&")
+        : "";
 
-  return pathPrefix.folder + id + queryString;
-};
+    queryString =
+      tagsPart || attributesPart
+        ? "?" +
+          (tagsPart ? "&" + tagsPart : "") +
+          (attributesPart ? "&" + attributesPart : "")
+        : "";
 
-export const getLastPointer = (ctx: AspanContextType) => {
-  const pointers = ctx.returnPositions[0];
-  const lastPointer = pointers.slice(-1)[0];
-  ctx.returnPositions[1](pointers.slice(0, -1));
-  return lastPointer;
+    return pathPrefix.folder + queryString;
+  }
+
+  throw new Error("context error");
 };

@@ -1,19 +1,18 @@
-import React from "react";
-import { useQuery, useMutation } from "@apollo/client";
+import { useContext } from "react";
+import { useMutation } from "@apollo/client";
 import { Formik } from "formik";
 import { useHistory } from "react-router-dom";
 
 import {
   useEntryId,
-  GetMetaData,
-  GetMetaDataVariables,
-  pathPrefix,
   Characters,
   Button,
   MetaDataForm,
+  SET_METADATA,
+  AspanContext,
+  getFolderPathname,
 } from "common";
 import { MetaDataPartialForm } from "components/MetaDataPartialForm";
-import { GET_METADATA, SET_METADATA } from "./queries";
 import {
   FlexForm,
   EntryName,
@@ -25,31 +24,25 @@ import {
 export const MetaScreen = () => {
   const history = useHistory();
   const entryId = useEntryId();
-
-  const { loading, error, data } = useQuery<GetMetaData, GetMetaDataVariables>(
-    GET_METADATA,
-    {
-      variables: { entryId },
-      fetchPolicy: "no-cache",
-    }
-  );
+  const ctx = useContext(AspanContext);
 
   const [setMetaData] = useMutation(SET_METADATA);
 
-  if (loading) return <p>Loading...</p>;
-  if (error || !data) return <p>Error :(</p>;
-  if (!data.entry) return <p>Error. No such entry</p>;
+  if (!ctx?.repoVariables) throw new Error("context error");
 
   const {
-    entry: { __typename, metaData },
-    tags: availableTags,
-    attributes: availableAttributes,
-  } = data;
+    repo: { entries, tags: availableTags, attributes: availableAttributes },
+    repoVariables,
+  } = ctx;
+
+  const entry = entries.find((entry) => entry.id === entryId);
+
+  if (!entry) throw new Error("entry not found");
+
+  const { metaData, __typename } = entry;
 
   const goBack = () => {
-    history.push(
-      (__typename === "Folder" ? pathPrefix.folder : pathPrefix.image) + entryId
-    );
+    history.push(getFolderPathname(repoVariables));
   };
 
   const initialValues: MetaDataForm = {

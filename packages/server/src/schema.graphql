@@ -25,14 +25,17 @@ type File implements AbstractEntry {
   thumbImageUrl: String!
   imageUrl: String!
   contentType: String!
+
+  prev: String
+  next: String
 }
 
 union Entry = File | Folder
 
 type Query {
-  entries(folderId: String, filterMetaData: MetaDataInput): [Entry!]
+  entries(id: String, metaDataInput: MetaDataInput): [Entry!]!
 
-  entry(entryId: String): Entry
+  entry(id: String!): Entry
 
   """
   returns list of all tags used in repository
@@ -57,5 +60,5 @@ type Mutation {
   removeAttribute(id: String!, attributeKey: String!): MetaData
   setTitle(id: String!, title: String!): MetaData
   setDescription(id: String!, description: String!): MetaData
-  setMetaData(id: String!, metaData: MetaDataInput!): MetaData
+  setMetaData(id: String!, metaDataInput: MetaDataInput!): MetaData
 }

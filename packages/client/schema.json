@@ -19,7 +19,7 @@
             "description": "",
             "args": [
               {
-                "name": "folderId",
+                "name": "id",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
@@ -29,7 +29,7 @@
                 "defaultValue": null
               },
               {
-                "name": "filterMetaData",
+                "name": "metaDataInput",
                 "description": null,
                 "type": {
                   "kind": "INPUT_OBJECT",
@@ -40,15 +40,19 @@
               }
             ],
             "type": {
-              "kind": "LIST",
+              "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "NON_NULL",
+                "kind": "LIST",
                 "name": null,
                 "ofType": {
-                  "kind": "UNION",
-                  "name": "Entry",
-                  "ofType": null
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "UNION",
+                    "name": "Entry",
+                    "ofType": null
+                  }
                 }
               }
             },
@@ -60,12 +64,16 @@
             "description": "",
             "args": [
               {
-                "name": "entryId",
+                "name": "id",
                 "description": null,
                 "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
                 },
                 "defaultValue": null
               }
@@ -295,6 +303,30 @@
                 "name": "String",
                 "ofType": null
               }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "prev",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "next",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -753,7 +785,7 @@
                 "defaultValue": null
               },
               {
-                "name": "metaData",
+                "name": "metaDataInput",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",

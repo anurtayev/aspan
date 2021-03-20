@@ -1,53 +1,35 @@
-import React, { useContext } from "react";
-import { useQuery } from "@apollo/client";
-import { Field, Formik } from "formik";
+import { useContext } from "react";
+import { Formik } from "formik";
 import { useHistory } from "react-router-dom";
 
-import {
-  GetExistingMetaKeys,
-  Button,
-  MetaDataForm,
-  FormLine,
-  getFolderPathname,
-  AspanContext,
-  getLastPointer,
-} from "common";
+import { Button, MetaDataForm, getFolderPathname, AspanContext } from "common";
 import { MetaDataPartialForm } from "components/MetaDataPartialForm";
-import { GET_EXISTING_META_KEYS } from "./queries";
-import {
-  FlexForm,
-  Section,
-  SubmitButton,
-  SectionHeader,
-} from "./SearchScreen.styles";
+import { FlexForm, Section, SubmitButton } from "./SearchScreen.styles";
 
 export const SearchScreen = () => {
   const history = useHistory();
   const ctx = useContext(AspanContext);
 
-  const { loading, error, data } = useQuery<GetExistingMetaKeys>(
-    GET_EXISTING_META_KEYS
-  );
+  if (!ctx?.repoVariables) throw new Error("context error");
 
-  if (loading) return <p>Loading...</p>;
-  if (error || !data || !ctx) return <p>Error :(</p>;
+  const {
+    repo: { tags: availableTags, attributes: availableAttributes },
+    repoVariables,
+  } = ctx;
 
-  const { tags: availableTags, attributes: availableAttributes } = data;
-
-  const initialValues: MetaDataForm & { idSubstring: string } = {
+  const initialValues: MetaDataForm = {
     tags: [],
     attributes: [],
     newTag: "",
     newKey: "",
     newValue: "",
-    idSubstring: "",
   };
 
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={(
-        { idSubstring, tags, attributes, newTag, newKey, newValue },
+        { tags, attributes, newTag, newKey, newValue },
         { setSubmitting }
       ) => {
         setSubmitting(false);
@@ -60,24 +42,16 @@ export const SearchScreen = () => {
 
         history.push(
           getFolderPathname({
-            id: "",
-            scrollTop: 0,
-            tags,
-            attributes,
-            idSubstring,
+            metaDataInput: {
+              tags,
+              attributes,
+            },
           })
         );
       }}
     >
-      {({ isSubmitting, values: { idSubstring } }) => (
+      {({ isSubmitting }) => (
         <FlexForm>
-          <Section>
-            <SectionHeader>Enter name substring</SectionHeader>
-            <FormLine>
-              <Field name="idSubstring" />
-            </FormLine>
-          </Section>
-
           <MetaDataPartialForm
             availableAttributes={availableAttributes}
             availableTags={availableTags}
@@ -89,9 +63,7 @@ export const SearchScreen = () => {
             </SubmitButton>
             <Button
               type="button"
-              onClick={() =>
-                history.push(getFolderPathname(getLastPointer(ctx)))
-              }
+              onClick={() => history.push(getFolderPathname(repoVariables))}
             >
               Cancel
             </Button>

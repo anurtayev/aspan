@@ -8,7 +8,7 @@ import { SearchScreen } from "components/SearchScreen";
 import { Nav } from "components/Nav";
 import { pathPrefix } from "common";
 
-const App = () => (
+export const App = () => (
   <>
     <Nav />
     <Switch>
@@ -33,5 +33,3 @@ const App = () => (
     </Switch>
   </>
 );
-
-export default App;

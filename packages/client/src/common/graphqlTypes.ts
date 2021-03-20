@@ -4,85 +4,41 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: GetEntries
+// GraphQL query operation: Repo
 // ====================================================
 
-export interface GetEntries_entries_Folder {
-  __typename: "Folder";
-  id: string;
-}
-
-export interface GetEntries_entries_File {
-  __typename: "File";
-  id: string;
-  thumbImageUrl: string;
-  imageUrl: string;
-}
-
-export type GetEntries_entries = GetEntries_entries_Folder | GetEntries_entries_File;
-
-export interface GetEntries {
-  entries: GetEntries_entries[] | null;
-}
-
-export interface GetEntriesVariables {
-  folderId: string;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// @generated
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL query operation: GetEntry
-// ====================================================
-
-export interface GetEntry_entry_Folder {
-  __typename: "Folder";
-  id: string;
-}
-
-export interface GetEntry_entry_File {
-  __typename: "File";
-  id: string;
-  thumbImageUrl: string;
-  imageUrl: string;
-}
-
-export type GetEntry_entry = GetEntry_entry_Folder | GetEntry_entry_File;
-
-export interface GetEntry {
-  entry: GetEntry_entry | null;
-}
-
-export interface GetEntryVariables {
-  entryId: string;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// @generated
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL query operation: GetMetaData
-// ====================================================
-
-export interface GetMetaData_entry_metaData {
+export interface Repo_entries_Folder_metaData {
   __typename: "MetaData";
   tags: string[] | null;
   attributes: string[][] | null;
 }
 
-export interface GetMetaData_entry {
-  __typename: "File" | "Folder";
+export interface Repo_entries_Folder {
+  __typename: "Folder";
   id: string;
-  metaData: GetMetaData_entry_metaData | null;
+  metaData: Repo_entries_Folder_metaData | null;
 }
 
-export interface GetMetaData {
-  entry: GetMetaData_entry | null;
+export interface Repo_entries_File_metaData {
+  __typename: "MetaData";
+  tags: string[] | null;
+  attributes: string[][] | null;
+}
+
+export interface Repo_entries_File {
+  __typename: "File";
+  id: string;
+  metaData: Repo_entries_File_metaData | null;
+  thumbImageUrl: string;
+  imageUrl: string;
+  prev: string | null;
+  next: string | null;
+}
+
+export type Repo_entries = Repo_entries_Folder | Repo_entries_File;
+
+export interface Repo {
+  entries: Repo_entries[];
   /**
    * returns list of all tags used in repository
    */
@@ -93,8 +49,9 @@ export interface GetMetaData {
   attributes: string[];
 }
 
-export interface GetMetaDataVariables {
-  entryId: string;
+export interface RepoVariables {
+  id?: string | null;
+  metaDataInput?: MetaDataInput | null;
 }
 
 /* tslint:disable */
@@ -118,27 +75,7 @@ export interface SetMetaData {
 
 export interface SetMetaDataVariables {
   id: string;
-  metaData: MetaDataInput;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// @generated
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL query operation: GetExistingMetaKeys
-// ====================================================
-
-export interface GetExistingMetaKeys {
-  /**
-   * returns list of all tags used in repository
-   */
-  tags: string[];
-  /**
-   * returns list of all attributes used in repository
-   */
-  attributes: string[];
+  metaDataInput: MetaDataInput;
 }
 
 /* tslint:disable */

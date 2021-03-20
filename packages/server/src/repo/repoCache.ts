@@ -65,9 +65,6 @@ export const repoCache = (options: IOptions): Repository =>
       {
         tags: new Set<string>(),
         attributes: new Set<string>(),
-        cache: new Map<Scalars["ID"], CacheEntry>().set("/", {
-          __typename: "Folder",
-          metaData: null
-        })
+        cache: new Map<Scalars["ID"], CacheEntry>()
       }
     );

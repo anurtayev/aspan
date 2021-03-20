@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { Switch, Route } from "react-router-dom";
 
@@ -6,9 +6,8 @@ import {
   useEntryId,
   pathPrefix,
   Characters,
-  AspanContext,
-  getLastPointer,
   getFolderPathname,
+  AspanContext,
 } from "common";
 import { Frame, ActionButton, Id } from "./Nav.styles";
 
@@ -18,7 +17,13 @@ export const Nav = () => {
   const isHomeFolder = entryId === "" || entryId === "/";
   const ctx = useContext(AspanContext);
 
-  if (!ctx) return <p>Error :(</p>;
+  if (!ctx?.repoVariables) throw new Error("context error");
+
+  const { repoVariables } = ctx;
+
+  const goBack = () => {
+    history.push(getFolderPathname(repoVariables));
+  };
 
   const goHome = () => history.push(pathPrefix.folder + "/");
 
@@ -32,13 +37,7 @@ export const Nav = () => {
 
           {/** Parent folder */}
           {!isHomeFolder && (
-            <ActionButton
-              onClick={() =>
-                history.push(getFolderPathname(getLastPointer(ctx)))
-              }
-            >
-              {Characters.arrowUp}
-            </ActionButton>
+            <ActionButton onClick={goBack}>{Characters.arrowUp}</ActionButton>
           )}
 
           {/** Meta */}

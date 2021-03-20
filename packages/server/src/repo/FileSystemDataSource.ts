@@ -40,18 +40,18 @@ export class FileSystemDataSource extends DataSource {
     return Array.from(this.repository.attributes);
   }
 
-  public getEntry = (id: Scalars["ID"]): Maybe<Entry> => {
+  public getEntry = (id: string): Maybe<Entry> => {
     const rawEntry = this.repository.cache.get(id);
     if (!rawEntry) return null;
-    return this.expandEntry({ id, rawEntry });
+    return this.expandEntry({ id, cacheEntry: rawEntry });
   };
 
   public expandEntry = ({
     id,
-    rawEntry: { __typename }
+    cacheEntry: { __typename }
   }: {
     id: string;
-    rawEntry: CacheEntry;
+    cacheEntry: CacheEntry;
   }): Entry => {
     const contentType = extname(id);
     const dockerImageUrl = process.env.DOCKER_NETWORK_PICREPO_URL + id;
@@ -74,31 +74,59 @@ export class FileSystemDataSource extends DataSource {
         };
   };
 
-  public getEntries = (
-    folderId: Maybe<string> | undefined,
-    filterMetaData: Maybe<MetaDataInput> | undefined
-  ): Array<Entry> | null => {
-    if (
-      (!folderId && !filterMetaData) ||
-      (filterMetaData && !filterMetaData.tags && !filterMetaData.attributes)
-    )
-      return null;
+  private sort = (entries: Array<Entry>): Array<Entry> =>
+    entries.sort((a, b) => {
+      const aName = a.id.split("/").slice(-1);
+      const bName = b.id.split("/").slice(-1);
+      if (a.__typename === "Folder" && b.__typename === "File") return -1;
+      if (a.__typename === "File" && b.__typename === "Folder") return 1;
+      else if (aName < bName) return -1;
+      else if (aName > bName) return 1;
+      else return 0;
+    });
 
-    let retVal = null;
-    for (const [key, rawEntry] of this.repository.cache) {
-      const { metaData } = rawEntry;
+  private calculatePrevNext = (entries: Array<Entry>): Array<Entry> =>
+    entries.reduce((accumulator, entry, index, entries) => {
+      return [
+        ...accumulator,
+        {
+          ...entry,
+          prev:
+            entry.__typename === "File"
+              ? index === 0 || entries[index - 1].__typename === "Folder"
+                ? undefined
+                : entries[index - 1].id
+              : undefined,
+          next:
+            entry.__typename === "File"
+              ? index === entries.length - 1
+                ? undefined
+                : entries[index + 1].id
+              : undefined
+        }
+      ];
+    }, [] as Array<Entry>);
 
-      if (
-        (folderId ? dirname(key) === folderId : true) &&
-        satisfiesFilter(metaData, filterMetaData)
-      ) {
-        if (!retVal) retVal = [];
-        retVal.push(this.expandEntry({ id: key, rawEntry }));
-      }
-    }
+  private filterEntries = (
+    filterFn: ([key, cacheEntry]: [string, CacheEntry]) => boolean
+  ): Array<Entry> =>
+    Array.from(this.repository.cache)
+      .filter(filterFn)
+      .map(([id, cacheEntry]) => this.expandEntry({ id, cacheEntry }));
 
-    return retVal;
-  };
+  public getEntries = (id: string): Array<Entry> =>
+    this.calculatePrevNext(
+      this.sort(this.filterEntries(([key]) => dirname(key) === id))
+    );
+
+  public search = (filterMetaData: MetaDataInput): Array<Entry> =>
+    this.calculatePrevNext(
+      this.sort(
+        this.filterEntries(([, rawEntry]) =>
+          satisfiesFilter(rawEntry.metaData, filterMetaData)
+        )
+      )
+    );
 
   public getMetaData = (id: string): Maybe<MetaData> => {
     const metaData = this.repository.cache.get(id)?.metaData;

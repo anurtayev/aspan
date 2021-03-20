@@ -25,6 +25,8 @@ export type File = AbstractEntry & {
   thumbImageUrl: Scalars['String'];
   imageUrl: Scalars['String'];
   contentType: Scalars['String'];
+  prev?: Maybe<Scalars['String']>;
+  next?: Maybe<Scalars['String']>;
 };
 
 export type Folder = AbstractEntry & {
@@ -99,12 +101,12 @@ export type MutationSetDescriptionArgs = {
 
 export type MutationSetMetaDataArgs = {
   id: Scalars['String'];
-  metaData: MetaDataInput;
+  metaDataInput: MetaDataInput;
 };
 
 export type Query = {
   __typename?: 'Query';
-  entries?: Maybe<Array<Entry>>;
+  entries: Array<Entry>;
   entry?: Maybe<Entry>;
   /** returns list of all tags used in repository */
   tags: Array<Scalars['String']>;
@@ -114,13 +116,13 @@ export type Query = {
 
 
 export type QueryEntriesArgs = {
-  folderId?: Maybe<Scalars['String']>;
-  filterMetaData?: Maybe<MetaDataInput>;
+  id?: Maybe<Scalars['String']>;
+  metaDataInput?: Maybe<MetaDataInput>;
 };
 
 
 export type QueryEntryArgs = {
-  entryId?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -246,6 +248,8 @@ export type FileResolvers<ContextType = any, ParentType extends ResolversParentT
   thumbImageUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   imageUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   contentType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  prev?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  next?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -268,12 +272,12 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   removeAttribute?: Resolver<Maybe<ResolversTypes['MetaData']>, ParentType, ContextType, RequireFields<MutationRemoveAttributeArgs, 'id' | 'attributeKey'>>;
   setTitle?: Resolver<Maybe<ResolversTypes['MetaData']>, ParentType, ContextType, RequireFields<MutationSetTitleArgs, 'id' | 'title'>>;
   setDescription?: Resolver<Maybe<ResolversTypes['MetaData']>, ParentType, ContextType, RequireFields<MutationSetDescriptionArgs, 'id' | 'description'>>;
-  setMetaData?: Resolver<Maybe<ResolversTypes['MetaData']>, ParentType, ContextType, RequireFields<MutationSetMetaDataArgs, 'id' | 'metaData'>>;
+  setMetaData?: Resolver<Maybe<ResolversTypes['MetaData']>, ParentType, ContextType, RequireFields<MutationSetMetaDataArgs, 'id' | 'metaDataInput'>>;
 }>;
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  entries?: Resolver<Maybe<Array<ResolversTypes['Entry']>>, ParentType, ContextType, RequireFields<QueryEntriesArgs, never>>;
-  entry?: Resolver<Maybe<ResolversTypes['Entry']>, ParentType, ContextType, RequireFields<QueryEntryArgs, never>>;
+  entries?: Resolver<Array<ResolversTypes['Entry']>, ParentType, ContextType, RequireFields<QueryEntriesArgs, never>>;
+  entry?: Resolver<Maybe<ResolversTypes['Entry']>, ParentType, ContextType, RequireFields<QueryEntryArgs, 'id'>>;
   tags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   attributes?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
 }>;
