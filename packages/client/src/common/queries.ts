@@ -18,10 +18,6 @@ export const FOLDER_ENTRIES = gql`
         next
       }
     }
-
-    tags
-
-    attributes
   }
 `;
 
@@ -31,5 +27,31 @@ export const SET_METADATA = gql`
       tags
       attributes
     }
+  }
+`;
+
+export const GET_METADATA = gql`
+  query GetMetaData($id: String!) {
+    entry(id: $id) {
+      ... on AbstractEntry {
+        __typename
+        id
+        metaData {
+          tags
+          attributes
+        }
+      }
+    }
+
+    tags
+
+    attributes
+  }
+`;
+
+export const GET_REPO_METADATA = gql`
+  query GetRepoMetaData {
+    tags
+    attributes
   }
 `;

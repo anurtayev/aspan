@@ -1,8 +1,16 @@
 import { useContext } from "react";
 import { Formik } from "formik";
 import { useHistory } from "react-router-dom";
+import { useQuery } from "@apollo/client";
 
-import { Button, MetaDataForm, getFolderPathname, AspanContext } from "common";
+import {
+  Button,
+  MetaDataForm,
+  getFolderPathname,
+  AspanContext,
+  GetRepoMetaData,
+  GET_REPO_METADATA,
+} from "common";
 import { MetaDataPartialForm } from "components/MetaDataPartialForm";
 import { FlexForm, Section, SubmitButton } from "./SearchScreen.styles";
 
@@ -10,12 +18,20 @@ export const SearchScreen = () => {
   const history = useHistory();
   const ctx = useContext(AspanContext);
 
-  if (!ctx?.repoVariables) throw new Error("context error");
+  const { loading, error, data } = useQuery<GetRepoMetaData>(
+    GET_REPO_METADATA,
+    {
+      fetchPolicy: "no-cache",
+    }
+  );
 
-  const {
-    repo: { tags: availableTags, attributes: availableAttributes },
-    repoVariables,
-  } = ctx;
+  if (!ctx?.repoVariables) throw new Error("context error");
+  if (loading) return <p>Loading</p>;
+  if (error || !data) return <p>Error</p>;
+
+  const { repoVariables } = ctx;
+
+  const { tags, attributes } = data;
 
   const initialValues: MetaDataForm = {
     tags: [],
@@ -53,8 +69,8 @@ export const SearchScreen = () => {
       {({ isSubmitting }) => (
         <FlexForm>
           <MetaDataPartialForm
-            availableAttributes={availableAttributes}
-            availableTags={availableTags}
+            availableAttributes={attributes}
+            availableTags={tags}
           />
 
           <Section>

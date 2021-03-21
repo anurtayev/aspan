@@ -39,14 +39,6 @@ export type Repo_entries = Repo_entries_Folder | Repo_entries_File;
 
 export interface Repo {
   entries: Repo_entries[];
-  /**
-   * returns list of all tags used in repository
-   */
-  tags: string[];
-  /**
-   * returns list of all attributes used in repository
-   */
-  attributes: string[];
 }
 
 export interface RepoVariables {
@@ -76,6 +68,63 @@ export interface SetMetaData {
 export interface SetMetaDataVariables {
   id: string;
   metaDataInput: MetaDataInput;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GetMetaData
+// ====================================================
+
+export interface GetMetaData_entry_metaData {
+  __typename: "MetaData";
+  tags: string[] | null;
+  attributes: string[][] | null;
+}
+
+export interface GetMetaData_entry {
+  __typename: "File" | "Folder";
+  id: string;
+  metaData: GetMetaData_entry_metaData | null;
+}
+
+export interface GetMetaData {
+  entry: GetMetaData_entry | null;
+  /**
+   * returns list of all tags used in repository
+   */
+  tags: string[];
+  /**
+   * returns list of all attributes used in repository
+   */
+  attributes: string[];
+}
+
+export interface GetMetaDataVariables {
+  id: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GetRepoMetaData
+// ====================================================
+
+export interface GetRepoMetaData {
+  /**
+   * returns list of all tags used in repository
+   */
+  tags: string[];
+  /**
+   * returns list of all attributes used in repository
+   */
+  attributes: string[];
 }
 
 /* tslint:disable */

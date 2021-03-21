@@ -14,10 +14,10 @@ import { Frame, ActionButton, Id } from "./Nav.styles";
 export const Nav = () => {
   const history = useHistory();
   const entryId = useEntryId();
-  const isHomeFolder = entryId === "" || entryId === "/";
+  const isHomeFolder = entryId === "/";
   const ctx = useContext(AspanContext);
 
-  if (!ctx?.repoVariables) throw new Error("context error");
+  if (!ctx?.repoVariables) return null;
 
   const { repoVariables } = ctx;
 

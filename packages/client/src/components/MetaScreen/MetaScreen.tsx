@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { Formik } from "formik";
 import { useHistory } from "react-router-dom";
 
@@ -9,8 +9,13 @@ import {
   Button,
   MetaDataForm,
   SET_METADATA,
+  GET_METADATA,
   AspanContext,
   getFolderPathname,
+  GetMetaData,
+  GetMetaDataVariables,
+  SetMetaData,
+  SetMetaDataVariables,
 } from "common";
 import { MetaDataPartialForm } from "components/MetaDataPartialForm";
 import {
@@ -26,24 +31,31 @@ export const MetaScreen = () => {
   const entryId = useEntryId();
   const ctx = useContext(AspanContext);
 
-  const [setMetaData] = useMutation(SET_METADATA);
+  const [setMetaData] = useMutation<SetMetaData, SetMetaDataVariables>(
+    SET_METADATA
+  );
+
+  const { loading, error, data } = useQuery<GetMetaData, GetMetaDataVariables>(
+    GET_METADATA,
+    {
+      variables: { id: entryId },
+      fetchPolicy: "no-cache",
+    }
+  );
 
   if (!ctx?.repoVariables) throw new Error("context error");
+  if (loading) return <p>Loading</p>;
+  if (error || !data) return <p>Error</p>;
 
-  const {
-    repo: { entries, tags: availableTags, attributes: availableAttributes },
-    repoVariables,
-  } = ctx;
-
-  const entry = entries.find((entry) => entry.id === entryId);
-
-  if (!entry) throw new Error("entry not found");
-
-  const { metaData, __typename } = entry;
-
+  const { repoVariables } = ctx;
   const goBack = () => {
     history.push(getFolderPathname(repoVariables));
   };
+
+  const { entry, tags, attributes } = data;
+  if (!entry) throw new Error("entry not found");
+
+  const { metaData, __typename } = entry;
 
   const initialValues: MetaDataForm = {
     tags: metaData && metaData.tags ? metaData.tags : [],
@@ -61,7 +73,7 @@ export const MetaScreen = () => {
         setMetaData({
           variables: {
             id: entryId,
-            metaData: {
+            metaDataInput: {
               tags: [...(tags ? tags : []), ...(newTag ? [newTag.trim()] : [])],
               attributes: [
                 ...(attributes ? attributes : []),
@@ -86,8 +98,8 @@ export const MetaScreen = () => {
           </Section>
 
           <MetaDataPartialForm
-            availableAttributes={availableAttributes}
-            availableTags={availableTags}
+            availableAttributes={attributes}
+            availableTags={tags}
           />
 
           <Section>
