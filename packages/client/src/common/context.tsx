@@ -2,9 +2,9 @@ import {
   createContext,
   useState,
   ReactNode,
-  Dispatch,
-  SetStateAction,
   useEffect,
+  createRef,
+  RefObject,
 } from "react";
 import { useLocation } from "react-router-dom";
 import { useQuery } from "@apollo/client";
@@ -34,10 +34,10 @@ const getVariables = (location: Location<unknown>): RepoVariables => {
 
 export type AspanContextType = {
   repo: Repo;
-  imagePath?: string | null;
-  scrollTop?: number;
-  setScrollTop: Dispatch<SetStateAction<number | undefined>>;
-  repoVariables?: RepoVariables;
+  imagePath: string | null;
+  scrollTop: number;
+  repoVariables: RepoVariables;
+  folderScreenRef: RefObject<HTMLDivElement>;
 };
 
 export const AspanContext = createContext<AspanContextType | undefined>(
@@ -51,8 +51,9 @@ export const AspanContextComponent = ({
 }) => {
   const location = useLocation();
   const [repoVariables, setRepoVariables] = useState<RepoVariables>();
-  const [scrollTop, setScrollTop] = useState<number>();
-  const [imagePath, setImagePath] = useState<string>();
+  const [scrollTop, setScrollTop] = useState<number>(0);
+  const [imagePath, setImagePath] = useState<string>("");
+  const folderScreenRef = createRef<HTMLDivElement>();
 
   const { loading, error, data } = useQuery<Repo, RepoVariables>(
     FOLDER_ENTRIES,
@@ -65,21 +66,28 @@ export const AspanContextComponent = ({
   useEffect(() => {
     if (location.pathname.startsWith(pathPrefix.folder)) {
       setRepoVariables(getVariables(location));
+      setScrollTop(0);
       setImagePath("");
-    } else if (location.pathname.startsWith(pathPrefix.image)) {
-      setImagePath(getId(location.pathname));
-    }
-  }, [location]);
+    } else {
+      if (location.pathname.startsWith(pathPrefix.image)) {
+        setImagePath(imagePath ? "" : getId(location.pathname));
+      }
 
-  if (loading) return <p>Loading...</p>;
+      !imagePath &&
+        folderScreenRef.current &&
+        setScrollTop(folderScreenRef.current.scrollTop);
+    }
+  }, [location, folderScreenRef, imagePath]);
+
+  if (loading || !repoVariables) return <p>Loading...</p>;
   if (error || !data) return <p>Error</p>;
 
   const contextValue: AspanContextType = {
     scrollTop,
-    setScrollTop,
     repo: data,
     imagePath,
     repoVariables,
+    folderScreenRef,
   };
 
   return (
