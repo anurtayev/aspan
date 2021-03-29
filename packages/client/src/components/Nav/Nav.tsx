@@ -22,7 +22,7 @@ export const Nav = () => {
   const { repoVariables } = ctx;
 
   const goBack = () => {
-    history.push(getFolderPathname(repoVariables));
+    history.push(getFolderPathname(repoVariables.current));
   };
 
   const goHome = () => history.push(pathPrefix.folder + "/");

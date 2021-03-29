@@ -12,9 +12,6 @@ export const App = () => (
   <>
     <Nav />
     <Switch>
-      <Route exact path="/">
-        <Redirect to={pathPrefix.folder + "/"} />
-      </Route>
       <Route path={pathPrefix.folder}>
         <FolderScreen />
       </Route>
@@ -28,7 +25,7 @@ export const App = () => (
         <SearchScreen />
       </Route>
       <Route>
-        <div>Under construction</div>
+        <Redirect to={pathPrefix.folder + "/"} />
       </Route>
     </Switch>
   </>
