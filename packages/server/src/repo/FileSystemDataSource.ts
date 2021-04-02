@@ -116,9 +116,7 @@ export class FileSystemDataSource extends DataSource {
 
   public getEntries = (id: string): Array<Entry> =>
     this.calculatePrevNext(
-      this.sort(
-        this.filterEntries(([key]) => dirname(key) === id || key === id)
-      )
+      this.sort(this.filterEntries(([key]) => dirname(key) === id))
     );
 
   public search = (filterMetaData: MetaDataInput): Array<Entry> =>

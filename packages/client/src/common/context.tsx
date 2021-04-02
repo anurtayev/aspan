@@ -3,8 +3,10 @@ import {
   ReactNode,
   useEffect,
   useRef,
+  useState,
   RefObject,
-  MutableRefObject,
+  Dispatch,
+  SetStateAction,
 } from "react";
 import { useLocation } from "react-router-dom";
 import { useQuery } from "@apollo/client";
@@ -36,7 +38,7 @@ export type AspanContextType = {
   repo: Repo;
   imagePath: RefObject<string>;
   scrollTop: RefObject<number>;
-  repoVariables: MutableRefObject<RepoVariables>;
+  repoVariables: RepoVariables;
   folderScreen: RefObject<HTMLDivElement>;
 };
 
@@ -51,22 +53,25 @@ export const AspanContextComponent = ({
 }) => {
   const location = useLocation();
 
-  const repoVariables = useRef<RepoVariables>({});
+  const [repoVariables, setRepoVariables] = useState<RepoVariables>({});
   const scrollTop = useRef<number>(0);
   const imagePath = useRef<string>("");
   const folderScreen = useRef<HTMLDivElement>(null);
 
+  console.log("==> 1");
+
   const { loading, error, data } = useQuery<Repo, RepoVariables>(
     FOLDER_ENTRIES,
     {
-      variables: getVariables(location),
+      variables: repoVariables,
       fetchPolicy: "no-cache",
     }
   );
 
   useEffect(() => {
     if (location.pathname.startsWith(pathPrefix.folder)) {
-      repoVariables.current = getVariables(location);
+      console.log("==> 2");
+      setRepoVariables(getVariables(location));
       scrollTop.current = 0;
       imagePath.current = "";
     } else if (
@@ -79,10 +84,12 @@ export const AspanContextComponent = ({
         scrollTop.current = folderScreen.current.scrollTop;
       }
     }
-  }, [location]);
+  }, [location, repoVariables]);
 
   if (loading || !folderScreen) return <p>Loading...</p>;
   if (error || !data) return <p>Error</p>;
+
+  console.log("==> 3");
 
   return (
     <AspanContext.Provider

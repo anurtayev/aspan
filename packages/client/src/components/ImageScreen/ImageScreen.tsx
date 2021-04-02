@@ -22,8 +22,6 @@ export const ImageScreen = () => {
 
   if (!ctx?.repoVariables) throw new Error("context error");
 
-  console.log(ctx.repoVariables);
-
   const {
     repoVariables,
     repo: { entries },
@@ -38,7 +36,7 @@ export const ImageScreen = () => {
       <Image
         src={process.env.REACT_APP_IMG_CDN_URL + entryId}
         alt=""
-        onClick={() => history.push(getFolderPathname(repoVariables.current))}
+        onClick={() => history.push(getFolderPathname(repoVariables))}
       />
       {entry.prev && (
         <LeftSlideButton

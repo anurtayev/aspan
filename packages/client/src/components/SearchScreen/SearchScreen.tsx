@@ -79,9 +79,7 @@ export const SearchScreen = () => {
             </SubmitButton>
             <Button
               type="button"
-              onClick={() =>
-                history.push(getFolderPathname(repoVariables.current))
-              }
+              onClick={() => history.push(getFolderPathname(repoVariables))}
             >
               Cancel
             </Button>

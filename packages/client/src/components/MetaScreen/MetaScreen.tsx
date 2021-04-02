@@ -49,7 +49,7 @@ export const MetaScreen = () => {
 
   const { repoVariables } = ctx;
   const goBack = () => {
-    history.push(getFolderPathname(repoVariables.current));
+    history.push(getFolderPathname(repoVariables));
   };
 
   const { entry, tags, attributes } = data;
