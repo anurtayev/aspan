@@ -5,8 +5,6 @@ import {
   useRef,
   useState,
   RefObject,
-  Dispatch,
-  SetStateAction,
 } from "react";
 import { useLocation } from "react-router-dom";
 import { useQuery } from "@apollo/client";
@@ -16,15 +14,23 @@ import { Repo, RepoVariables, MetaDataInput, pathPrefixesRegExp } from ".";
 import { FOLDER_ENTRIES } from "./queries";
 import { pathPrefix } from "./util";
 
-const parseQueryString = (queryString: string): MetaDataInput => {
+const parseQueryString = (queryString: string): MetaDataInput | undefined => {
   const params = new URLSearchParams(queryString);
-  return {
-    tags: params.getAll("tags"),
-    attributes: params.getAll("attributes").map((elem) => elem.split(",")),
-  };
+  const tags = params.getAll("tags");
+  const attributes = params.getAll("attributes").map((elem) => elem.split(","));
+
+  return tags.length || attributes.length
+    ? {
+        tags: params.getAll("tags"),
+        attributes: params.getAll("attributes").map((elem) => elem.split(",")),
+      }
+    : undefined;
 };
 
-const getId = (pathname: string) => pathname.replace(pathPrefixesRegExp, "");
+const getId = (pathname: string): string | undefined => {
+  const path = pathname.replace(pathPrefixesRegExp, "");
+  return path || undefined;
+};
 
 const getVariables = (location: Location<unknown>): RepoVariables => {
   const { pathname, search } = location;
@@ -58,8 +64,6 @@ export const AspanContextComponent = ({
   const imagePath = useRef<string>("");
   const folderScreen = useRef<HTMLDivElement>(null);
 
-  console.log("==> 1");
-
   const { loading, error, data } = useQuery<Repo, RepoVariables>(
     FOLDER_ENTRIES,
     {
@@ -78,18 +82,20 @@ export const AspanContextComponent = ({
       location.pathname.startsWith(pathPrefix.image) &&
       !imagePath.current
     ) {
-      imagePath.current = getId(location.pathname);
+      const id = getId(location.pathname);
+      if (id) imagePath.current = id;
+      else throw new Error("image id is missing");
     } else {
       if (!imagePath.current && folderScreen.current) {
         scrollTop.current = folderScreen.current.scrollTop;
       }
     }
-  }, [location, repoVariables]);
+  }, [location]);
 
   if (loading || !folderScreen) return <p>Loading...</p>;
   if (error || !data) return <p>Error</p>;
 
-  console.log("==> 3");
+  console.log("==> 1");
 
   return (
     <AspanContext.Provider

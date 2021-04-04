@@ -11,6 +11,11 @@ import {
 } from "common";
 import { Frame, ActionButton, Id } from "./Nav.styles";
 
+const getParent = (id: string): string => {
+  const parentPath = id.split("/").slice(0, -1).join("/");
+  return parentPath || "/";
+};
+
 export const Nav = () => {
   const history = useHistory();
   const entryId = useEntryId();
@@ -22,7 +27,9 @@ export const Nav = () => {
   const { repoVariables } = ctx;
 
   const goBack = () => {
-    history.push(getFolderPathname(repoVariables));
+    const { id } = repoVariables;
+    if (!id) return;
+    history.push(getFolderPathname({ id: getParent(id) }));
   };
 
   const goHome = () => history.push(pathPrefix.folder + "/");
