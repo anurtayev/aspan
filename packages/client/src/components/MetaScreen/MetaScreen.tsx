@@ -1,4 +1,3 @@
-import { useContext } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { Formik } from "formik";
 import { useHistory } from "react-router-dom";
@@ -10,12 +9,12 @@ import {
   MetaDataForm,
   SET_METADATA,
   GET_METADATA,
-  AspanContext,
-  getFolderPathname,
   GetMetaData,
   GetMetaDataVariables,
   SetMetaData,
   SetMetaDataVariables,
+  useAspanContext,
+  getGoBackPath,
 } from "common";
 import { MetaDataPartialForm } from "components/MetaDataPartialForm";
 import {
@@ -29,7 +28,7 @@ import {
 export const MetaScreen = () => {
   const history = useHistory();
   const entryId = useEntryId();
-  const ctx = useContext(AspanContext);
+  const ctx = useAspanContext();
 
   const [setMetaData] = useMutation<SetMetaData, SetMetaDataVariables>(
     SET_METADATA
@@ -43,14 +42,8 @@ export const MetaScreen = () => {
     }
   );
 
-  if (!ctx?.repoVariables) throw new Error("context error");
   if (loading) return <p>Loading</p>;
   if (error || !data) return <p>Error</p>;
-
-  const { repoVariables } = ctx;
-  const goBack = () => {
-    history.push(getFolderPathname(repoVariables));
-  };
 
   const { entry, tags, attributes } = data;
   if (!entry) throw new Error("entry not found");
@@ -64,6 +57,8 @@ export const MetaScreen = () => {
     newKey: "",
     newValue: "",
   };
+
+  const goBack = () => history.push(getGoBackPath(ctx));
 
   return (
     <Formik

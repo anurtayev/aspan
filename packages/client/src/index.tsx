@@ -7,7 +7,9 @@ import { BrowserRouter as Router } from "react-router-dom";
 import "./index.css";
 import { App } from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { defaultTheme, AspanContextComponent } from "common";
+import { defaultTheme, StateMachine } from "common";
+
+if (window.location.pathname === "/") window.location.assign("/folder/");
 
 ReactDOM.render(
   <React.StrictMode>
@@ -21,9 +23,9 @@ ReactDOM.render(
     >
       <ThemeProvider theme={defaultTheme}>
         <Router>
-          <AspanContextComponent>
+          <StateMachine>
             <App />
-          </AspanContextComponent>
+          </StateMachine>
         </Router>
       </ThemeProvider>
     </ApolloProvider>

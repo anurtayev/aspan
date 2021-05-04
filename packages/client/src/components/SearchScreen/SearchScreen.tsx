@@ -25,11 +25,9 @@ export const SearchScreen = () => {
     }
   );
 
-  if (!ctx?.repoVariables) throw new Error("context error");
+  if (!ctx) throw new Error("context error");
   if (loading) return <p>Loading</p>;
   if (error || !data) return <p>Error</p>;
-
-  const { repoVariables } = ctx;
 
   const { tags, attributes } = data;
 
@@ -77,10 +75,7 @@ export const SearchScreen = () => {
             <SubmitButton type="submit" disabled={isSubmitting}>
               Submit
             </SubmitButton>
-            <Button
-              type="button"
-              onClick={() => history.push(getFolderPathname(repoVariables))}
-            >
+            <Button type="button" onClick={() => history.goBack()}>
               Cancel
             </Button>
           </Section>

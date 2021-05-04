@@ -1,12 +1,8 @@
 import { useLocation } from "react-router-dom";
-import { MetaDataInput, RepoVariables } from "./graphqlTypes";
 
-export const pathPrefix: { [key: string]: string } = {
-  folder: "/folder",
-  image: "/image",
-  meta: "/meta",
-  search: "/search",
-};
+import { MetaDataInput, SlidesVariables } from "./graphqlTypes";
+import { State } from "./context";
+import { AspanContextType } from "./context";
 
 export enum entryType {
   folder = "Folder",
@@ -14,7 +10,7 @@ export enum entryType {
 }
 
 export const pathPrefixesRegExp = new RegExp(
-  `^(${pathPrefix.folder}|${pathPrefix.image}|${pathPrefix.meta})`
+  `^(${State.folder}|${State.image}|${State.meta})`
 );
 
 export const useEntryId = () => {
@@ -48,10 +44,10 @@ export type MetaDataForm = MetaDataInput & {
   newValue: string;
 };
 
-export const getFolderPathname = (repoVariables: RepoVariables) => {
+export const getFolderPathname = (repoVariables: SlidesVariables) => {
   const { id, metaDataInput } = repoVariables;
 
-  if (id) return pathPrefix.folder + id;
+  if (id) return State.folder + id;
 
   if (metaDataInput) {
     const { tags, attributes } = metaDataInput;
@@ -76,8 +72,17 @@ export const getFolderPathname = (repoVariables: RepoVariables) => {
           (attributesPart ? "&" + attributesPart : "")
         : "";
 
-    return pathPrefix.folder + queryString;
+    return State.folder + queryString;
   }
 
   throw new Error("context error");
 };
+
+export const getGoBackPath = ({
+  imageId,
+  slidesVariables,
+  currentState,
+}: AspanContextType) =>
+  imageId && currentState !== State.image
+    ? imageId.current
+    : getFolderPathname(slidesVariables.current);

@@ -4,44 +4,30 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: Repo
+// GraphQL query operation: Slides
 // ====================================================
 
-export interface Repo_entries_Folder_metaData {
-  __typename: "MetaData";
-  tags: string[] | null;
-  attributes: string[][] | null;
-}
-
-export interface Repo_entries_Folder {
+export interface Slides_entries_Folder {
   __typename: "Folder";
   id: string;
-  metaData: Repo_entries_Folder_metaData | null;
 }
 
-export interface Repo_entries_File_metaData {
-  __typename: "MetaData";
-  tags: string[] | null;
-  attributes: string[][] | null;
-}
-
-export interface Repo_entries_File {
+export interface Slides_entries_File {
   __typename: "File";
   id: string;
-  metaData: Repo_entries_File_metaData | null;
   thumbImageUrl: string;
   imageUrl: string;
   prev: string | null;
   next: string | null;
 }
 
-export type Repo_entries = Repo_entries_Folder | Repo_entries_File;
+export type Slides_entries = Slides_entries_Folder | Slides_entries_File;
 
-export interface Repo {
-  entries: Repo_entries[];
+export interface Slides {
+  entries: Slides_entries[];
 }
 
-export interface RepoVariables {
+export interface SlidesVariables {
   id?: string | null;
   metaDataInput?: MetaDataInput | null;
 }

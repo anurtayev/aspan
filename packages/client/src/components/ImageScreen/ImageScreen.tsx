@@ -1,12 +1,11 @@
-import { useContext } from "react";
 import { useHistory } from "react-router-dom";
 
 import {
-  pathPrefix,
+  State,
   useEntryId,
   Characters,
-  getFolderPathname,
-  AspanContext,
+  useAspanContext,
+  getGoBackPath,
 } from "common";
 import {
   Frame,
@@ -18,16 +17,11 @@ import {
 export const ImageScreen = () => {
   const history = useHistory();
   const entryId = useEntryId();
-  const ctx = useContext(AspanContext);
+  const ctx = useAspanContext();
 
-  if (!ctx?.repoVariables) throw new Error("context error");
-
-  const {
-    repoVariables,
-    repo: { entries },
-  } = ctx;
-
-  const entry = entries.find((entry) => entry.id === entryId);
+  const entry = ctx.slides.current.entries.find(
+    (entry) => entry.id === entryId
+  );
 
   if (!entry || entry.__typename !== "File") throw new Error("entry not found");
 
@@ -36,12 +30,12 @@ export const ImageScreen = () => {
       <Image
         src={process.env.REACT_APP_IMG_CDN_URL + entryId}
         alt=""
-        onClick={() => history.push(getFolderPathname(repoVariables))}
+        onClick={() => history.push(getGoBackPath(ctx))}
       />
       {entry.prev && (
         <LeftSlideButton
           onClick={() => {
-            history.push(pathPrefix.image + entry.prev);
+            history.push(State.image + entry.prev);
           }}
         >
           {Characters.arrowLeft}
@@ -49,7 +43,7 @@ export const ImageScreen = () => {
       )}
       {entry.next && (
         <RightSlideButton
-          onClick={() => history.push(pathPrefix.image + entry.next)}
+          onClick={() => history.push(State.image + entry.next)}
         >
           {Characters.arrowRight}
         </RightSlideButton>

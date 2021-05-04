@@ -1,17 +1,15 @@
 import gql from "graphql-tag";
 
 export const FOLDER_ENTRIES = gql`
-  query Repo($id: String, $metaDataInput: MetaDataInput) {
+  query Slides($id: String, $metaDataInput: MetaDataInput) {
     entries(id: $id, metaDataInput: $metaDataInput) {
-      ... on AbstractEntry {
+      ... on Folder {
         __typename
         id
-        metaData {
-          tags
-          attributes
-        }
       }
       ... on File {
+        __typename
+        id
         thumbImageUrl
         imageUrl
         prev

@@ -1,18 +1,25 @@
 import {
   createContext,
+  useContext,
   ReactNode,
   useEffect,
-  useRef,
   useState,
-  RefObject,
+  MutableRefObject,
+  useRef,
 } from "react";
 import { useLocation } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { Location } from "history";
 
-import { Repo, RepoVariables, MetaDataInput, pathPrefixesRegExp } from ".";
+import { Slides, SlidesVariables, MetaDataInput, pathPrefixesRegExp } from ".";
 import { FOLDER_ENTRIES } from "./queries";
-import { pathPrefix } from "./util";
+
+export enum State {
+  folder = "/folder",
+  image = "/image",
+  meta = "/meta",
+  search = "/search",
+}
 
 const parseQueryString = (queryString: string): MetaDataInput | undefined => {
   const params = new URLSearchParams(queryString);
@@ -32,7 +39,7 @@ const getId = (pathname: string): string | undefined => {
   return path || undefined;
 };
 
-const getVariables = (location: Location<unknown>): RepoVariables => {
+const getVariables = (location: Location<unknown>): SlidesVariables => {
   const { pathname, search } = location;
   return {
     id: getId(pathname),
@@ -40,74 +47,106 @@ const getVariables = (location: Location<unknown>): RepoVariables => {
   };
 };
 
+const getState = (pathname: string): State => {
+  switch (`/${pathname.split("/")[1]}`) {
+    case State.folder:
+      return State.folder;
+    case State.image:
+      return State.image;
+    case State.meta:
+      return State.meta;
+    case State.search:
+      return State.search;
+  }
+  throw new Error("unknown state");
+};
+
 export type AspanContextType = {
-  repo: Repo;
-  imagePath: RefObject<string>;
-  scrollTop: RefObject<number>;
-  repoVariables: RepoVariables;
-  folderScreen: RefObject<HTMLDivElement>;
+  folderId: MutableRefObject<string>;
+  slidesVariables: MutableRefObject<SlidesVariables>;
+  slides: MutableRefObject<Slides>;
+  savedScrollTopRef: MutableRefObject<number>;
+
+  imageId?: MutableRefObject<string>;
+
+  currentState: State;
 };
 
 export const AspanContext = createContext<AspanContextType | undefined>(
   undefined
 );
 
-export const AspanContextComponent = ({
-  children,
-}: {
-  children: ReactNode;
-}) => {
+export const StateMachine = ({ children }: { children: ReactNode }) => {
   const location = useLocation();
 
-  const [repoVariables, setRepoVariables] = useState<RepoVariables>({});
-  const scrollTop = useRef<number>(0);
-  const imagePath = useRef<string>("");
-  const folderScreen = useRef<HTMLDivElement>(null);
+  const folderId = useRef<string>("");
+  const slidesVariables = useRef<SlidesVariables>({});
+  const slides = useRef<Slides>({ entries: [] });
+  const savedScrollTopRef = useRef<number>(0);
+  const imageId = useRef<string>("");
+  const [currentState, setCurrentState] = useState<State>(State.folder);
 
-  const { loading, error, data } = useQuery<Repo, RepoVariables>(
+  const { loading, error, data } = useQuery<Slides, SlidesVariables>(
     FOLDER_ENTRIES,
     {
-      variables: repoVariables,
-      fetchPolicy: "no-cache",
+      variables: slidesVariables.current,
     }
   );
 
   useEffect(() => {
-    if (location.pathname.startsWith(pathPrefix.folder)) {
-      console.log("==> 2");
-      setRepoVariables(getVariables(location));
-      scrollTop.current = 0;
-      imagePath.current = "";
-    } else if (
-      location.pathname.startsWith(pathPrefix.image) &&
-      !imagePath.current
-    ) {
-      const id = getId(location.pathname);
-      if (id) imagePath.current = id;
-      else throw new Error("image id is missing");
-    } else {
-      if (!imagePath.current && folderScreen.current) {
-        scrollTop.current = folderScreen.current.scrollTop;
+    const { pathname, search } = location;
+    const incomingId = `${pathname}${search}`;
+
+    if (pathname.startsWith(State.folder)) {
+      if (folderId.current !== incomingId) {
+        folderId.current = incomingId;
+        slidesVariables.current = getVariables(location);
+        savedScrollTopRef.current = 0;
       }
+
+      imageId.current = "";
+    } else if (
+      pathname.startsWith(State.image) &&
+      imageId.current !== incomingId
+    ) {
+      imageId.current = incomingId;
     }
+
+    setCurrentState(getState(pathname));
   }, [location]);
 
-  if (loading || !folderScreen) return <p>Loading...</p>;
-  if (error || !data) return <p>Error</p>;
+  if (loading) return <p>Loading...</p>;
+  if (error || typeof data === "undefined") return <p>Error</p>;
 
-  console.log("==> 1");
+  slides.current = data;
 
   return (
     <AspanContext.Provider
       value={{
-        scrollTop,
-        repo: data,
-        imagePath,
-        repoVariables,
-        folderScreen,
+        folderId,
+        slidesVariables,
+        slides,
+        savedScrollTopRef,
+        imageId,
+        currentState,
       }}
     >
       {children}
     </AspanContext.Provider>
   );
+};
+
+export const useAspanContext = () => {
+  const ctx = useContext(AspanContext);
+
+  if (
+    !ctx ||
+    !ctx.currentState ||
+    !ctx.folderId ||
+    !ctx.slidesVariables ||
+    !ctx.slides
+  )
+    throw new Error("context error");
+
+  return ctx;
 };

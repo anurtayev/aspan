@@ -1,99 +1,37 @@
-import { useContext } from "react";
 import { useHistory } from "react-router-dom";
-import { Switch, Route } from "react-router-dom";
+import { Route } from "react-router-dom";
 
-import {
-  useEntryId,
-  pathPrefix,
-  Characters,
-  getFolderPathname,
-  AspanContext,
-} from "common";
+import { useEntryId, State, Characters } from "common";
 import { Frame, ActionButton, Id } from "./Nav.styles";
-
-const getParent = (id: string): string => {
-  const parentPath = id.split("/").slice(0, -1).join("/");
-  return parentPath || "/";
-};
 
 export const Nav = () => {
   const history = useHistory();
   const entryId = useEntryId();
   const isHomeFolder = entryId === "/";
-  const ctx = useContext(AspanContext);
-
-  if (!ctx?.repoVariables) return null;
-
-  const { repoVariables } = ctx;
-
-  const goBack = () => {
-    const { id } = repoVariables;
-    if (!id) return;
-    history.push(getFolderPathname({ id: getParent(id) }));
-  };
-
-  const goHome = () => history.push(pathPrefix.folder + "/");
 
   return (
     <Frame>
-      <Switch>
-        {/** ============================= FOLDER SCREEN */}
-        <Route path={pathPrefix.folder}>
-          {/** Home */}
-          <ActionButton onClick={goHome}>{Characters.home}</ActionButton>
-
-          {/** Parent folder */}
-          {!isHomeFolder && (
-            <ActionButton onClick={goBack}>{Characters.arrowUp}</ActionButton>
-          )}
-
-          {/** Meta */}
-          {!isHomeFolder && (
-            <ActionButton
-              onClick={() => history.push(pathPrefix.meta + entryId)}
-            >
-              {Characters.label}
-            </ActionButton>
-          )}
-
-          {/** Search */}
-          <ActionButton onClick={() => history.push(pathPrefix.search)}>
-            {Characters.magnifyingGlass}
-          </ActionButton>
-        </Route>
-
-        {/** ============================= IMAGE SCREEN */}
-        <Route path={pathPrefix.image}>
-          {/** Home */}
-          <ActionButton onClick={goHome}>{Characters.home}</ActionButton>
-
-          {/** Meta */}
-          <ActionButton onClick={() => history.push(pathPrefix.meta + entryId)}>
+      <ActionButton
+        onClick={() => {
+          history.push(State.folder + "/");
+        }}
+      >
+        {Characters.home}
+      </ActionButton>
+      <Route path={[State.folder, State.image]}>
+        {/** Meta */}
+        {!isHomeFolder && (
+          <ActionButton onClick={() => history.push(State.meta + entryId)}>
             {Characters.label}
           </ActionButton>
+        )}
 
-          {/** Search */}
-          <ActionButton onClick={() => history.push(pathPrefix.search)}>
-            {Characters.magnifyingGlass}
-          </ActionButton>
-        </Route>
+        {/** Search */}
+        <ActionButton onClick={() => history.push(State.search)}>
+          {Characters.magnifyingGlass}
+        </ActionButton>
+      </Route>
 
-        {/** ============================= META SCREEN */}
-        <Route path={pathPrefix.meta}>
-          {/** Home */}
-          <ActionButton onClick={goHome}>{Characters.home}</ActionButton>
-
-          {/** Search */}
-          <ActionButton onClick={() => history.push(pathPrefix.search)}>
-            {Characters.magnifyingGlass}
-          </ActionButton>
-        </Route>
-
-        {/** Catch all */}
-        <Route>
-          <ActionButton onClick={goHome}>{Characters.home}</ActionButton>
-        </Route>
-      </Switch>
       <Id>{entryId}</Id>
     </Frame>
   );
