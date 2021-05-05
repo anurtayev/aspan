@@ -1,22 +1,24 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useContext } from "react";
 
-import { useAspanContext } from "common";
+import { StateContext } from "common";
 import { FolderScreenFrame } from "./FolderScreen.styles";
 import { File } from "./File";
 import { Folder } from "./Folder";
 
 export const FolderScreen = () => {
-  const { savedScrollTopRef, slides } = useAspanContext();
+  const { savedScrollTopRef, slides } = useContext(StateContext);
   const folderRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    folderRef.current &&
-      folderRef.current.scrollTo(0, savedScrollTopRef.current);
+    savedScrollTopRef &&
+      folderRef.current &&
+      folderRef.current.scrollTo(0, savedScrollTopRef);
   });
 
+  console.log("==> FolderScreen", slides.entries.length);
   return (
     <FolderScreenFrame ref={folderRef}>
-      {slides.current.entries.map((entry) =>
+      {slides.entries.map((entry) =>
         entry.__typename === "File" ? (
           <File key={entry.id} {...entry} />
         ) : (

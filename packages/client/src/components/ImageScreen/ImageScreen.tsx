@@ -1,12 +1,7 @@
-import { useHistory } from "react-router-dom";
+import { useContext } from "react";
+import { useHistory, useParams } from "react-router-dom";
 
-import {
-  State,
-  useEntryId,
-  Characters,
-  useAspanContext,
-  getGoBackPath,
-} from "common";
+import { Routes, Characters, StateContext } from "common";
 import {
   Frame,
   Image,
@@ -16,26 +11,24 @@ import {
 
 export const ImageScreen = () => {
   const history = useHistory();
-  const entryId = useEntryId();
-  const ctx = useAspanContext();
+  const { id } = useParams<{ id: string }>();
+  const { slides, folderPathname, search } = useContext(StateContext);
 
-  const entry = ctx.slides.current.entries.find(
-    (entry) => entry.id === entryId
-  );
+  const entry = slides.entries.find((entry) => entry.id === "/" + id);
 
   if (!entry || entry.__typename !== "File") throw new Error("entry not found");
 
   return (
     <Frame>
       <Image
-        src={process.env.REACT_APP_IMG_CDN_URL + entryId}
+        src={`${process.env.REACT_APP_IMG_CDN_URL}/${id}`}
         alt=""
-        onClick={() => history.push(getGoBackPath(ctx))}
+        onClick={() => history.push(folderPathname + search)}
       />
       {entry.prev && (
         <LeftSlideButton
           onClick={() => {
-            history.push(State.image + entry.prev);
+            history.push(Routes.image + entry.prev);
           }}
         >
           {Characters.arrowLeft}
@@ -43,7 +36,7 @@ export const ImageScreen = () => {
       )}
       {entry.next && (
         <RightSlideButton
-          onClick={() => history.push(State.image + entry.next)}
+          onClick={() => history.push(Routes.image + entry.next)}
         >
           {Characters.arrowRight}
         </RightSlideButton>

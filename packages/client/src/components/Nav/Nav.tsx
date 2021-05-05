@@ -1,38 +1,40 @@
-import { useHistory } from "react-router-dom";
-import { Route } from "react-router-dom";
+import { useContext } from "react";
+import { useHistory, Route } from "react-router-dom";
 
-import { useEntryId, State, Characters } from "common";
+import { Routes, Characters, StateContext } from "common";
 import { Frame, ActionButton, Id } from "./Nav.styles";
 
 export const Nav = () => {
   const history = useHistory();
-  const entryId = useEntryId();
-  const isHomeFolder = entryId === "/";
+  const { folderPathname, imagePathname } = useContext(StateContext);
+
+  const isHomeFolder =
+    folderPathname === `/${Routes.folder}/` && !imagePathname;
 
   return (
     <Frame>
       <ActionButton
         onClick={() => {
-          history.push(State.folder + "/");
+          history.push(Routes.folder + "/");
         }}
       >
         {Characters.home}
       </ActionButton>
-      <Route path={[State.folder, State.image]}>
+      <Route path={[Routes.folder, Routes.image]}>
         {/** Meta */}
         {!isHomeFolder && (
-          <ActionButton onClick={() => history.push(State.meta + entryId)}>
+          <ActionButton onClick={() => history.push(`/${Routes.meta}`)}>
             {Characters.label}
           </ActionButton>
         )}
 
         {/** Search */}
-        <ActionButton onClick={() => history.push(State.search)}>
+        <ActionButton onClick={() => history.push(`/${Routes.search}`)}>
           {Characters.magnifyingGlass}
         </ActionButton>
       </Route>
 
-      <Id>{entryId}</Id>
+      <Id>{imagePathname || folderPathname}</Id>
     </Frame>
   );
 };

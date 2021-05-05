@@ -1,9 +1,9 @@
+import { useContext } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { Formik } from "formik";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 
 import {
-  useEntryId,
   Characters,
   Button,
   MetaDataForm,
@@ -13,8 +13,7 @@ import {
   GetMetaDataVariables,
   SetMetaData,
   SetMetaDataVariables,
-  useAspanContext,
-  getGoBackPath,
+  StateContext,
 } from "common";
 import { MetaDataPartialForm } from "components/MetaDataPartialForm";
 import {
@@ -27,8 +26,8 @@ import {
 
 export const MetaScreen = () => {
   const history = useHistory();
-  const entryId = useEntryId();
-  const ctx = useAspanContext();
+  const { id } = useParams<{ id: string }>();
+  const { imagePathname, folderPathname, search } = useContext(StateContext);
 
   const [setMetaData] = useMutation<SetMetaData, SetMetaDataVariables>(
     SET_METADATA
@@ -37,7 +36,7 @@ export const MetaScreen = () => {
   const { loading, error, data } = useQuery<GetMetaData, GetMetaDataVariables>(
     GET_METADATA,
     {
-      variables: { id: entryId },
+      variables: { id },
       fetchPolicy: "no-cache",
     }
   );
@@ -58,7 +57,7 @@ export const MetaScreen = () => {
     newValue: "",
   };
 
-  const goBack = () => history.push(getGoBackPath(ctx));
+  const goBack = () => history.push(imagePathname || folderPathname + search);
 
   return (
     <Formik
@@ -67,7 +66,7 @@ export const MetaScreen = () => {
         const { newKey, newValue, newTag, tags, attributes } = values;
         setMetaData({
           variables: {
-            id: entryId,
+            id,
             metaDataInput: {
               tags: [...(tags ? tags : []), ...(newTag ? [newTag.trim()] : [])],
               attributes: [
@@ -89,7 +88,7 @@ export const MetaScreen = () => {
             <PictureSymbol>
               {__typename === "Folder" ? Characters.folder : Characters.file}
             </PictureSymbol>
-            <EntryName>{entryId.split("/").slice(-1)[0]}</EntryName>
+            <EntryName>{id.split("/").slice(-1)[0]}</EntryName>
           </Section>
 
           <MetaDataPartialForm

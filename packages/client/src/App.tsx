@@ -6,22 +6,22 @@ import { ImageScreen } from "components/ImageScreen";
 import { MetaScreen } from "components/MetaScreen";
 import { SearchScreen } from "components/SearchScreen";
 import { Nav } from "components/Nav";
-import { State } from "common";
+import { Routes } from "common";
 
 export const App = () => (
   <>
     <Nav />
     <Switch>
-      <Route path={State.folder}>
+      <Route path={Routes.folder}>
         <FolderScreen />
       </Route>
-      <Route path={State.image}>
+      <Route path={Routes.image + "/:id+"}>
         <ImageScreen />
       </Route>
-      <Route path={State.meta}>
+      <Route path={Routes.meta}>
         <MetaScreen />
       </Route>
-      <Route path={State.search}>
+      <Route path={Routes.search}>
         <SearchScreen />
       </Route>
     </Switch>

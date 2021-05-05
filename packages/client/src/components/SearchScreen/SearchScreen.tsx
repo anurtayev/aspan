@@ -7,7 +7,7 @@ import {
   Button,
   MetaDataForm,
   getFolderPathname,
-  AspanContext,
+  StateContext,
   GetRepoMetaData,
   GET_REPO_METADATA,
 } from "common";
@@ -16,7 +16,7 @@ import { FlexForm, Section, SubmitButton } from "./SearchScreen.styles";
 
 export const SearchScreen = () => {
   const history = useHistory();
-  const ctx = useContext(AspanContext);
+  const ctx = useContext(StateContext);
 
   const { loading, error, data } = useQuery<GetRepoMetaData>(
     GET_REPO_METADATA,

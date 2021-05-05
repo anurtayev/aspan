@@ -7,29 +7,28 @@ import { BrowserRouter as Router } from "react-router-dom";
 import "./index.css";
 import { App } from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { defaultTheme, StateMachine } from "common";
+import { defaultTheme, StateMachine, Routes } from "common";
 
-if (window.location.pathname === "/") window.location.assign("/folder/");
+if (window.location.pathname === "/")
+  window.location.assign(`${Routes.folder}/`);
 
 ReactDOM.render(
-  <React.StrictMode>
-    <ApolloProvider
-      client={
-        new ApolloClient({
-          uri: process.env.REACT_APP_GRAPHQL_SERVER_URL,
-          cache: new InMemoryCache(),
-        })
-      }
-    >
-      <ThemeProvider theme={defaultTheme}>
-        <Router>
-          <StateMachine>
-            <App />
-          </StateMachine>
-        </Router>
-      </ThemeProvider>
-    </ApolloProvider>
-  </React.StrictMode>,
+  <ApolloProvider
+    client={
+      new ApolloClient({
+        uri: process.env.REACT_APP_GRAPHQL_SERVER_URL,
+        cache: new InMemoryCache(),
+      })
+    }
+  >
+    <ThemeProvider theme={defaultTheme}>
+      <Router>
+        <StateMachine>
+          <App />
+        </StateMachine>
+      </Router>
+    </ThemeProvider>
+  </ApolloProvider>,
   document.getElementById("root")
 );
 

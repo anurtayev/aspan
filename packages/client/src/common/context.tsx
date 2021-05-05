@@ -1,20 +1,11 @@
-import {
-  createContext,
-  useContext,
-  ReactNode,
-  useEffect,
-  useState,
-  MutableRefObject,
-  useRef,
-} from "react";
+import { createContext, ReactNode, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { useQuery } from "@apollo/client";
-import { Location } from "history";
 
 import { Slides, SlidesVariables, MetaDataInput, pathPrefixesRegExp } from ".";
 import { FOLDER_ENTRIES } from "./queries";
 
-export enum State {
+export enum Routes {
   folder = "/folder",
   image = "/image",
   meta = "/meta",
@@ -39,114 +30,85 @@ const getId = (pathname: string): string | undefined => {
   return path || undefined;
 };
 
-const getVariables = (location: Location<unknown>): SlidesVariables => {
-  const { pathname, search } = location;
+const getVariables = ({
+  pathname,
+  search,
+}: {
+  pathname: string;
+  search: string;
+}): SlidesVariables => {
   return {
     id: getId(pathname),
     metaDataInput: parseQueryString(search),
   };
 };
 
-const getState = (pathname: string): State => {
-  switch (`/${pathname.split("/")[1]}`) {
-    case State.folder:
-      return State.folder;
-    case State.image:
-      return State.image;
-    case State.meta:
-      return State.meta;
-    case State.search:
-      return State.search;
-  }
-  throw new Error("unknown state");
+export type StateContextType = {
+  folderPathname: string;
+  search: string;
+  slides: Slides;
+  savedScrollTopRef: number;
+  imagePathname: string;
 };
 
-export type AspanContextType = {
-  folderId: MutableRefObject<string>;
-  slidesVariables: MutableRefObject<SlidesVariables>;
-  slides: MutableRefObject<Slides>;
-  savedScrollTopRef: MutableRefObject<number>;
-
-  imageId?: MutableRefObject<string>;
-
-  currentState: State;
+const defaultState: StateContextType = {
+  folderPathname: "",
+  search: "",
+  slides: { entries: [] },
+  savedScrollTopRef: 0,
+  imagePathname: "",
 };
-
-export const AspanContext = createContext<AspanContextType | undefined>(
-  undefined
-);
+export const StateContext = createContext<StateContextType>(defaultState);
 
 export const StateMachine = ({ children }: { children: ReactNode }) => {
-  const location = useLocation();
+  const { pathname, search } = useLocation();
 
-  const folderId = useRef<string>("");
-  const slidesVariables = useRef<SlidesVariables>({});
-  const slides = useRef<Slides>({ entries: [] });
-  const savedScrollTopRef = useRef<number>(0);
-  const imageId = useRef<string>("");
-  const [currentState, setCurrentState] = useState<State>(State.folder);
+  const { current: ctx } = useRef<StateContextType>(defaultState);
 
-  const { loading, error, data } = useQuery<Slides, SlidesVariables>(
+  if (pathname.startsWith(Routes.folder)) {
+    if (ctx.folderPathname !== pathname) {
+      ctx.folderPathname = pathname;
+      ctx.search = search;
+      ctx.savedScrollTopRef = 0;
+    }
+
+    ctx.imagePathname = "";
+  } else if (
+    pathname.startsWith(Routes.image) &&
+    ctx.imagePathname !== pathname
+  ) {
+    ctx.imagePathname = pathname;
+  }
+
+  console.log(
+    "==> StateMachine ps",
+    JSON.stringify(
+      getVariables({
+        pathname: ctx.folderPathname,
+        search: ctx.search,
+      }),
+      null,
+      2
+    )
+  );
+
+  const { loading, error, data: slides } = useQuery<Slides, SlidesVariables>(
     FOLDER_ENTRIES,
     {
-      variables: slidesVariables.current,
+      variables: getVariables({
+        pathname: ctx.folderPathname,
+        search: ctx.search,
+      }),
     }
   );
-
-  useEffect(() => {
-    const { pathname, search } = location;
-    const incomingId = `${pathname}${search}`;
-
-    if (pathname.startsWith(State.folder)) {
-      if (folderId.current !== incomingId) {
-        folderId.current = incomingId;
-        slidesVariables.current = getVariables(location);
-        savedScrollTopRef.current = 0;
-      }
-
-      imageId.current = "";
-    } else if (
-      pathname.startsWith(State.image) &&
-      imageId.current !== incomingId
-    ) {
-      imageId.current = incomingId;
-    }
-
-    setCurrentState(getState(pathname));
-  }, [location]);
 
   if (loading) return <p>Loading...</p>;
-  if (error || typeof data === "undefined") return <p>Error</p>;
+  if (error) return <p>Error</p>;
 
-  slides.current = data;
+  ctx.slides = slides as Slides;
 
+  console.log("==> StateMachine", slides?.entries.length);
   return (
-    <AspanContext.Provider
-      value={{
-        folderId,
-        slidesVariables,
-        slides,
-        savedScrollTopRef,
-        imageId,
-        currentState,
-      }}
-    >
-      {children}
-    </AspanContext.Provider>
+    <StateContext.Provider value={{ ...ctx }}>{children}</StateContext.Provider>
   );
-};
-
-export const useAspanContext = () => {
-  const ctx = useContext(AspanContext);
-
-  if (
-    !ctx ||
-    !ctx.currentState ||
-    !ctx.folderId ||
-    !ctx.slidesVariables ||
-    !ctx.slides
-  )
-    throw new Error("context error");
-
-  return ctx;
 };
