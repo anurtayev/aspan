@@ -30,21 +30,19 @@ export const MetaScreen = () => {
   const { imagePathname, folderPathname, search } = useContext(StateContext);
   const id = imagePathname ? getId(imagePathname) : getId(folderPathname);
 
-  const [setMetaData] = useMutation<SetMetaData, SetMetaDataVariables>(
-    SET_METADATA
-  );
+  const [setMetaData] =
+    useMutation<SetMetaData, SetMetaDataVariables>(SET_METADATA);
 
   const { loading, error, data } = useQuery<GetMetaData, GetMetaDataVariables>(
     GET_METADATA,
     {
       variables: { id },
+      fetchPolicy: "no-cache",
     }
   );
 
   if (loading || !data) return <p>Loading</p>;
   if (error) return <p>Error</p>;
-
-  console.log("==> MetaScreen", JSON.stringify(data, null, 2));
 
   const { entry, tags, attributes } = data;
   if (!entry) throw new Error("entry not found");

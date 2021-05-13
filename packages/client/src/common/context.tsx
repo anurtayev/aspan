@@ -43,15 +43,23 @@ export const StateMachine = ({ children }: { children: ReactNode }) => {
     ctx.imagePathname = pathname;
   }
 
-  const { loading, error, data: slides } = useQuery<Slides, SlidesVariables>(
-    FOLDER_ENTRIES,
-    {
-      variables: getVariables({
-        pathname: ctx.folderPathname,
-        search: ctx.search,
-      }),
-    }
-  );
+  const variables = getVariables({
+    pathname: ctx.folderPathname,
+    search: ctx.search,
+  });
+
+  const fetchPolicy = variables.id ? "cache-first" : "no-cache";
+
+  console.log("==> StateMachine", variables, fetchPolicy);
+
+  const {
+    loading,
+    error,
+    data: slides,
+  } = useQuery<Slides, SlidesVariables>(FOLDER_ENTRIES, {
+    variables,
+    fetchPolicy,
+  });
 
   if (loading || !slides) return <p>Loading...</p>;
   if (error) return <p>Error</p>;

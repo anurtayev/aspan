@@ -28,6 +28,10 @@ export const resolvers: Resolvers<IContext> = {
       return [];
     },
 
+    entry(_, { id }, { dataSources }) {
+      return dataSources.fs.getEntry(id);
+    },
+
     tags(_, __, { dataSources: { fs } }) {
       return fs.tags;
     },

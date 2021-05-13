@@ -89,6 +89,12 @@ export class FileSystemDataSource extends DataSource {
       .filter(filterFn)
       .map(([, cacheEntry]) => cacheEntry);
 
+  public getEntry = (id: string): Maybe<Entry> => {
+    const rawEntry = this.repository.cache.get(id);
+    if (!rawEntry) return null;
+    return rawEntry;
+  };
+
   public getEntries = (id: string): Array<Entry> =>
     this.calculatePrevNext(
       this.sort(this.filterEntries(([key]) => dirname(key) === id))

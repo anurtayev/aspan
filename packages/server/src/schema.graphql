@@ -33,6 +33,8 @@ type File implements Entry {
 type Query {
   entries(id: String, metaDataInput: MetaDataInput): [Entry!]!
 
+  entry(id: String!): Entry
+
   """
   returns list of all tags used in repository
   """

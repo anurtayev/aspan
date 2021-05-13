@@ -709,6 +709,22 @@
             "deprecationReason": null
           },
           {
+            "name": "contentType",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "thumbImageUrl",
             "description": "",
             "args": [],
@@ -726,22 +742,6 @@
           },
           {
             "name": "imageUrl",
-            "description": "",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "contentType",
             "description": "",
             "args": [],
             "type": {

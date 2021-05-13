@@ -105,6 +105,7 @@ export type MutationSetMetaDataArgs = {
 export type Query = {
   __typename?: 'Query';
   entries: Array<Entry>;
+  entry?: Maybe<Entry>;
   /** returns list of all tags used in repository */
   tags: Array<Scalars['String']>;
   /** returns list of all attributes used in repository */
@@ -115,6 +116,11 @@ export type Query = {
 export type QueryEntriesArgs = {
   id?: Maybe<Scalars['String']>;
   metaDataInput?: Maybe<MetaDataInput>;
+};
+
+
+export type QueryEntryArgs = {
+  id: Scalars['String'];
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -263,6 +269,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   entries?: Resolver<Array<ResolversTypes['Entry']>, ParentType, ContextType, RequireFields<QueryEntriesArgs, never>>;
+  entry?: Resolver<Maybe<ResolversTypes['Entry']>, ParentType, ContextType, RequireFields<QueryEntryArgs, 'id'>>;
   tags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   attributes?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
 }>;

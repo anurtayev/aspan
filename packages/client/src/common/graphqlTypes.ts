@@ -7,14 +7,29 @@
 // GraphQL query operation: Slides
 // ====================================================
 
+export interface Slides_entries_Folder_metaData {
+  __typename: "MetaData";
+  tags: string[] | null;
+  attributes: string[][] | null;
+}
+
 export interface Slides_entries_Folder {
   __typename: "Folder";
   id: string;
+  metaData: Slides_entries_Folder_metaData | null;
+}
+
+export interface Slides_entries_File_metaData {
+  __typename: "MetaData";
+  tags: string[] | null;
+  attributes: string[][] | null;
 }
 
 export interface Slides_entries_File {
   __typename: "File";
   id: string;
+  metaData: Slides_entries_File_metaData | null;
+  contentType: string;
   thumbImageUrl: string;
   imageUrl: string;
   prev: string | null;
