@@ -9,9 +9,7 @@ export const File = ({ id, thumbImageUrl, imageUrl }: FileParams) => {
 
   return (
     <Frame
-      onClick={() => {
-        history.push("/image" + id);
-      }}
+      onClick={() => history.push("/image" + id)}
       thumbImageUrl={thumbImageUrl}
     />
   );

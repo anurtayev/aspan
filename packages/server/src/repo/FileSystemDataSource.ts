@@ -3,13 +3,15 @@ import { DataSource, DataSourceConfig } from "apollo-datasource";
 import { IOptions } from "../util";
 import {
   Entry,
+  Folder,
+  File,
   Maybe,
   MetaData,
   MetaDataInput,
   MutationAddAttributeArgs,
   Scalars
 } from "../generated/graphql";
-import { Cache, CacheEntry, Repository } from "../repo";
+import { Cache, ID, Repository } from "../repo";
 import { IContext } from "../util";
 import {
   addTag,
@@ -20,6 +22,11 @@ import {
 } from "./metaDataHelpers";
 import { metaFile, metaFolder, fsPath } from "./path";
 import { ensureDir, writeJson, pathExists, remove } from "fs-extra";
+
+export const isFile = (cacheElement: File | Folder): boolean =>
+  cacheElement.__typename === "File";
+
+export const isFolder = (cacheElement: Entry): boolean => !isFile(cacheElement);
 
 export class FileSystemDataSource extends DataSource {
   options!: IOptions;
@@ -40,79 +47,47 @@ export class FileSystemDataSource extends DataSource {
     return Array.from(this.repository.attributes);
   }
 
-  public getEntry = (id: string): Maybe<Entry> => {
-    const rawEntry = this.repository.cache.get(id);
-    if (!rawEntry) return null;
-    return this.expandEntry({ id, cacheEntry: rawEntry });
-  };
-
-  public expandEntry = ({
-    id,
-    cacheEntry: { __typename }
-  }: {
-    id: string;
-    cacheEntry: CacheEntry;
-  }): Entry => {
-    const contentType = extname(id);
-    const dockerImageUrl = process.env.DOCKER_NETWORK_PICREPO_URL + id;
-    const imageUrl = process.env.IMG_CDN_URL + id;
-
-    return __typename === "File"
-      ? {
-          __typename: "File",
-          id,
-          contentType,
-          thumbImageUrl:
-            process.env.THUMBOR_URL +
-            `/unsafe/${process.env.THUMBS_LENGTH}x${process.env.THUMBS_WIDTH}/` +
-            encodeURIComponent(dockerImageUrl),
-          imageUrl
-        }
-      : {
-          __typename: "Folder",
-          id
-        };
-  };
-
   private sort = (entries: Array<Entry>): Array<Entry> =>
     entries.sort((a, b) => {
       const aName = a.id.split("/").slice(-1);
       const bName = b.id.split("/").slice(-1);
-      if (a.__typename === "Folder" && b.__typename === "File") return -1;
-      if (a.__typename === "File" && b.__typename === "Folder") return 1;
+      if (isFolder(a) && isFile(b)) return -1;
+      if (isFile(a) && isFolder(b)) return 1;
       else if (aName < bName) return -1;
       else if (aName > bName) return 1;
       else return 0;
     });
 
-  private calculatePrevNext = (entries: Array<Entry>): Array<Entry> =>
+  private calculatePrevNext = (
+    entries: Array<File | Folder>
+  ): Array<File | Folder> =>
     entries.reduce((accumulator, entry, index, entries) => {
       return [
         ...accumulator,
         {
           ...entry,
-          prev:
-            entry.__typename === "File"
-              ? index === 0 || entries[index - 1].__typename === "Folder"
-                ? undefined
-                : entries[index - 1].id
-              : undefined,
-          next:
-            entry.__typename === "File"
-              ? index === entries.length - 1
-                ? undefined
-                : entries[index + 1].id
-              : undefined
+          ...(entry.__typename === "File"
+            ? {
+                prev:
+                  index === 0 || isFolder(entries[index - 1])
+                    ? undefined
+                    : entries[index - 1].id,
+                next:
+                  index === entries.length - 1
+                    ? undefined
+                    : entries[index + 1].id
+              }
+            : {})
         }
       ];
     }, [] as Array<Entry>);
 
   private filterEntries = (
-    filterFn: ([key, cacheEntry]: [string, CacheEntry]) => boolean
+    filterFn: ([key, cacheEntry]: [string, File | Folder]) => boolean
   ): Array<Entry> =>
     Array.from(this.repository.cache)
       .filter(filterFn)
-      .map(([id, cacheEntry]) => this.expandEntry({ id, cacheEntry }));
+      .map(([, cacheEntry]) => cacheEntry);
 
   public getEntries = (id: string): Array<Entry> =>
     this.calculatePrevNext(
@@ -140,7 +115,6 @@ export class FileSystemDataSource extends DataSource {
     if (await pathExists(fsPath(id, this.options))) {
       const cacheEntry = this.repository.cache.get(id);
       if (!cacheEntry) throw new Error("missing cache entry for " + id);
-      const { __typename } = cacheEntry;
 
       if (
         metaData &&
@@ -163,7 +137,7 @@ export class FileSystemDataSource extends DataSource {
           metaData
         );
 
-        this.repository.cache.set(id, { __typename, metaData });
+        this.repository.cache.set(id, { ...cacheEntry, metaData });
         metaData.tags?.forEach(tag => this.repository.tags.add(tag));
         metaData.attributes?.forEach(([key]) =>
           this.repository.attributes.add(key)
@@ -173,7 +147,7 @@ export class FileSystemDataSource extends DataSource {
         remove(fsPath(metaFile(id, this.options), this.options));
 
         this.repository.cache.set(id, {
-          __typename,
+          ...cacheEntry,
           metaData: null
         });
         return null;

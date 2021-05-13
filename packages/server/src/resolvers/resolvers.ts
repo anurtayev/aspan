@@ -1,5 +1,6 @@
 import { Entry, Resolvers } from "../generated/graphql";
 import { IContext } from "../util";
+import { Cache, ID, Repository, isFile, isFolder } from "../repo";
 
 const metaData = (
   { id }: { id: string },
@@ -7,16 +8,6 @@ const metaData = (
   { dataSources }: IContext
 ) => {
   return dataSources.fs.getMetaData(id);
-};
-
-const folderElementTypeResolver = (obj: Entry, _: any, __: any) => {
-  if (obj.__typename === "File") {
-    return "File";
-  }
-  if (obj.__typename === "Folder") {
-    return "Folder";
-  }
-  return null;
 };
 
 export const resolvers: Resolvers<IContext> = {
@@ -35,10 +26,6 @@ export const resolvers: Resolvers<IContext> = {
       if (metaDataInput) return search(metaDataInput);
 
       return [];
-    },
-
-    entry(_, { id }, { dataSources }) {
-      return dataSources.fs.getEntry(id);
     },
 
     tags(_, __, { dataSources: { fs } }) {
@@ -72,19 +59,15 @@ export const resolvers: Resolvers<IContext> = {
     }
   },
 
-  Folder: {
-    metaData
-  },
-
-  File: {
-    metaData
-  },
-
-  AbstractEntry: {
-    __resolveType: folderElementTypeResolver
-  },
-
   Entry: {
-    __resolveType: folderElementTypeResolver
+    __resolveType: (obj, _: any, __: any) => {
+      if (obj.__typename === "File") {
+        return "File";
+      }
+      if (obj.__typename === "Folder") {
+        return "Folder";
+      }
+      return null;
+    }
   }
 };

@@ -1,6 +1,13 @@
 import { Stats, statSync } from "fs";
 import { relative, basename, extname } from "path";
-import { Maybe, MetaData, Scalars } from "../generated/graphql";
+import {
+  Maybe,
+  MetaData,
+  Scalars,
+  Entry,
+  File,
+  Folder
+} from "../generated/graphql";
 import { IOptions } from "../util";
 import klawSync, { Item } from "klaw-sync";
 import { metaFile, fsPath } from "./path";
@@ -8,13 +15,9 @@ import { pathExistsSync, readJsonSync } from "fs-extra";
 
 export type Tags = Set<string>;
 export type Attributes = Set<string>;
+export type ID = Scalars["ID"];
 
-export type CacheEntry = {
-  __typename: string;
-  metaData: Maybe<MetaData>;
-};
-
-export type Cache = Map<Scalars["ID"], CacheEntry>;
+export type Cache = Map<ID, File | Folder>;
 
 export type Repository = { tags: Tags; attributes: Attributes; cache: Cache };
 
@@ -51,8 +54,21 @@ export const repoCache = (options: IOptions): Repository =>
         const metaData = getMetaData({ id, options });
 
         repository.cache.set(id, {
-          __typename: stats.isFile() ? "File" : "Folder",
-          metaData
+          id,
+          metaData,
+          ...(stats.isFile()
+            ? {
+                __typename: "File",
+                contentType: extname(id),
+                thumbImageUrl:
+                  process.env.THUMBOR_URL +
+                  `/unsafe/${process.env.THUMBS_LENGTH}x${process.env.THUMBS_WIDTH}/` +
+                  encodeURIComponent(
+                    process.env.DOCKER_NETWORK_PICREPO_URL + id
+                  ),
+                imageUrl: process.env.IMG_CDN_URL + id
+              }
+            : { __typename: "Folder" })
         });
 
         metaData?.tags?.forEach(tag => repository.tags.add(tag));
@@ -65,6 +81,6 @@ export const repoCache = (options: IOptions): Repository =>
       {
         tags: new Set<string>(),
         attributes: new Set<string>(),
-        cache: new Map<Scalars["ID"], CacheEntry>()
+        cache: new Map<ID, Entry>()
       }
     );

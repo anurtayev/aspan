@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { Formik } from "formik";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import {
   Characters,
@@ -14,6 +14,7 @@ import {
   SetMetaData,
   SetMetaDataVariables,
   StateContext,
+  getId,
 } from "common";
 import { MetaDataPartialForm } from "components/MetaDataPartialForm";
 import {
@@ -26,8 +27,8 @@ import {
 
 export const MetaScreen = () => {
   const history = useHistory();
-  const { id } = useParams<{ id: string }>();
   const { imagePathname, folderPathname, search } = useContext(StateContext);
+  const id = imagePathname ? getId(imagePathname) : getId(folderPathname);
 
   const [setMetaData] = useMutation<SetMetaData, SetMetaDataVariables>(
     SET_METADATA
@@ -37,12 +38,13 @@ export const MetaScreen = () => {
     GET_METADATA,
     {
       variables: { id },
-      fetchPolicy: "no-cache",
     }
   );
 
-  if (loading) return <p>Loading</p>;
-  if (error || !data) return <p>Error</p>;
+  if (loading || !data) return <p>Loading</p>;
+  if (error) return <p>Error</p>;
+
+  console.log("==> MetaScreen", JSON.stringify(data, null, 2));
 
   const { entry, tags, attributes } = data;
   if (!entry) throw new Error("entry not found");

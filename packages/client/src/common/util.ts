@@ -1,9 +1,15 @@
 import { MetaDataInput, SlidesVariables } from "./graphqlTypes";
-import { Routes } from "./context";
 
 export enum entryType {
   folder = "Folder",
   file = "File",
+}
+
+export enum Routes {
+  folder = "/folder",
+  image = "/image",
+  meta = "/meta",
+  search = "/search",
 }
 
 export const pathPrefixesRegExp = new RegExp(
@@ -68,4 +74,33 @@ export const getFolderPathname = (repoVariables: SlidesVariables) => {
   }
 
   throw new Error("context error");
+};
+
+const parseQueryString = (queryString: string): MetaDataInput | undefined => {
+  const params = new URLSearchParams(queryString);
+  const tags = params.getAll("tags");
+  const attributes = params.getAll("attributes").map((elem) => elem.split(","));
+
+  return tags.length || attributes.length
+    ? {
+        tags: params.getAll("tags"),
+        attributes: params.getAll("attributes").map((elem) => elem.split(",")),
+      }
+    : undefined;
+};
+
+export const getId = (pathname: string) =>
+  pathname.replace(pathPrefixesRegExp, "");
+
+export const getVariables = ({
+  pathname,
+  search,
+}: {
+  pathname: string;
+  search: string;
+}): SlidesVariables => {
+  return {
+    id: getId(pathname),
+    metaDataInput: parseQueryString(search),
+  };
 };

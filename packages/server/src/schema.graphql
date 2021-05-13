@@ -8,34 +8,30 @@ type MetaData {
   attributes: [[String!]!]
 }
 
-interface AbstractEntry {
+interface Entry {
   id: ID!
   metaData: MetaData
 }
 
-type Folder implements AbstractEntry {
+type Folder implements Entry {
   id: ID!
   metaData: MetaData
 }
 
-type File implements AbstractEntry {
+type File implements Entry {
   id: ID!
   metaData: MetaData
 
+  contentType: String!
   thumbImageUrl: String!
   imageUrl: String!
-  contentType: String!
 
   prev: String
   next: String
 }
 
-union Entry = File | Folder
-
 type Query {
   entries(id: String, metaDataInput: MetaDataInput): [Entry!]!
-
-  entry(id: String!): Entry
 
   """
   returns list of all tags used in repository

@@ -11,25 +11,23 @@ export type Scalars = {
   Float: number;
 };
 
-export type AbstractEntry = {
+export type Entry = {
   id: Scalars['ID'];
   metaData?: Maybe<MetaData>;
 };
 
-export type Entry = File | Folder;
-
-export type File = AbstractEntry & {
+export type File = Entry & {
   __typename?: 'File';
   id: Scalars['ID'];
   metaData?: Maybe<MetaData>;
+  contentType: Scalars['String'];
   thumbImageUrl: Scalars['String'];
   imageUrl: Scalars['String'];
-  contentType: Scalars['String'];
   prev?: Maybe<Scalars['String']>;
   next?: Maybe<Scalars['String']>;
 };
 
-export type Folder = AbstractEntry & {
+export type Folder = Entry & {
   __typename?: 'Folder';
   id: Scalars['ID'];
   metaData?: Maybe<MetaData>;
@@ -107,7 +105,6 @@ export type MutationSetMetaDataArgs = {
 export type Query = {
   __typename?: 'Query';
   entries: Array<Entry>;
-  entry?: Maybe<Entry>;
   /** returns list of all tags used in repository */
   tags: Array<Scalars['String']>;
   /** returns list of all attributes used in repository */
@@ -118,11 +115,6 @@ export type Query = {
 export type QueryEntriesArgs = {
   id?: Maybe<Scalars['String']>;
   metaDataInput?: Maybe<MetaDataInput>;
-};
-
-
-export type QueryEntryArgs = {
-  id: Scalars['String'];
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -207,14 +199,13 @@ export type ResolversTypes = ResolversObject<{
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
   MetaDataInput: MetaDataInput;
-  Entry: ResolversTypes['File'] | ResolversTypes['Folder'];
-  File: ResolverTypeWrapper<File>;
-  AbstractEntry: ResolversTypes['File'] | ResolversTypes['Folder'];
+  Entry: ResolversTypes['Folder'] | ResolversTypes['File'];
   ID: ResolverTypeWrapper<Scalars['ID']>;
   MetaData: ResolverTypeWrapper<MetaData>;
-  Folder: ResolverTypeWrapper<Folder>;
   Mutation: ResolverTypeWrapper<{}>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Folder: ResolverTypeWrapper<Folder>;
+  File: ResolverTypeWrapper<File>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -222,32 +213,27 @@ export type ResolversParentTypes = ResolversObject<{
   Query: {};
   String: Scalars['String'];
   MetaDataInput: MetaDataInput;
-  Entry: ResolversParentTypes['File'] | ResolversParentTypes['Folder'];
-  File: File;
-  AbstractEntry: ResolversParentTypes['File'] | ResolversParentTypes['Folder'];
+  Entry: ResolversParentTypes['Folder'] | ResolversParentTypes['File'];
   ID: Scalars['ID'];
   MetaData: MetaData;
-  Folder: Folder;
   Mutation: {};
   Boolean: Scalars['Boolean'];
-}>;
-
-export type AbstractEntryResolvers<ContextType = any, ParentType extends ResolversParentTypes['AbstractEntry'] = ResolversParentTypes['AbstractEntry']> = ResolversObject<{
-  __resolveType: TypeResolveFn<'File' | 'Folder', ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  metaData?: Resolver<Maybe<ResolversTypes['MetaData']>, ParentType, ContextType>;
+  Folder: Folder;
+  File: File;
 }>;
 
 export type EntryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Entry'] = ResolversParentTypes['Entry']> = ResolversObject<{
-  __resolveType: TypeResolveFn<'File' | 'Folder', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Folder' | 'File', ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  metaData?: Resolver<Maybe<ResolversTypes['MetaData']>, ParentType, ContextType>;
 }>;
 
 export type FileResolvers<ContextType = any, ParentType extends ResolversParentTypes['File'] = ResolversParentTypes['File']> = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   metaData?: Resolver<Maybe<ResolversTypes['MetaData']>, ParentType, ContextType>;
+  contentType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   thumbImageUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   imageUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  contentType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   prev?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   next?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -277,13 +263,11 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   entries?: Resolver<Array<ResolversTypes['Entry']>, ParentType, ContextType, RequireFields<QueryEntriesArgs, never>>;
-  entry?: Resolver<Maybe<ResolversTypes['Entry']>, ParentType, ContextType, RequireFields<QueryEntryArgs, 'id'>>;
   tags?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   attributes?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
-  AbstractEntry?: AbstractEntryResolvers<ContextType>;
   Entry?: EntryResolvers<ContextType>;
   File?: FileResolvers<ContextType>;
   Folder?: FolderResolvers<ContextType>;

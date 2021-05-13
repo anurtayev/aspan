@@ -3,13 +3,14 @@ import gql from "graphql-tag";
 export const FOLDER_ENTRIES = gql`
   query Slides($id: String, $metaDataInput: MetaDataInput) {
     entries(id: $id, metaDataInput: $metaDataInput) {
-      ... on Folder {
-        __typename
-        id
+      __typename
+      id
+      metaData {
+        tags
+        attributes
       }
       ... on File {
-        __typename
-        id
+        contentType
         thumbImageUrl
         imageUrl
         prev
@@ -31,13 +32,11 @@ export const SET_METADATA = gql`
 export const GET_METADATA = gql`
   query GetMetaData($id: String!) {
     entry(id: $id) {
-      ... on AbstractEntry {
-        __typename
-        id
-        metaData {
-          tags
-          attributes
-        }
+      __typename
+      id
+      metaData {
+        tags
+        attributes
       }
     }
 

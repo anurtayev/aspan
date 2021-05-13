@@ -12,12 +12,16 @@ export const FolderScreen = () => {
   useEffect(() => {
     savedScrollTopRef &&
       folderRef.current &&
-      folderRef.current.scrollTo(0, savedScrollTopRef);
+      folderRef.current.scrollTo(0, savedScrollTopRef.current);
   });
 
-  console.log("==> FolderScreen", slides.entries.length);
   return (
-    <FolderScreenFrame ref={folderRef}>
+    <FolderScreenFrame
+      ref={folderRef}
+      onClick={() =>
+        (savedScrollTopRef.current = folderRef.current?.scrollTop as number)
+      }
+    >
       {slides.entries.map((entry) =>
         entry.__typename === "File" ? (
           <File key={entry.id} {...entry} />

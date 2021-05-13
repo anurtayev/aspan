@@ -8,28 +8,29 @@ export const Nav = () => {
   const history = useHistory();
   const { folderPathname, imagePathname } = useContext(StateContext);
 
-  const isHomeFolder =
-    folderPathname === `/${Routes.folder}/` && !imagePathname;
+  const isHomeFolder = folderPathname === `${Routes.folder}/` && !imagePathname;
 
   return (
     <Frame>
-      <ActionButton
-        onClick={() => {
-          history.push(Routes.folder + "/");
-        }}
-      >
-        {Characters.home}
-      </ActionButton>
+      {!isHomeFolder && (
+        <ActionButton
+          onClick={() => {
+            history.push(Routes.folder + "/");
+          }}
+        >
+          {Characters.home}
+        </ActionButton>
+      )}
       <Route path={[Routes.folder, Routes.image]}>
         {/** Meta */}
         {!isHomeFolder && (
-          <ActionButton onClick={() => history.push(`/${Routes.meta}`)}>
+          <ActionButton onClick={() => history.push(Routes.meta)}>
             {Characters.label}
           </ActionButton>
         )}
 
         {/** Search */}
-        <ActionButton onClick={() => history.push(`/${Routes.search}`)}>
+        <ActionButton onClick={() => history.push(Routes.search)}>
           {Characters.magnifyingGlass}
         </ActionButton>
       </Route>

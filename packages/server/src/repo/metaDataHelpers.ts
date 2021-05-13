@@ -106,7 +106,7 @@ export const removeAttribute = (
 };
 
 export const satisfiesFilter = (
-  metaData: Maybe<MetaData>,
+  metaData: Maybe<MetaData> | undefined,
   filterMetaData: Maybe<MetaDataInput> | undefined
 ): boolean => {
   // no filter

@@ -72,7 +72,7 @@ export interface GetMetaData_entry_metaData {
 }
 
 export interface GetMetaData_entry {
-  __typename: "File" | "Folder";
+  __typename: "Folder" | "File";
   id: string;
   metaData: GetMetaData_entry_metaData | null;
 }
