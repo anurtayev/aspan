@@ -6,9 +6,12 @@ import { Frame, ActionButton, Id } from "./Nav.styles";
 
 export const Nav = () => {
   const history = useHistory();
-  const { folderPathname, imagePathname } = useContext(StateContext);
+  const { folderPathname, imagePathname, search, refetch } =
+    useContext(StateContext);
 
   const isHomeFolder = folderPathname === `${Routes.folder}/` && !imagePathname;
+  const isSearchFolder =
+    folderPathname === Routes.folder && search && !imagePathname;
 
   return (
     <Frame>
@@ -23,7 +26,7 @@ export const Nav = () => {
       )}
       <Route path={[Routes.folder, Routes.image]}>
         {/** Meta */}
-        {!isHomeFolder && (
+        {!isHomeFolder && !isSearchFolder && (
           <ActionButton onClick={() => history.push(Routes.meta)}>
             {Characters.label}
           </ActionButton>
@@ -33,6 +36,13 @@ export const Nav = () => {
         <ActionButton onClick={() => history.push(Routes.search)}>
           {Characters.magnifyingGlass}
         </ActionButton>
+
+        {/** Refresh */}
+        {isSearchFolder && (
+          <ActionButton onClick={() => refetch()}>
+            {Characters.refresh}
+          </ActionButton>
+        )}
       </Route>
 
       <Id>{imagePathname || folderPathname}</Id>

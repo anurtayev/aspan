@@ -11,6 +11,7 @@ export type StateContextType = {
   slides: Slides;
   savedScrollTopRef: MutableRefObject<number>;
   imagePathname: string;
+  refetch: () => any;
 };
 
 const defaultState: StateContextType = {
@@ -19,6 +20,7 @@ const defaultState: StateContextType = {
   slides: { entries: [] },
   savedScrollTopRef: { current: 0 },
   imagePathname: "",
+  refetch: () => {},
 };
 export const StateContext = createContext<StateContextType>(defaultState);
 
@@ -29,7 +31,7 @@ export const StateMachine = ({ children }: { children: ReactNode }) => {
   const savedScrollTopRef = useRef<number>(0);
 
   if (pathname.startsWith(Routes.folder)) {
-    if (ctx.folderPathname !== pathname) {
+    if (ctx.folderPathname !== pathname || ctx.search !== search) {
       ctx.folderPathname = pathname;
       ctx.search = search;
       ctx.savedScrollTopRef.current = 0;
@@ -48,17 +50,16 @@ export const StateMachine = ({ children }: { children: ReactNode }) => {
     search: ctx.search,
   });
 
-  const fetchPolicy = variables.id ? "cache-first" : "no-cache";
-
-  console.log("==> StateMachine", variables, fetchPolicy);
+  // const fetchPolicy = variables.id ? "cache-first" : "network-only";
 
   const {
     loading,
     error,
     data: slides,
+    refetch,
   } = useQuery<Slides, SlidesVariables>(FOLDER_ENTRIES, {
     variables,
-    fetchPolicy,
+    fetchPolicy: "no-cache",
   });
 
   if (loading || !slides) return <p>Loading...</p>;
@@ -67,7 +68,7 @@ export const StateMachine = ({ children }: { children: ReactNode }) => {
   ctx.slides = slides;
 
   return (
-    <StateContext.Provider value={{ ...ctx, savedScrollTopRef }}>
+    <StateContext.Provider value={{ ...ctx, savedScrollTopRef, refetch }}>
       {children}
     </StateContext.Provider>
   );

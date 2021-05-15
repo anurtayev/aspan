@@ -34,6 +34,7 @@ export enum Characters {
   arrowRight = "\u{21e8}",
   label = "\u{1f3f7}",
   magnifyingGlass = "\u{1F50D}",
+  refresh = "\u{27F3}",
 }
 
 export type MetaDataForm = MetaDataInput & {

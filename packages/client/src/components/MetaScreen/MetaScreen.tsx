@@ -28,7 +28,7 @@ import {
 export const MetaScreen = () => {
   const history = useHistory();
   const { imagePathname, folderPathname, search } = useContext(StateContext);
-  const id = imagePathname ? getId(imagePathname) : getId(folderPathname);
+  const id = getId(imagePathname || folderPathname);
 
   const [setMetaData] =
     useMutation<SetMetaData, SetMetaDataVariables>(SET_METADATA);
