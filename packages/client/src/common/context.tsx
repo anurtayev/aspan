@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useRef, MutableRefObject } from "react";
+import { createContext, ReactNode, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 
@@ -9,7 +9,7 @@ export type StateContextType = {
   folderPathname: string;
   search: string;
   slides: Slides;
-  savedScrollTopRef: MutableRefObject<number>;
+  savedScrollTops: Map<string, number>;
   imagePathname: string;
   refetch: () => any;
 };
@@ -18,7 +18,7 @@ const defaultState: StateContextType = {
   folderPathname: "",
   search: "",
   slides: { entries: [] },
-  savedScrollTopRef: { current: 0 },
+  savedScrollTops: new Map<string, number>(),
   imagePathname: "",
   refetch: () => {},
 };
@@ -28,13 +28,11 @@ export const StateMachine = ({ children }: { children: ReactNode }) => {
   const { pathname, search } = useLocation();
 
   const { current: ctx } = useRef<StateContextType>(defaultState);
-  const savedScrollTopRef = useRef<number>(0);
 
   if (pathname.startsWith(Routes.folder)) {
     if (ctx.folderPathname !== pathname || ctx.search !== search) {
       ctx.folderPathname = pathname;
       ctx.search = search;
-      ctx.savedScrollTopRef.current = 0;
     }
 
     ctx.imagePathname = "";
@@ -50,8 +48,6 @@ export const StateMachine = ({ children }: { children: ReactNode }) => {
     search: ctx.search,
   });
 
-  // const fetchPolicy = variables.id ? "cache-first" : "network-only";
-
   const {
     loading,
     error,
@@ -66,10 +62,7 @@ export const StateMachine = ({ children }: { children: ReactNode }) => {
   if (error) return <p>Error</p>;
 
   ctx.slides = slides;
+  ctx.refetch = refetch;
 
-  return (
-    <StateContext.Provider value={{ ...ctx, savedScrollTopRef, refetch }}>
-      {children}
-    </StateContext.Provider>
-  );
+  return <StateContext.Provider value={ctx}>{children}</StateContext.Provider>;
 };
