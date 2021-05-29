@@ -28,7 +28,7 @@ export const SmallButton = styled.div`
   }
 `;
 
-export const FormLine = styled.div`
+export const FormBrick = styled.div`
   height: 2rem;
   font-size: 1.2rem;
   display: flex;

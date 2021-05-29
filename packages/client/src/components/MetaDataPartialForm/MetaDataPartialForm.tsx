@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FieldArray, Field, useFormikContext } from "formik";
 
-import { Characters, FormLine, SmallButton, MetaDataForm } from "common";
+import { Characters, FormBrick, SmallButton, MetaDataForm } from "common";
 import { Selections } from "./Selections";
 import {
   Section,
@@ -37,16 +37,16 @@ export const MetaDataPartialForm = ({
               <ExistingItemsBox>
                 {tags &&
                   tags.map((tag: string, index: number) => (
-                    <FormLine key={index}>
+                    <FormBrick key={index}>
                       <ElemBox>{tag}</ElemBox>
                       <SmallButton onClick={() => remove(index)}>
                         {Characters.multiply}
                       </SmallButton>
-                    </FormLine>
+                    </FormBrick>
                   ))}
               </ExistingItemsBox>
 
-              <FormLine>
+              <FormBrick>
                 <Field
                   name="newTag"
                   autoComplete="off"
@@ -67,7 +67,7 @@ export const MetaDataPartialForm = ({
                 >
                   {Characters.plus}
                 </SmallButton>
-              </FormLine>
+              </FormBrick>
               <Selections
                 currentValue={newTag}
                 selections={availableTags}
@@ -92,7 +92,7 @@ export const MetaDataPartialForm = ({
               <ExistingItemsBox>
                 {attributes &&
                   attributes.map((attribute: string[], index: number) => (
-                    <FormLine key={index}>
+                    <FormBrick key={index}>
                       <ElemBox>{attribute[0]}</ElemBox>
                       <Field
                         name={`attributes.${index}.1`}
@@ -101,11 +101,11 @@ export const MetaDataPartialForm = ({
                       <SmallButton onClick={() => remove(index)}>
                         {Characters.multiply}
                       </SmallButton>
-                    </FormLine>
+                    </FormBrick>
                   ))}{" "}
               </ExistingItemsBox>
 
-              <FormLine>
+              <FormBrick>
                 <Field
                   name="newKey"
                   autoComplete="off"
@@ -128,7 +128,7 @@ export const MetaDataPartialForm = ({
                 >
                   {Characters.plus}
                 </SmallButton>
-              </FormLine>
+              </FormBrick>
               <Selections
                 currentValue={newKey}
                 selections={availableAttributes}
