@@ -1,14 +1,9 @@
 import React, { useState } from "react";
 import { FieldArray, Field, useFormikContext } from "formik";
+import styled from "styled-components";
 
 import { Characters, FormBrick, SmallButton, MetaDataForm } from "common";
 import { Selections } from "./Selections";
-import {
-  Section,
-  SectionHeader,
-  ElemBox,
-  ExistingItemsBox,
-} from "./MetaDataPartialForm.styles";
 
 type Params = { availableTags: string[]; availableAttributes: string[] };
 
@@ -146,3 +141,23 @@ export const MetaDataPartialForm = ({
     </>
   );
 };
+
+const Section = styled.div`
+  margin: 1rem 0 0 2rem;
+`;
+
+const SectionHeader = styled.h5`
+  color: red;
+  margin: 0 0 0.2rem 0;
+`;
+
+const ElemBox = styled.div`
+  border: 1px solid;
+  padding: 0 0.5rem 0 0.5rem;
+  background: lightgrey;
+`;
+
+const ExistingItemsBox = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;

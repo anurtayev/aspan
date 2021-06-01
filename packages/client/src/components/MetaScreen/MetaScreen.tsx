@@ -1,7 +1,8 @@
 import { useContext } from "react";
 import { useMutation, useQuery } from "@apollo/client";
-import { Formik } from "formik";
-import { useHistory } from "react-router-dom";
+import { Form, Formik } from "formik";
+import { useHistory, useLocation } from "react-router-dom";
+import styled from "styled-components";
 
 import {
   Characters,
@@ -17,18 +18,12 @@ import {
   getId,
 } from "common";
 import { MetaDataPartialForm } from "components/MetaDataPartialForm";
-import {
-  FlexForm,
-  EntryName,
-  Section,
-  PictureSymbol,
-  SubmitButton,
-} from "./MetaScreen.styles";
 
 export const MetaScreen = () => {
   const history = useHistory();
   const { imagePathname, folderPathname, search } = useContext(StateContext);
-  const id = getId(imagePathname || folderPathname);
+  const { pathname } = useLocation();
+  const id = getId(pathname);
 
   const [setMetaData] =
     useMutation<SetMetaData, SetMetaDataVariables>(SET_METADATA);
@@ -109,3 +104,26 @@ export const MetaScreen = () => {
     </Formik>
   );
 };
+
+const FlexForm = styled(Form)`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
+
+const Section = styled.div`
+  margin: 1rem 0 0 2rem;
+`;
+
+const PictureSymbol = styled.span`
+  font-size: 1.5rem;
+`;
+
+const EntryName = styled.span`
+  font-size: 1rem;
+  margin: 0 0 0 1rem;
+`;
+
+const SubmitButton = styled(Button)`
+  background: deepskyblue;
+`;
