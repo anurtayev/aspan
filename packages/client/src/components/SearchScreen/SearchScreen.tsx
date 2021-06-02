@@ -4,7 +4,6 @@ import { useHistory } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 
 import {
-  Button,
   MetaDataForm,
   getFolderPathname,
   StateContext,
@@ -75,9 +74,9 @@ export const SearchScreen = () => {
             <SubmitButton type="submit" disabled={isSubmitting}>
               Submit
             </SubmitButton>
-            <Button type="button" onClick={() => history.goBack()}>
+            <button type="button" onClick={() => history.goBack()}>
               Cancel
-            </Button>
+            </button>
           </Section>
         </FlexForm>
       )}

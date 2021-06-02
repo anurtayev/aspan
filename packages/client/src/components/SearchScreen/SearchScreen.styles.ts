@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { Form } from "formik";
-import { Button } from "common";
 
 export const FlexForm = styled(Form)`
   display: flex;
@@ -21,7 +20,7 @@ export const EntryName = styled.span`
   margin: 0 0 0 1rem;
 `;
 
-export const SubmitButton = styled(Button)`
+export const SubmitButton = styled.button`
   background: deepskyblue;
 `;
 

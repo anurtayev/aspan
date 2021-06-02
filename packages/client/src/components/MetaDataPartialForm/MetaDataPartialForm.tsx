@@ -23,13 +23,13 @@ export const MetaDataPartialForm = ({
 
   return (
     <>
-      <Section>
-        <SectionHeader>TAGS</SectionHeader>
+      <div>
+        <SectionHeader>Tags</SectionHeader>
         <FieldArray
           name="tags"
           render={({ remove, push }) => (
             <>
-              <ExistingItemsBox>
+              <ExistingItemsContainer>
                 {tags &&
                   tags.map((tag: string, index: number) => (
                     <FormBrick key={index}>
@@ -39,10 +39,10 @@ export const MetaDataPartialForm = ({
                       </SmallButton>
                     </FormBrick>
                   ))}
-              </ExistingItemsBox>
+              </ExistingItemsContainer>
 
               <FormBrick>
-                <Field
+                <StyledField
                   name="newTag"
                   autoComplete="off"
                   onFocus={() => {
@@ -76,20 +76,20 @@ export const MetaDataPartialForm = ({
             </>
           )}
         />
-      </Section>
+      </div>
 
-      <Section>
-        <SectionHeader>ATTRIBUTES</SectionHeader>
+      <div>
+        <SectionHeader>Attributes</SectionHeader>
         <FieldArray
           name="attributes"
           render={({ remove, push }) => (
             <>
-              <ExistingItemsBox>
+              <ExistingItemsContainer>
                 {attributes &&
                   attributes.map((attribute: string[], index: number) => (
                     <FormBrick key={index}>
                       <ElemBox>{attribute[0]}</ElemBox>
-                      <Field
+                      <StyledField
                         name={`attributes.${index}.1`}
                         value={attribute[1]}
                       />
@@ -98,16 +98,16 @@ export const MetaDataPartialForm = ({
                       </SmallButton>
                     </FormBrick>
                   ))}{" "}
-              </ExistingItemsBox>
+              </ExistingItemsContainer>
 
               <FormBrick>
-                <Field
+                <StyledField
                   name="newKey"
                   autoComplete="off"
                   onFocus={() => setIsNewKeyFocused(true)}
                   onBlur={() => setIsNewKeyFocused(false)}
                 />
-                <Field name="newValue" />
+                <StyledField name="newValue" />
                 <SmallButton
                   onClick={() => {
                     const newKeyValue = newKey.trim();
@@ -137,27 +137,30 @@ export const MetaDataPartialForm = ({
             </>
           )}
         />
-      </Section>
+      </div>
     </>
   );
 };
 
-const Section = styled.div`
-  margin: 1rem 0 0 2rem;
-`;
-
 const SectionHeader = styled.h5`
-  color: red;
+  color: #1187f6;
   margin: 0 0 0.2rem 0;
 `;
 
 const ElemBox = styled.div`
   border: 1px solid;
-  padding: 0 0.5rem 0 0.5rem;
+  padding: 0 0.2rem 0 0.2rem;
   background: lightgrey;
+  height: 1rem;
+  font-size: 0.75rem;
 `;
 
-const ExistingItemsBox = styled.div`
+const ExistingItemsContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
+`;
+
+const StyledField = styled(Field)`
+  height: 0.76rem;
+  width: 40%;
 `;

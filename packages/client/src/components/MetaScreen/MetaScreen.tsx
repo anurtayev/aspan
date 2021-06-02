@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { Form, Formik } from "formik";
 import { useHistory, useLocation } from "react-router-dom";
@@ -6,7 +6,6 @@ import styled from "styled-components";
 
 import {
   Characters,
-  Button,
   MetaDataForm,
   SET_METADATA,
   GET_METADATA,
@@ -79,26 +78,26 @@ export const MetaScreen = () => {
     >
       {({ isSubmitting }) => (
         <FlexForm>
-          <Section>
-            <PictureSymbol>
+          <HeaderContainer>
+            <span>
               {__typename === "Folder" ? Characters.folder : Characters.file}
-            </PictureSymbol>
+            </span>
             <EntryName>{id.split("/").slice(-1)[0]}</EntryName>
-          </Section>
+          </HeaderContainer>
 
           <MetaDataPartialForm
             availableAttributes={attributes}
             availableTags={tags}
           />
 
-          <Section>
+          <ButtonContainer>
             <SubmitButton type="submit" disabled={isSubmitting}>
               Submit
             </SubmitButton>
-            <Button type="button" onClick={goBack}>
+            <button type="button" onClick={goBack}>
               Cancel
-            </Button>
-          </Section>
+            </button>
+          </ButtonContainer>
         </FlexForm>
       )}
     </Formik>
@@ -109,21 +108,24 @@ const FlexForm = styled(Form)`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-`;
-
-const Section = styled.div`
-  margin: 1rem 0 0 2rem;
-`;
-
-const PictureSymbol = styled.span`
-  font-size: 1.5rem;
+  padding-left: 1em;
 `;
 
 const EntryName = styled.span`
-  font-size: 1rem;
-  margin: 0 0 0 1rem;
+  margin-left: 0.5rem;
 `;
 
-const SubmitButton = styled(Button)`
+const SubmitButton = styled.button`
   background: deepskyblue;
+  margin-right: 1rem;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+`;
+
+const HeaderContainer = styled.div`
+  margin-bottom: 1rem;
 `;
