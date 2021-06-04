@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { FieldArray, Field, useFormikContext } from "formik";
 import styled from "styled-components";
 
@@ -15,11 +15,6 @@ export const MetaDataPartialForm = ({
     values: { tags, attributes, newTag, newKey, newValue },
     setFieldValue,
   } = useFormikContext<MetaDataForm>();
-
-  const [isNewTagFocused, setIsNewTagFocused] = useState(false);
-  const [isNewTagSelected, setIsNewTagSelected] = useState(false);
-  const [isNewKeyFocused, setIsNewKeyFocused] = useState(false);
-  const [isNewKeySelected, setIsNewKeySelected] = useState(false);
 
   return (
     <>
@@ -42,21 +37,11 @@ export const MetaDataPartialForm = ({
               </ExistingItemsContainer>
 
               <FormBrick>
-                <StyledField
-                  name="newTag"
-                  autoComplete="off"
-                  onFocus={() => {
-                    setIsNewTagSelected(false);
-                    setIsNewTagFocused(true);
-                  }}
-                  onBlur={() => {
-                    setIsNewTagFocused(false);
-                  }}
-                />
+                <StyledField name="newTag" autoComplete="off" />
                 <SmallButton
                   onClick={() => {
                     const newTagValue = newTag.trim();
-                    !tags?.includes(newTagValue) && push(newTag.trim());
+                    !tags?.includes(newTagValue) && push(newTagValue);
                     setFieldValue("newTag", "");
                   }}
                 >
@@ -67,11 +52,8 @@ export const MetaDataPartialForm = ({
                 currentValue={newTag}
                 selections={availableTags}
                 setNewValue={(selectedValue: string) =>
-                  setFieldValue("newTag", selectedValue)
+                  !tags?.includes(selectedValue) && push(selectedValue)
                 }
-                isInputFocused={isNewTagFocused}
-                isSelected={isNewTagSelected}
-                setIsSelected={setIsNewTagSelected}
               />
             </>
           )}
@@ -101,12 +83,7 @@ export const MetaDataPartialForm = ({
               </ExistingItemsContainer>
 
               <FormBrick>
-                <StyledField
-                  name="newKey"
-                  autoComplete="off"
-                  onFocus={() => setIsNewKeyFocused(true)}
-                  onBlur={() => setIsNewKeyFocused(false)}
-                />
+                <StyledField name="newKey" autoComplete="off" />
                 <StyledField name="newValue" />
                 <SmallButton
                   onClick={() => {
@@ -130,9 +107,6 @@ export const MetaDataPartialForm = ({
                 setNewValue={(selectedValue: string) =>
                   setFieldValue("newKey", selectedValue)
                 }
-                isInputFocused={isNewKeyFocused}
-                isSelected={isNewKeySelected}
-                setIsSelected={setIsNewKeySelected}
               />
             </>
           )}
