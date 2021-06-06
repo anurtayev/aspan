@@ -38,7 +38,7 @@ export const MetaScreen = () => {
   if (loading || !data) return <p>Loading</p>;
   if (error) return <p>Error</p>;
 
-  const { entry, tags, attributes } = data;
+  const { entry, tags: availableTags, attributes: availableAttributes } = data;
   if (!entry) throw new Error("entry not found");
 
   const { metaData, __typename } = entry;
@@ -86,8 +86,8 @@ export const MetaScreen = () => {
           </HeaderContainer>
 
           <MetaDataPartialForm
-            availableAttributes={attributes}
-            availableTags={tags}
+            availableAttributes={availableAttributes}
+            availableTags={availableTags}
           />
 
           <ButtonContainer>

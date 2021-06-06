@@ -40,7 +40,7 @@ export const MetaDataPartialForm = ({
                 <StyledField name="newTag" autoComplete="off" />
                 <SmallButton
                   onClick={() => {
-                    const newTagValue = newTag.trim();
+                    const newTagValue = newTag.trim().toLowerCase();
                     !tags?.includes(newTagValue) && push(newTagValue);
                     setFieldValue("newTag", "");
                   }}
@@ -50,7 +50,9 @@ export const MetaDataPartialForm = ({
               </FormBrick>
               <Selections
                 currentValue={newTag}
-                selections={availableTags}
+                selections={availableTags.filter((availableTag) =>
+                  tags && tags.length ? !tags.includes(availableTag) : true
+                )}
                 setNewValue={(selectedValue: string) =>
                   !tags?.includes(selectedValue) && push(selectedValue)
                 }
@@ -87,13 +89,13 @@ export const MetaDataPartialForm = ({
                 <StyledField name="newValue" />
                 <SmallButton
                   onClick={() => {
-                    const newKeyValue = newKey.trim();
+                    const newKeyValue = newKey.trim().toLowerCase();
                     if (
                       !attributes?.find(
                         (attribute) => attribute[0] === newKeyValue
                       )
                     )
-                      push([newKeyValue, newValue.trim()]);
+                      push([newKeyValue, newValue.trim().toLowerCase()]);
                     setFieldValue("newKey", "");
                     setFieldValue("newValue", "");
                   }}
@@ -103,7 +105,13 @@ export const MetaDataPartialForm = ({
               </FormBrick>
               <Selections
                 currentValue={newKey}
-                selections={availableAttributes}
+                selections={availableAttributes.filter((availableAttribute) =>
+                  attributes && attributes.length
+                    ? !attributes.some(
+                        ([attributeKey]) => attributeKey === availableAttribute
+                      )
+                    : true
+                )}
                 setNewValue={(selectedValue: string) =>
                   setFieldValue("newKey", selectedValue)
                 }
