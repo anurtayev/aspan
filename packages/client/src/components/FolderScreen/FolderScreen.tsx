@@ -1,4 +1,4 @@
-import { useEffect, useRef, useContext } from "react";
+import { useEffect, useContext } from "react";
 import { useLocation } from "react-router-dom";
 
 import { StateContext } from "common";
@@ -7,29 +7,22 @@ import { File } from "./File";
 import { Folder } from "./Folder";
 
 export const FolderScreen = () => {
-  const ctx = useContext(StateContext);
-  const folderRef = useRef<HTMLDivElement>(null);
-  const { pathname, search } = useLocation();
+  const { imagesDivRef, saveScrollTopFn, restoreScrollTopFn, slides } =
+    useContext(StateContext);
+  const location = useLocation();
 
   useEffect(() => {
-    folderRef.current &&
-      folderRef.current.scrollTo(
-        0,
-        ctx.savedScrollTops.get(pathname + search) || 0
-      );
+    restoreScrollTopFn(location);
   });
 
   return (
     <FolderScreenFrame
-      ref={folderRef}
+      ref={imagesDivRef}
       onClick={() => {
-        ctx.savedScrollTops.set(
-          pathname + search,
-          folderRef.current?.scrollTop as number
-        );
+        saveScrollTopFn(location);
       }}
     >
-      {ctx.slides.entries.map((entry) =>
+      {slides.entries.map((entry) =>
         entry.__typename === "File" ? (
           <File key={entry.id} {...entry} />
         ) : (

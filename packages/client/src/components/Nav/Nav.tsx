@@ -2,19 +2,24 @@ import { useContext } from "react";
 import { useHistory, Route, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
-import { Routes, Characters, StateContext, getId } from "common";
+import { Routes, Characters, StateContext, getId, getParent } from "common";
 
 export const Nav = () => {
   const history = useHistory();
-  const { pathname, search } = useLocation();
+  const location = useLocation();
+  const { pathname, search } = location;
 
-  const { refetch } = useContext(StateContext);
+  const { refetch, saveScrollTopFn } = useContext(StateContext);
 
   const isHomeFolder = pathname === `${Routes.folder}/`;
   const isSearchFolder = pathname === Routes.folder && search;
 
   return (
-    <Frame>
+    <Frame
+      onClick={() => {
+        saveScrollTopFn(location);
+      }}
+    >
       {!isHomeFolder && (
         <ActionButton
           onClick={() => {
@@ -24,6 +29,7 @@ export const Nav = () => {
           {Characters.home}
         </ActionButton>
       )}
+
       <Route path={[Routes.folder, Routes.image]}>
         {/** Meta */}
         {!isHomeFolder && !isSearchFolder && (
@@ -43,6 +49,19 @@ export const Nav = () => {
         {isSearchFolder && (
           <ActionButton onClick={() => refetch()}>
             {Characters.refresh}
+          </ActionButton>
+        )}
+      </Route>
+
+      <Route path={Routes.folder}>
+        {/** Parent folder */}
+        {!isHomeFolder && !isSearchFolder && (
+          <ActionButton
+            onClick={() =>
+              history.push(Routes.folder + getParent(getId(pathname)))
+            }
+          >
+            {Characters.arrowUp}
           </ActionButton>
         )}
       </Route>

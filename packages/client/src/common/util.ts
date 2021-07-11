@@ -93,6 +93,12 @@ const parseQueryString = (queryString: string): MetaDataInput | undefined => {
 export const getId = (pathname: string) =>
   pathname.replace(pathPrefixesRegExp, "");
 
+export const getParent = (folderName: string) => {
+  const parts = folderName.split("/");
+
+  return parts.length === 2 ? "/" : parts.slice(0, -1).join("/");
+};
+
 export const getVariables = ({
   pathname,
   search,
