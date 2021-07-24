@@ -7,6 +7,8 @@ import { Selections } from "./Selections";
 
 type Params = { availableTags: string[]; availableAttributes: string[] };
 
+const cleanse = (value: string): string => value.trim().toLowerCase();
+
 export const MetaDataPartialForm = ({
   availableTags,
   availableAttributes,
@@ -40,7 +42,7 @@ export const MetaDataPartialForm = ({
                 <StyledField name="newTag" autoComplete="off" />
                 <SmallButton
                   onClick={() => {
-                    const newTagValue = newTag.trim().toLowerCase();
+                    const newTagValue = cleanse(newTag);
                     !tags?.includes(newTagValue) && push(newTagValue);
                     setFieldValue("newTag", "");
                   }}
@@ -89,13 +91,13 @@ export const MetaDataPartialForm = ({
                 <StyledField name="newValue" />
                 <SmallButton
                   onClick={() => {
-                    const newKeyValue = newKey.trim().toLowerCase();
+                    const newKeyValue = cleanse(newKey);
                     if (
                       !attributes?.find(
                         (attribute) => attribute[0] === newKeyValue
                       )
                     )
-                      push([newKeyValue, newValue.trim().toLowerCase()]);
+                      push([newKeyValue, cleanse(newValue)]);
                     setFieldValue("newKey", "");
                     setFieldValue("newValue", "");
                   }}

@@ -24,8 +24,9 @@ export const MetaScreen = () => {
   const { pathname } = useLocation();
   const id = getId(pathname);
 
-  const [setMetaData] =
-    useMutation<SetMetaData, SetMetaDataVariables>(SET_METADATA);
+  const [setMetaData] = useMutation<SetMetaData, SetMetaDataVariables>(
+    SET_METADATA
+  );
 
   const { loading, error, data } = useQuery<GetMetaData, GetMetaDataVariables>(
     GET_METADATA,
@@ -57,18 +58,13 @@ export const MetaScreen = () => {
     <Formik
       initialValues={initialValues}
       onSubmit={(values, { setSubmitting }) => {
-        const { newKey, newValue, newTag, tags, attributes } = values;
+        const { tags, attributes } = values;
         setMetaData({
           variables: {
             id,
             metaDataInput: {
-              tags: [...(tags ? tags : []), ...(newTag ? [newTag.trim()] : [])],
-              attributes: [
-                ...(attributes ? attributes : []),
-                ...(newKey && newValue
-                  ? [[newKey.trim(), newValue.trim()]]
-                  : []),
-              ],
+              tags,
+              attributes,
             },
           },
         });
