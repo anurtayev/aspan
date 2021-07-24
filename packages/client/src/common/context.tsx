@@ -85,5 +85,7 @@ export const StateMachine = ({ children }: { children: ReactNode }) => {
   ctx.slides = slides;
   ctx.refetch = refetch;
 
-  return <StateContext.Provider value={ctx}>{children}</StateContext.Provider>;
+  return (
+    <StateContext.Provider value={{ ...ctx }}>{children}</StateContext.Provider>
+  );
 };
