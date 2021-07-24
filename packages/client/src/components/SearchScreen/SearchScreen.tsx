@@ -41,23 +41,14 @@ export const SearchScreen = () => {
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={(
-        { tags, attributes, newTag, newKey, newValue },
-        { setSubmitting }
-      ) => {
+      onSubmit={({ tags, attributes }, { setSubmitting }) => {
         setSubmitting(false);
-
-        tags = [...(tags ? tags : []), ...(newTag ? [newTag] : [])];
-        attributes = [
-          ...(attributes ? attributes : []),
-          ...(newKey && newValue ? [[newKey, newValue]] : []),
-        ];
 
         history.push(
           getFolderPathname({
             metaDataInput: {
-              tags,
-              attributes,
+              tags: tags || [],
+              attributes: attributes || [],
             },
           })
         );
