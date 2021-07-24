@@ -28,6 +28,8 @@ export const isFile = (cacheElement: File | Folder): boolean =>
 
 export const isFolder = (cacheElement: Entry): boolean => !isFile(cacheElement);
 
+const metaFilter = (key: string): boolean => !key.startsWith("_");
+
 export class FileSystemDataSource extends DataSource {
   options!: IOptions;
 
@@ -40,11 +42,11 @@ export class FileSystemDataSource extends DataSource {
   }
 
   get tags() {
-    return Array.from(this.repository.tags);
+    return Array.from(this.repository.tags).filter(metaFilter);
   }
 
   get attributes() {
-    return Array.from(this.repository.attributes);
+    return Array.from(this.repository.attributes).filter(metaFilter);
   }
 
   private sort = (entries: Array<Entry>): Array<Entry> =>
