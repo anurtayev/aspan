@@ -1,0 +1,3 @@
+REACT_APP_GRAPHQL_SERVER_URL=http://localhost:4000
+REACT_APP_IMG_CDN_URL=http://picrepo
+REACT_APP_THUMBOR_URL=http://localhost:8090

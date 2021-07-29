@@ -7,15 +7,15 @@ import { Routes, Characters, StateContext, getId, getParent } from "common";
 export const Nav = () => {
   const history = useHistory();
   const location = useLocation();
+  const { refetch, saveScrollTopFn, navRef } = useContext(StateContext);
+
   const { pathname, search } = location;
-
-  const { refetch, saveScrollTopFn } = useContext(StateContext);
-
   const isHomeFolder = pathname === `${Routes.folder}/`;
   const isSearchFolder = pathname === Routes.folder && search;
 
   return (
     <Frame
+      ref={navRef}
       onClick={() => {
         saveScrollTopFn(location);
       }}

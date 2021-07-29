@@ -12,7 +12,7 @@ import {
 export const ImageScreen = () => {
   const history = useHistory();
   const { id } = useParams<{ id: string }>();
-  const { slides, folderPathname, search } = useContext(StateContext);
+  const { slides, folderPathname, search, navRef } = useContext(StateContext);
 
   const entry = slides.entries.find((entry) => entry.id === "/" + id);
 
@@ -21,7 +21,14 @@ export const ImageScreen = () => {
   return (
     <Frame>
       <Image
-        src={`${process.env.REACT_APP_IMG_CDN_URL}/${id}`}
+        src={`${process.env.REACT_APP_THUMBOR_URL}/unsafe/fit-in/${
+          navRef.current?.clientWidth
+        }x${
+          document.documentElement.clientHeight -
+          (navRef.current?.clientHeight || 0)
+        }/${encodeURIComponent(
+          `${process.env.REACT_APP_IMG_CDN_URL || ""}/${id}`
+        )}`}
         alt=""
         onClick={() => history.push(folderPathname + search)}
       />

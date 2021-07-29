@@ -19,9 +19,11 @@ export type StateContextType = {
   imagesDivRef: RefObject<HTMLDivElement>;
   saveScrollTopFn: SaveScrollTopFn;
   restoreScrollTopFn: RestoreScrollTopFn;
+  navRef: RefObject<HTMLDivElement>;
 };
 
 const imagesDivRef = createRef<HTMLDivElement>();
+const navRef = createRef<HTMLDivElement>();
 const savedScrollTops = new Map<string, number>();
 const saveScrollTopFn: SaveScrollTopFn = ({ pathname, search }) =>
   savedScrollTops.set(
@@ -41,6 +43,7 @@ const defaultState: StateContextType = {
   imagesDivRef,
   saveScrollTopFn,
   restoreScrollTopFn,
+  navRef,
 };
 
 export const StateContext = createContext<StateContextType>(defaultState);
