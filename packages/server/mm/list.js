@@ -1,4 +1,6 @@
-const { traverse } = require("./util");
+const exif = require("exif-reader");
+const sharp = require("sharp");
+const { traverse, traverseFiles } = require("./util");
 
 /**
  *
@@ -29,5 +31,15 @@ module.exports = {
       tags && console.log(tags);
       attributes && console.log("\nattributes:");
       attributes && console.log(attributes);
+    }),
+
+  listImageMeta: () =>
+    traverseFiles().forEach(({ path }) => {
+      sharp(path)
+        .metadata()
+        .then(metadata => {
+          metadata && console.log(exif(metadata.exif));
+        })
+        .catch(e => console.log(e));
     })
 };

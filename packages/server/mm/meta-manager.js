@@ -17,6 +17,11 @@ listCommand
   .description("list all meta files")
   .action(require("./list").listMetaFiles);
 
+listCommand
+  .command("imagemeta")
+  .description("list exif meta")
+  .action(require("./list").listImageMeta);
+
 program
   .command("delete")
   .command("tag <tag>")

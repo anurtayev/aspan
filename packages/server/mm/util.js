@@ -20,6 +20,13 @@ module.exports = {
       stats
     })),
 
+  traverseFiles: () =>
+    require("klaw-sync")(process.env.REPOSITORY_PATH, {
+      nodir: true,
+      traverseAll: true,
+      filter: ({ path }) => extname(path) === process.env.EXTS
+    }),
+
   saveJSON: (path, json) => {
     if (typeof json !== "object") removeSync(path);
 
