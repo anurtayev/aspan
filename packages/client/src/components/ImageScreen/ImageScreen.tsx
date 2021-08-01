@@ -27,7 +27,7 @@ export const ImageScreen = () => {
           document.documentElement.clientHeight -
           (navRef.current?.clientHeight || 0)
         }/${encodeURIComponent(
-          `${process.env.REACT_APP_IMG_CDN_URL || ""}/${id}`
+          `${process.env.REACT_APP_IMG_CDN_URL_INTERNAL || ""}/${id}`
         )}`}
         alt=""
         onClick={() => history.push(folderPathname + search)}
